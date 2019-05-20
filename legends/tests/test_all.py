@@ -4,7 +4,7 @@ import flask_testing
 from flask_testing import TestCase
 
 from legends import create_app
-from legends.models import db, DF_World
+from legends.models import db, Artifact, DF_World, Historical_Figure
 
 class MyTest(TestCase):
     SQLALCHEMY_DATABASE_URI = "sqlite://"
@@ -18,6 +18,12 @@ class MyTest(TestCase):
         db.create_all()
         w = DF_World(id=1, name="The Tested Realm")
         db.session.add(w)
+        a1 = Artifact(df_world_id=1, id=1, name="a big axe")
+        a2 = Artifact(df_world_id=1, id=2, name="a big book", holder_hfid=1)
+        hf1 = Historical_Figure(df_world_id=1, id=1)
+        db.session.add(a1)
+        db.session.add(a2)
+        db.session.add(hf1)
         db.session.commit()
 
     def tearDown(self):
@@ -30,6 +36,20 @@ class MyTest(TestCase):
     def test_world_exists(self):
         world = DF_World.query.first()
         assert world.id == 1
+        assert world.name == "The Tested Realm"
+
+    def test_artifacts_in_world(self):
+        world = DF_World.query.first()
+        a1 = Artifact.query.get((1,1))
+        a2 = Artifact.query.get((1,2))
+        assert world.artifacts == [a1, a2] 
+
+    def test_hf_holds_artifact(self):
+        hf = Historical_Figure.query.get((1,1))
+        a2 = Artifact.query.get((1,2))
+        assert hf.held_artifacts == [a2]
+
+
 
 
 
