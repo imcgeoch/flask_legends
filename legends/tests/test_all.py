@@ -37,10 +37,15 @@ class MyTest(TestCase):
     def test_dumb(self):
         assert True
 
+    # World
+
     def test_world_exists(self):
         world = DF_World.query.first()
         assert world.id == 1
         assert world.name == "The Tested Realm"
+
+    # Artifact
+    ############################################
 
     def test_artifacts_in_world(self):
         world = DF_World.query.first()
@@ -56,6 +61,9 @@ class MyTest(TestCase):
     def test_artifact_repr(self):
         a2 = Artifact.query.get((1,2))
         assert repr(a2) == '<Artifact a big book>'
+    
+    # Historical Era 
+    ############################################
 
     def test_era_in_world(self):
         world = DF_World.query.first()
