@@ -9,6 +9,7 @@ class DF_World(db.Model):
 
     historical_figures = db.relationship('Historical_Figure', backref='df_world')
     artifacts = db.relationship('Artifact', backref='df_world')
+    historical_eras = db.relationship('Historical_Era', backref='df_world')
 
     def __repr__(self):
         return "<df_world %s>" % (id)
@@ -40,3 +41,14 @@ class Artifact(db.Model):
 
     def __repr__(self):
         return "<Artifact %s>" % (self.name)
+
+class Historical_Era(db.Model):
+    __tablename__ = 'historical_eras'
+
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+                            primary_key=True)
+    name = db.Column(db.String(50), primary_key=True)
+    start_year = db.Column(db.Integer)
+
+    def __repr__(self):
+        return "<Historical Era %s>" % (self.name)
