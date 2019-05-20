@@ -49,3 +49,6 @@ class Historical_Era(db.Model):
                             primary_key=True)
     name = db.Column(db.String(50), primary_key=True)
     start_year = db.Column(db.Integer)
+
+    def __repr__(self):
+        return "<Historical Era %s>" % (self.name)

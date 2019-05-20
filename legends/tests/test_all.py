@@ -53,10 +53,14 @@ class MyTest(TestCase):
         a2 = Artifact.query.get((1,2))
         assert hf.held_artifacts == [a2]
 
-    def test_era(self):
+    def test_era_in_world(self):
         world = DF_World.query.first()
         he = Historical_Era.query.get((1, "the time of trials"))
         assert world.historical_eras == [he]
+
+    def test_era_repr(self):
+        he = Historical_Era.query.get((1, "the time of trials"))
+        assert repr(he) == '<Historical Era the time of trials>'
 
 
 
