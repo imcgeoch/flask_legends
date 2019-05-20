@@ -40,3 +40,11 @@ class Artifact(db.Model):
 
     def __repr__(self):
         return "<Artifact %s>" % (self.name)
+
+class Historical_Era(db.Model):
+    __tablename__ = 'historical_eras'
+
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+                            primary_key=True)
+    name = db.Column(db.String(50), primary_key=True)
+    start_year = db.Column(db.Integer)
