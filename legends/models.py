@@ -20,9 +20,28 @@ class Historical_Figure(db.Model):
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    
+    name = db.Column(db.String(50))
+    race = db.Column(db.String(20))
+    caste = db.Column(db.String(10))
+    deity = db.Column(db.Boolean) # Self-closing in xml
+    force = db.Column(db.Boolean) # Self-closing in xml
+    active_interaction = db.Column(db.String(50)) # Ex: DEITY_FORCE_WAREB...
+    animated = db.Column(db.Boolean)
+    animated_string = db.Column(db.String(50))
+    appeared = db.Column(db.Integer) # a year
+    associated_type = db.Column(db.String(20)) #Ex: BOWMAN
+    birth_seconds72 = db.Column(db.Integer) 
+    birth_year = db.Column(db.Integer)
+    death_seconds72 = db.Column(db.Integer)
+    death_year = db.Column(db.Integer)
+    current_identity_id = db.Column(db.Integer)
+    ent_pop_id = db.Column(db.Integer)
+
     held_artifacts = db.relationship('Artifact', backref='holder_hf', 
                                       viewonly=True)
+
+    def __repr__(self):
+        return "<Historical Figure %s>" % (self.name)
 
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
@@ -52,3 +71,4 @@ class Historical_Era(db.Model):
 
     def __repr__(self):
         return "<Historical Era %s>" % (self.name)
+
