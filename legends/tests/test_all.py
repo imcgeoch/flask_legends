@@ -7,6 +7,9 @@ from legends import create_app
 from legends.models import db, Artifact, DF_World, Historical_Figure, \
                            Historical_Era
 
+from legends.models import *
+
+
 class MyTest(TestCase):
     SQLALCHEMY_DATABASE_URI = "sqlite://"
     TESTING = True
