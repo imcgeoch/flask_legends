@@ -100,6 +100,8 @@ class Entity(db.Model):
 
     site_links = db.relationship('Site_Link', backref='entity', 
                                  viewonly=True)
+    structures = db.relationship('Structure', backref='entity',
+                                 viewonly=True)
 
 class Historical_Figure(db.Model):
     __tablename__ = 'historical_figures'
@@ -154,6 +156,8 @@ class Historical_Figure(db.Model):
     interaction_knowledges = db.relationship('Interaction_Knowledge')
     journey_pets = db.relationship('Journey_Pet')
     spheres = db.relationship('Sphere')
+    structures = db.relationship('Structure', backref='historical_figures',
+                                 viewonly=True)
 
     def __repr__(self):
         return "<Historical Figure %s>" % (self.name)
@@ -362,6 +366,15 @@ class Region(db.Model):
     name = db.Column(db.String(50))
     type = db.Column(db.Enum(*types))
 
+class Underground_Region(db.Model):
+    __tablename__ = 'underground_regions'
+
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.Enum('cavern', 'magma', 'underworld'))
+
+
 class Site(db.Model):
     __tablename__ = 'sites'
 
@@ -378,6 +391,76 @@ class Site(db.Model):
     type = db.Column(db.Enum(*types))
 
     site_links = db.relationship('Site_Link', backref='site', viewonly=True)
+    structures = db.relationship('Structure', backref='site', viewonly=True)
+
+class Structure(db.Model):
+    __tablename__ = 'structures'
+
+    types = ['underworld spire', 'inn tavern', 'market', 'temple',
+             'dungeon', 'keep', 'tomb', 'mead hall', 'library']
+    subtypes = ['catacombs', 'standard']
+    
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+                            primary_key=True)
+    site_id = db.Column(db.Integer, primary_key=True)
+    entity_id = db.Column(db.Integer, primary_key=True)
+    local_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    type = db.Column(db.Enum(*types))
+    subtype = db.Column(db.Enum(*subtypes))
+    worship_hfid = db.Column(db.Integer)
+
+    __table_args__ = (db.ForeignKeyConstraint([df_world_id, site_id],
+                                 [Site.df_world_id, Site.id]),
+                      db.ForeignKeyConstraint([df_world_id, entity_id],
+                                 [Entity.df_world_id, Entity.id]),
+                      db.ForeignKeyConstraint([df_world_id, worship_hfid],
+                                 [Historical_Figure.df_world_id,
+                                  Historical_Figure.id]), {})
+
+class World_Construction(db.Model):
+    __tablename__ = 'world_constructions'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    type = db.Column(db.String(50)) #should be enum
+    coords = db.Column(db.String(50))
+
+class Written_Content(db.Model):
+    __tablename__ = 'written_contents'
+    
+    forms = ['musical composition', 'choreography', 'pom', 'guide',
+             'essay', 'manual', 'cultural history', 'star chart', 
+             'letter', 'short story', 'cultural composition', 'novel', 
+             'autobiography', 'comparative biography', 'biography']
+
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50))
+    form = db.Column(db.Enum(*forms))
+    form_id = db.Column(db.Integer) # use primaryjoin with form_id == TYPE 
+    author_hfid = db.Column(db.Integer)
+    author_roll = db.Column(db.Integer)
+
+    styles = db.relationship('Style')
+    
+    __table_args__ = (db.ForeignKeyConstraint([df_world_id, author_hfid],
+                                 [Historical_Figure.df_world_id,
+                                  Historical_Figure.id]), {})
+
+class Style(db.Model):
+    __tablename__ = 'styles'
+
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer)
+    content_id = db.Column(db.Integer)
+    style = db.Column(db.String(10)) #should be enum
+    magnitude = db.Column(db.Integer)
+    __table_args__ = (db.ForeignKeyConstraint([df_world_id, content_id],
+                                 [Written_Content.df_world_id,
+                                  Written_Content.id]), {})
 
 class Musical_Form(db.Model):
     __tablename__ = 'musical_forms'
