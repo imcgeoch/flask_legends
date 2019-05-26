@@ -49,29 +49,6 @@ entity_reputations = db.Table('entity_reputations', db.metadata,
                                 ['entities.df_world_id', 'entities.id'])
         )
 
-
-
-
-link_types = ['child', 'spouse', 'deity']
-'''
-hf_links = db.Table('hf_links', db.metadata,
-        db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
-        db.Column('hfid1', db.Integer),
-        db.Column('hfid2', db.Integer),
-        db.Column('link_strength', db.Integer),
-        db.Column('link_type', db.Enum('child','spouse')),
-
-        db.ForeignKeyConstraint(['df_world_id', 'hfid1'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'hfid2'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id'])
-        )
-'''
-
-
 class DF_World(db.Model):
     __tablename__ = 'df_world'
     id = db.Column(db.Integer, primary_key=True)
