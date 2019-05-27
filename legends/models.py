@@ -17,37 +17,8 @@ competitors = db.Table('competitors', db.metadata,
                                  'historical_events.id'])
         )
 
-entity_position_links = db.Table('entity_position_links', db.metadata,
-        db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
-        db.Column('hfid', db.Integer),
-        db.Column('entity_id', db.Integer),
-        db.Column('start_year', db.Integer),
-        db.Column('end_year', db.Integer),
-        db.Column('position_profile_id', db.Integer),
-        
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
-                                ['entities.df_world_id', 'entities.id'])
-        )
 
-entity_reputations = db.Table('entity_reputations', db.metadata,
-        db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
-        db.Column('hfid', db.Integer),
-        db.Column('entity_id', db.Integer),
-        db.Column('first_ageless_season_count', db.Integer),
-        db.Column('first_ageless_year', db.Integer),
-        db.Column('unsolved_murders', db.Integer),
-        
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
-                                ['entities.df_world_id', 'entities.id'])
-        )
+
 
 class DF_World(db.Model):
     __tablename__ = 'df_world'
@@ -79,6 +50,12 @@ class Entity(db.Model):
                                  viewonly=True)
     structures = db.relationship('Structure', backref='entity',
                                  viewonly=True)
+    entity_position_links = db.relationship('Entity_Position_Link',
+                                backref='entity',
+                                viewonly=True)
+    entity_reputations = db.relationship('Entity_Reputation',
+                             backref='entity',
+                             viewonly=True)
 
 class Historical_Figure(db.Model):
     __tablename__ = 'historical_figures'
@@ -110,13 +87,11 @@ class Historical_Figure(db.Model):
                           secondary='competitors',
                           backref='competitors', 
                           viewonly=True)
-    entity_position_links = db.relationship('Entity', 
-                                secondary='entity_position_links',
-                                backref='position_holders',
+    entity_position_links = db.relationship('Entity_Position_Link',
+                                backref='historical_figure',
                                 viewonly=True)
-    entity_reputations = db.relationship('Entity',
-                             secondary='entity_reputations',
-                             backref='reputation_holders',
+    entity_reputations = db.relationship('Entity_Reputation',
+                             backref='historical_figure',
                              viewonly=True)
 
     hf_links = db.relationship('HF_Link', backref='this_histfig',
@@ -217,6 +192,42 @@ class Site_Link(db.Model):
         db.ForeignKeyConstraint(['df_world_id', 'site_id'],
                                 ['sites.df_world_id', 'sites.id'],
                                 ), 
+        {})
+
+class Entity_Position_Link(db.Model):
+    __tablename__ = 'entity_position_links'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer)
+    hfid = db.Column(db.Integer)
+    entity_id = db.Column(db.Integer)
+    start_year = db.Column(db.Integer)
+    end_year = db.Column(db.Integer)
+    position_profile_id = db.Column(db.Integer)
+  
+    __table_args__ = (
+        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
+                                ['historical_figures.df_world_id',
+                                 'historical_figures.id']),
+        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
+                                ['entities.df_world_id', 'entities.id']),
+        {})
+
+class Entity_Reputation(db.Model):
+    __tablename__ = 'entity_reputations'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer)
+    hfid = db.Column(db.Integer)
+    entity_id = db.Column(db.Integer)
+    first_ageless_season_count = db.Column(db.Integer)
+    first_ageless_year = db.Column(db.Integer)
+    unsolved_murders = db.Column(db.Integer)
+  
+    __table_args__ = (
+        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
+                                ['historical_figures.df_world_id',
+                                 'historical_figures.id']),
+        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
+                                ['entities.df_world_id', 'entities.id']),
         {})
 
 class Relationship(db.Model):
