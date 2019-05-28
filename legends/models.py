@@ -472,22 +472,26 @@ class Historical_Event(db.Model):
     year = db.Column(db.Integer)
     seconds72 = db.Column(db.Integer)
 
+    # shared columns
+    hfid = db.Column(db.Integer)
+    hfid2 = db.Column(db.Integer)
+    entity_id = db.Column(db.Integer)
+    entity_id2 = db.Column(db.Integer)
+    artifact_id = db.Column(db.Integer)
+    site_id = db.Column(db.Integer)
+    unit_id = db.Column(db.Integer)
+  
+    link_type = db.Column(db.String(20))
+    
     __mapper_args__ = {
         'polymorphic_identity':'historical_event',
         'polymorphic_on':'type'
     }
 
+
+'''
 class Change_HF_State_Event(Historical_Event):
-    #HF, Site
-    __tablename__ = 'change_hf_state_events'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
-    hfid = db.Column(db.Integer)
+    #hfid = db.Column(db.Integer)
     state = db.Column(db.String(20))
     coords = db.Column(db.String(20))
     feature_layer_id = db.Column(db.Integer)
@@ -495,111 +499,60 @@ class Change_HF_State_Event(Historical_Event):
     subregion_id = db.Column(db.Integer)
 
     __mapper_args__ = { 'polymorphic_identity':'change_hf_state'}
-
+'''
 
 class Add_HF_Entity_Link(Historical_Event):
-    # HF, Entity
-    __tablename__ = 'add_hf_entity_link'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
-
-    entity_id = db.Column(db.Integer)
+    # entity_id = db.Column(db.Integer)
     # to be calc'd
-    link_type = db.Column(db.String(20))
-    hfid = db.Column(db.Integer) 
+    # link_type = db.Column(db.String(20))
+    # hfid = db.Column(db.Integer) 
     position = db.Column(db.String(20))
     
     __mapper_args__ = { 'polymorphic_identity':'add_hf_entity_link'}
 
 class Add_HF_HF_Link(Historical_Event):
-    __tablename__ = 'add_hf_hf_link'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'add_hf_hf_link'}
 
-    hfid = db.Column(db.Integer)
-    hfid_target = db.Column(db.Integer)
+    #hfid = db.Column(db.Integer)
+    #hfid_target = db.Column(db.Integer) # hfid2
 
     # to be calc'd 
-    link_type = db.Column(db.String)
+    # link_type = db.Column(db.String(20))
 
 class Add_HF_Site_Link(Historical_Event):
-    __tablename__ = 'add_hf_site_link'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'add_hf_site_link'}
 
-    site_id = db.Column(db.Integer)
+    # site_id = db.Column(db.Integer)
     # to be calc'd
-    link_type = db.Column(db.String(20))
-    hfid = db.Column(db.Integer)
-    entity_id = db.Column(db.Integer)
+    # link_type = db.Column(db.String(20))
+    # hfid = db.Column(db.Integer)
+    # entity_id = db.Column(db.Integer)
     building = db.Column(db.Integer)
 
 class Agreement_Formed(Historical_Event):
-    __tablename__ = 'agreement_formed'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'agreement_formed'}
 
     agreement_id = db.Column(db.Integer)
-    hfid = db.Column(db.Integer)
-    site_id = db.Column(db.Integer)
-    artifact_id = db.Column(db.Integer)
+    #hfid = db.Column(db.Integer)
+    #site_id = db.Column(db.Integer)
+    #artifact_id = db.Column(db.Integer)
 
     #concluder_hfid, subject_id, reason in java but not seen in xml
 
 
 class Artifact_Claim_Formed(Historical_Event):
-    __tablename__ = 'artifact_claim_formed'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'artifact_claim_formed'}
 
-
-    hfid = db.Column(db.Integer)
-    artifact_id = db.Column(db.Integer)
-    entity_id = db.Column(db.Integer)
+    #hfid = db.Column(db.Integer)
+    #artifact_id = db.Column(db.Integer)
+    #entity_id = db.Column(db.Integer)
     position_profile_id = db.Column(db.Integer)
     claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure'))
 
 class Artifact_Copied(Historical_Event):
-    __tablename__ = 'artifact_copied'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'artifact_copied'}
 
-    artifact_id = db.Column(db.Integer)
+    # artifact_id = db.Column(db.Integer)
     dest_site_id = db.Column(db.Integer)
     dest_structure_id = db.Column(db.Integer)
     dest_entity_id = db.Column(db.Integer)
@@ -609,79 +562,38 @@ class Artifact_Copied(Historical_Event):
     from_original = db.Column(db.Boolean)
 
 class Artifact_Created(Historical_Event):
-    __tablename__ = 'artifact_created'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'artifact_created'}
 
-    artifact_id = db.Column(db.Integer)
-    hfid = db.Column(db.Integer)
-    unit_id = db.Column(db.Integer)
-    site_id = db.Column(db.Integer)
+    #artifact_id = db.Column(db.Integer)
+    #hfid = db.Column(db.Integer)
+    # unit_id = db.Column(db.Integer)
+    #site_id = db.Column(db.Integer)
 
 class Artifact_Destroyed(Historical_Event):
-    __tablename__ = 'artifact_destroyed'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'artifact_destroyed'}
 
-    artifact_id = db.Column(db.Integer)
-    site_id = db.Column(db.Integer)
-    entity_id = db.Column(db.Integer)
+    #artifact_id = db.Column(db.Integer)
+    #site_id = db.Column(db.Integer)
+    #entity_id = db.Column(db.Integer)
 
 class Artifact_Found(Historical_Event):
-    __tablename__ = 'artifact_found'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'artifact_found'}
 
-    artifact_id = db.Column(db.Integer)
-    hfid = db.Column(db.Integer)
-    unit_id = db.Column(db.Integer)
-    site_id = db.Column(db.Integer)
+    #artifact_id = db.Column(db.Integer)
+    #hfid = db.Column(db.Integer)
+    # unit_id = db.Column(db.Integer)
+    #site_id = db.Column(db.Integer)
 
 
 class Artifact_Given(Historical_Event):
-    __tablename__ = 'artifact_given'
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'artifact_given'}
 
-    artifact_id = db.Column(db.Integer)
-    giver_hfid = db.Column(db.Integer)
-    giver_entity_id = db.Column(db.Integer)
-    receiver_hfid = db.Column(db.Integer)
-    receiver_entity_id = db.Column(db.Integer)
+    #artifact_id = db.Column(db.Integer)
+    #giver_hfid = db.Column(db.Integer)
+    #giver_entity_id = db.Column(db.Integer)
+    #receiver_hfid = db.Column(db.Integer) hfid2
+    #receiver_entity_id = db.Column(db.Integer)
     reason = db.Column(db.String(20))
 
 class Artifact_Lost(Historical_Event):
-    __tablename__ = 'artifact_lost'
-
-
-    df_world_id = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, primary_key=True)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, id],
-                                 [Historical_Event.df_world_id,
-                                  Historical_Event.id]), {})
     __mapper_args__ = { 'polymorphic_identity':'artifact_lost'}
