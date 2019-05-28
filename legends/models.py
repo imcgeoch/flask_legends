@@ -18,8 +18,6 @@ competitors = db.Table('competitors', db.metadata,
         )
 
 
-
-
 class DF_World(db.Model):
     __tablename__ = 'df_world'
     id = db.Column(db.Integer, primary_key=True)
@@ -83,7 +81,7 @@ class Historical_Figure(db.Model):
     held_artifacts = db.relationship('Artifact', backref='holder_hf', 
                                       viewonly=True)
 
-    competitions = db.relationship('Historical_Event', 
+    competitions = db.relationship('Competition', 
                           secondary='competitors',
                           backref='competitors', 
                           viewonly=True)
@@ -480,38 +478,28 @@ class Historical_Event(db.Model):
     artifact_id = db.Column(db.Integer)
     site_id = db.Column(db.Integer)
     unit_id = db.Column(db.Integer)
+    site_civ_id = db.Column(db.Integer) # local group?
   
     link_type = db.Column(db.String(20))
+    reason = db.Column(db.String(50))
+    position = db.Column(db.String(20))
     
     __mapper_args__ = {
         'polymorphic_identity':'historical_event',
         'polymorphic_on':'type'
     }
 
-
-'''
-class Change_HF_State_Event(Historical_Event):
-    #hfid = db.Column(db.Integer)
-    state = db.Column(db.String(20))
-    coords = db.Column(db.String(20))
-    feature_layer_id = db.Column(db.Integer)
-    site_id = db.Column(db.Integer)
-    subregion_id = db.Column(db.Integer)
-
-    __mapper_args__ = { 'polymorphic_identity':'change_hf_state'}
-'''
-
 class Add_HF_Entity_Link(Historical_Event):
     # entity_id = db.Column(db.Integer)
     # to be calc'd
     # link_type = db.Column(db.String(20))
     # hfid = db.Column(db.Integer) 
-    position = db.Column(db.String(20))
+    #position = db.Column(db.String(20))
     
-    __mapper_args__ = { 'polymorphic_identity':'add_hf_entity_link'}
+    __mapper_args__ = { 'polymorphic_identity':'add hf entity link'}
 
 class Add_HF_HF_Link(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'add_hf_hf_link'}
+    __mapper_args__ = { 'polymorphic_identity':'add hf hf link'}
 
     #hfid = db.Column(db.Integer)
     #hfid_target = db.Column(db.Integer) # hfid2
@@ -520,7 +508,7 @@ class Add_HF_HF_Link(Historical_Event):
     # link_type = db.Column(db.String(20))
 
 class Add_HF_Site_Link(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'add_hf_site_link'}
+    __mapper_args__ = { 'polymorphic_identity':'add hf site link'}
 
     # site_id = db.Column(db.Integer)
     # to be calc'd
@@ -530,7 +518,7 @@ class Add_HF_Site_Link(Historical_Event):
     building = db.Column(db.Integer)
 
 class Agreement_Formed(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'agreement_formed'}
+    __mapper_args__ = { 'polymorphic_identity':'agreement formed'}
 
     agreement_id = db.Column(db.Integer)
     #hfid = db.Column(db.Integer)
@@ -541,7 +529,7 @@ class Agreement_Formed(Historical_Event):
 
 
 class Artifact_Claim_Formed(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'artifact_claim_formed'}
+    __mapper_args__ = { 'polymorphic_identity':'artifact claim formed'}
 
     #hfid = db.Column(db.Integer)
     #artifact_id = db.Column(db.Integer)
@@ -550,7 +538,7 @@ class Artifact_Claim_Formed(Historical_Event):
     claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure'))
 
 class Artifact_Copied(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'artifact_copied'}
+    __mapper_args__ = { 'polymorphic_identity':'artifact copied'}
 
     # artifact_id = db.Column(db.Integer)
     dest_site_id = db.Column(db.Integer)
@@ -562,7 +550,7 @@ class Artifact_Copied(Historical_Event):
     from_original = db.Column(db.Boolean)
 
 class Artifact_Created(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'artifact_created'}
+    __mapper_args__ = { 'polymorphic_identity':'artifact created'}
 
     #artifact_id = db.Column(db.Integer)
     #hfid = db.Column(db.Integer)
@@ -570,14 +558,14 @@ class Artifact_Created(Historical_Event):
     #site_id = db.Column(db.Integer)
 
 class Artifact_Destroyed(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'artifact_destroyed'}
+    __mapper_args__ = { 'polymorphic_identity':'artifact destroyed'}
 
     #artifact_id = db.Column(db.Integer)
     #site_id = db.Column(db.Integer)
     #entity_id = db.Column(db.Integer)
 
 class Artifact_Found(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'artifact_found'}
+    __mapper_args__ = { 'polymorphic_identity':'artifact found'}
 
     #artifact_id = db.Column(db.Integer)
     #hfid = db.Column(db.Integer)
@@ -586,14 +574,163 @@ class Artifact_Found(Historical_Event):
 
 
 class Artifact_Given(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'artifact_given'}
+    __mapper_args__ = { 'polymorphic_identity':'artifact given'}
 
     #artifact_id = db.Column(db.Integer)
     #giver_hfid = db.Column(db.Integer)
     #giver_entity_id = db.Column(db.Integer)
     #receiver_hfid = db.Column(db.Integer) hfid2
     #receiver_entity_id = db.Column(db.Integer)
-    reason = db.Column(db.String(20))
+    #reason = db.Column(db.String(50))
 
 class Artifact_Lost(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'artifact_lost'}
+    __mapper_args__ = { 'polymorphic_identity':'artifact lost'}
+
+    #artifact_id
+    #site_id
+
+class Artifact_Posessed(Historical_Event):
+    __mapper_args__ = { 'polymorphic_identity':'artifact posessed'}
+    # hfid
+    # artifact_id
+    # unit_id
+    # site_id
+
+    #reason = db.Column(db.String(50))
+    reason_id = db.Column(db.Integer)
+    circumstance = db.Column(db.String(50))
+    circumstance_id = db.Column(db.Integer)
+
+class Artifact_Recovered(Historical_Event):
+    __mapper_args__ = { 'polymorphic_identity':'artifact recovered'}
+
+    # hfid
+    # artifact_id
+    # unit_id
+    # site_id
+
+class Artifact_Stored(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'artifact stored'}
+    
+    # hfid
+    # artifact_id
+    # unit_id
+    # site_id
+
+class Artifact_Transformed(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'artifact transformed'}
+    new_artifact_id = db.Column(db.Integer)
+    # artifact_id
+    # unit_id
+    # site_id
+    # hfid
+
+class Assume_Identity(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'assume identity'}
+
+    #hfid
+    identity_id = db.Column(db.Integer)
+    #entity_id
+
+class Attacked_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'attacked site'}
+
+    #hfid attacker_general
+    #hfid2 defender_general
+    #entity_id attacker_civ_id
+    #entity_id2 defender_civ_id
+    #siteid
+    #site_civ_id = db.Column(db.Integer)
+
+class Body_Abused(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'body abused'}
+    # hfid
+    # entity_id
+    abuse_type = db.Column(db.Integer)
+    #site 
+
+class Change_HF_Body_State(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'change hf body state'}
+    #hfid
+    body_state = db.Column(db.String(20))
+    #siteid
+    building_id = db.Column(db.Integer)
+
+class Change_HF_Job(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'change hf job'}
+    old_job = db.Column(db.String(20))
+    new_job = db.Column(db.String(20))
+    #hfid
+
+class Change_HF_State(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'change hf state'}
+    subregion_id = db.Column(db.Integer)
+    #hfid = db.Column(db.Integer)
+    state = db.Column(db.String(20))
+
+class Change_Creature_Type(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'change creature type'}
+    #hfid1 changer
+    #hfid2 changee
+    old_race = db.Column(db.String(20))
+    new_race = db.Column(db.String(20))
+    old_caste = db.Column(db.String(20))
+    new_caste = db.Column(db.String(20))
+
+class Competition(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'competition'}
+
+    #hfid winner
+    occasion_id = db.Column(db.Integer)
+    schedule_id = db.Column(db.Integer)
+
+    #### List of competitors? is lookup from histfig
+
+class Create_Entity_Position(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'create entity position'}
+    #hfid
+    #entity_id civ
+    #site_civ_id = db.Column(db.Integer)
+    #reason
+    # position = db.Column(db.String(20))
+
+class Created_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'created site'}
+
+    #hfid builder_hfid
+    #site_id
+    #entity_id civid
+    #site_civ_id sitecivid
+
+class Created_Strucure(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'created structure'}
+    
+    #hfid builder_hfid
+    #site_id
+    #entity_id civid
+    #site_civ_id sitecivid
+    #structure_id 
+
+class Created_World_Construction(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'created world construction'}
+
+    #site
+    #site_civ
+    wcid = db.Column(db.Integer)
+    master_wcid = db.Column(db.Integer)
+    site_id2 = db.Column(db.Integer)
+
+class Creature_Devoured(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'creature devoured'}
+
+    # hfid1 victim (calced)
+    # hfid2 slayer (claced)
+    # entity
+    # site
+
+    race = db.Column(db.String(20))
+    caste = db.Column(db.String(20))
+   
+
+
+
