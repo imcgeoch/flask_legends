@@ -471,6 +471,7 @@ class Historical_Event(db.Model):
     seconds72 = db.Column(db.Integer)
 
     # shared columns
+    # lookups
     hfid = db.Column(db.Integer)
     hfid2 = db.Column(db.Integer)
     entity_id = db.Column(db.Integer)
@@ -479,10 +480,16 @@ class Historical_Event(db.Model):
     site_id = db.Column(db.Integer)
     unit_id = db.Column(db.Integer)
     site_civ_id = db.Column(db.Integer) # local group?
+    reason_id = db.Column(db.Integer)
+    circumstance_id = db.Column(db.Integer)
   
+    # strings
     link_type = db.Column(db.String(20))
     reason = db.Column(db.String(50))
     position = db.Column(db.String(20))
+    interaction = db.Column(db.String(50))
+    action = db.Column(db.Integer)
+    circumstance = db.Column(db.String(50))
     
     __mapper_args__ = {
         'polymorphic_identity':'historical_event',
@@ -491,7 +498,7 @@ class Historical_Event(db.Model):
 
 class Add_HF_Entity_Link(Historical_Event):
     # entity_id = db.Column(db.Integer)
-    # to be calc'd
+    # to be calc'd or not?
     # link_type = db.Column(db.String(20))
     # hfid = db.Column(db.Integer) 
     #position = db.Column(db.String(20))
@@ -504,14 +511,14 @@ class Add_HF_HF_Link(Historical_Event):
     #hfid = db.Column(db.Integer)
     #hfid_target = db.Column(db.Integer) # hfid2
 
-    # to be calc'd 
+    # to be calc'd or_not
     # link_type = db.Column(db.String(20))
 
 class Add_HF_Site_Link(Historical_Event):
     __mapper_args__ = { 'polymorphic_identity':'add hf site link'}
 
     # site_id = db.Column(db.Integer)
-    # to be calc'd
+    # to be calc'd or not?
     # link_type = db.Column(db.String(20))
     # hfid = db.Column(db.Integer)
     # entity_id = db.Column(db.Integer)
@@ -597,9 +604,10 @@ class Artifact_Posessed(Historical_Event):
     # site_id
 
     #reason = db.Column(db.String(50))
-    reason_id = db.Column(db.Integer)
-    circumstance = db.Column(db.String(50))
-    circumstance_id = db.Column(db.Integer)
+    #reason_id = db.Column(db.Integer)
+    # circumstance = db.Column(db.String(50))
+    #circumstance_id = db.Column(db.Integer)
+
 
 class Artifact_Recovered(Historical_Event):
     __mapper_args__ = { 'polymorphic_identity':'artifact recovered'}
@@ -723,14 +731,256 @@ class Created_World_Construction(Historical_Event):
 class Creature_Devoured(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'creature devoured'}
 
-    # hfid1 victim (calced)
-    # hfid2 slayer (claced)
+    # hfid1 victim 
+    # hfid2 eater 
     # entity
     # site
 
     race = db.Column(db.String(20))
     caste = db.Column(db.String(20))
    
+class Destroyed_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'destroyed site'}
 
+    #attacker = db.synonym('entity_id')
+    #defender = db.synonym('entity_id2')
+    #site
+    #site_civ
+
+class Diplomat_Lost(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'diplomat lost'}
+
+    #entity 
+    # entity2 involved
+    #site
+
+class Entity_Created(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'entity created'}
+    #entity_id
+    #siteid
+    #structureid
+
+class Entity_Law(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'entity law'}
+    #hfid
+    #entity id
+    law_type = db.Column(db.Enum('add', 'remove')) #add or remove
+    law = db.Column(db.String(50))
+
+class Entity_Primary_Criminals(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'entity primary criminals'}
+    # enid
+    # siteid
+    # structureid
+    # action = db.Column(db.Integer)
+
+class Entity_Searched_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'entity searched site'}
+    # edid (searcher civ)
+    # siteid
+    result = db.Column(db.String(20))
+
+class Field_Battle(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'field battle'}
+    # hfid
+    # hfid2
+    #entityid
+    #entityid2
+    # location
+
+class Field_Contact(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'field contact'}
+    #enid1
+    #enid2
+    #siteid
+
+class HF_Abducted(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf abducted'}
+    # hfid
+    # hfid2
+    # location
+
+class HF_Attacked_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf attacked site'}
+
+    # hfid 
+    # entity_id
+    # site_civ_id
+    # site_id
+
+class HF_Confronted(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf confronted'}
+    # hfid
+    situation = db.Column(db.String(50))
+    # reason = db.Column(db.String(50))
+    # location
+
+class HF_Destroyed_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf destroyed site'}
+    # hfid1
+    # entity_id
+    # site_civ_id
+    # site_id
+
+class HF_Died(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf died'}
+
+    # hfid
+    # hfid2 slayer
+    # artifact_id ?
+    # location
+    slayer_race = db.Column(db.String(20))
+    slayer_caste = db.Column(db.String(20))
+    slayer_item_id = db.Column(db.Integer)
+    slayer_shooter_item_id = db.Column(db.Integer)
+    cause = db.Column(db.String(20))
+
+class HF_Does_Interaction(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf does interaction'}
+
+    #hfid doer_hfid
+    #hfid target_hfid
+    #location
+    #interaction = db.Column(db.String(50))
+    interaction_action = db.Column(db.String(20))
+    interaction_string = db.Column(db.String(20))
+    source = db.Column(db.Integer)
+class HF_Gains_Secret_Goal(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf gains secret goal'}
+
+    #hfid
+    secret_goal = db.Column(db.String(20))
+
+class HF_Learns_Secret(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf learns secret'}
+
+    #hifd studet
+    #hfid teacher
+    #artifact_id
+    #interaction = db.Column(db.String(50))
+    secret_text = db.Column(db.String(50))
+
+class HF_New_Pet(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf new pet'}
+    # hfid group/grouphfid
+    pets = db.Column(db.String(50))
+    # location
+
+class HF_Prayed_Inside_Structure(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf prayed inside structure'}
+    #hf
+    #site
+    #structure
+
+class HF_Profaned_Structure(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf profaned structure'}
+    #hf
+    #site
+    #structure
+    # action = db.Column(db.Integer)
+
+class HF_Reach_Summit(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf reach summit'}
+    #location
+    #relationship with hf (multiple possible?)
+
+class HF_Recruited_Unit_Type_For_Entity(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':
+                            'hf recruited unit type for entity'}
+    #hfid
+    #entityid
+    #siteid
+    unit_type = db.Column(db.String(20))
+
+class HF_Relationship_Denied(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf relationship denied'}
+
+    #hdif seeker_hfid
+    #hfid2 target_hfid
+    relationship = db.Column(db.String(20))
+    #reason
+    #reason_id = db.Column(db.Integer)
+
+class HF_Reunion(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf reunion'}
+
+    #hfid group1hfid
+    #relationship with hfid (multiple targetsi possible)
+
+class HF_Revived(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf revived'}
+
+    #hfid
+    ghost = db.Column(db.String(20))
+
+class HF_Simple_Battle(Historical_Figure):
+    __mapper_args__ = {'polymorphic_identity':'hf revived'}
+
+    #hfid group_1_hfid
+    #hfid2 group_2_hfid
+    #location
+    #type subtype
+
+class HF_Travel(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf travel'}
+
+    # hfid
+    # location
+    returned = db.Column(db.Boolean)
+
+class HF_Wounded(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf wounded'}
+
+    # hfid woundee
+    # hfid2 wounder
+    # location
+    woundee_race = db.Column(db.Integer)
+    woundee_caste = db.Column(db.Integer)
+    body_part = db.Column(db.Integer)
+    injury_type = db.Column(db.Integer)
+    part_lost = db.Column(db.Integer)
+
+class HFs_Formed_Reputation_Relationship(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':
+            'hfs formed reputation relationship'}
+    #hfid1
+    #hfid2
+    #location
+    identity_id1 = db.Column(db.Integer)
+    identity_id2 = db.Column(db.Integer)
+    hf_rep_1_of_2 = db.Column(db.String(20))
+    hf_rep_2_of_1 = db.Column(db.String(20))
+
+class Insurrection_Started(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'insurrection started'}
+
+    #entity_id target_civ_id
+    #site_id
+    outcome = db.Column(db.String(25))
+
+class Item_Stolen(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'item stolen'}
+
+    # site
+    # structure
+    # entity
+    # histfig
+    # circumstance
+    # circumstance_id
+
+    ## item fields
+    item = db.Column(db.Integer)
+    mat = db.Column(db.String(20))
+    item_type = db.Column(db.String(20))
+    item_subtype = db.Column(db.String(20))
+    mat_type = db.Column(db.Integer)
+    mat_index = db.Column(db.Integer)
+    dye_mat_type = db.Column(db.Integer)
+    ####
+
+    # calc?
+    # looted_from
+    # looted_by
+    # artifact
 
 
