@@ -7,6 +7,9 @@ from legends import create_app
 from legends.models import db, Artifact, DF_World, Historical_Figure, \
                            Historical_Era
 
+from legends.models import *
+
+
 class MyTest(TestCase):
     SQLALCHEMY_DATABASE_URI = "sqlite://"
     TESTING = True
@@ -21,7 +24,8 @@ class MyTest(TestCase):
         db.session.add(w)
         a1 = Artifact(df_world_id=1, id=1, name="a big axe")
         a2 = Artifact(df_world_id=1, id=2, name="a big book", holder_hfid=1)
-        hf1 = Historical_Figure(df_world_id=1, id=1)
+        hf1 = Historical_Figure(df_world_id=1, id=1, name='urist mctesty', 
+                                race="DWARF", birth_year=2, birth_seconds72=54)
         db.session.add(a1)
         db.session.add(a2)
         db.session.add(hf1)
@@ -74,7 +78,20 @@ class MyTest(TestCase):
         he = Historical_Era.query.get((1, "the time of trials"))
         assert repr(he) == '<Historical Era the time of trials>'
 
+    # Historical Figure
+    ############################################
+    def test_hf_in_world(self):
+        world = DF_World.query.first()
+        hf = Historical_Figure.query.get((1,1))
+        assert world.historical_figures[0] == hf
 
+    def test_hf_repr(self):
+        hf = Historical_Figure.query.get((1,1))
+        assert repr(hf) == '<Historical Figure urist mctesty>'
+
+    def test_dwarf_not_deity(self):
+        hf = Historical_Figure.query.get((1,1))
+        assert not hf.deity
 
 
 
