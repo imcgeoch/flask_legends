@@ -18,10 +18,12 @@ competitors = db.Table('competitors', db.metadata,
         )
 
 
+
 class DF_World(db.Model):
     __tablename__ = 'df_world'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    altname = db.Column(db.String(50))
 
     historical_figures = db.relationship('Historical_Figure', backref='df_world')
     artifacts = db.relationship('Artifact', backref='df_world')
@@ -29,6 +31,25 @@ class DF_World(db.Model):
 
     def __repr__(self):
         return "<df_world %s>" % (id)
+
+class Landmass(db.Model):
+    __tablename__ = 'landmasses'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    coord1 = db.Column(db.String(10))
+    coord2 = db.Column(db.String(10))
+
+class Mountain_Peak(db.Model):
+    __tablename__ = 'mountain_peaks'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+
+    coords = db.Column(db.String(10))
+    height = db.Column(db.Integer)
+
 
 class Dance_Form(db.Model):
     __tablename__ = 'dance_forms'
@@ -43,6 +64,9 @@ class Entity(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    race = db.Column(db.String(20))
+    type = db.Column(db.String(20))
+    claims = db.Column(db.String)
 
     site_links = db.relationship('Site_Link', backref='entity', 
                                  viewonly=True)
@@ -55,8 +79,26 @@ class Entity(db.Model):
                              backref='entity',
                              viewonly=True)
     eventcols1 = db.relationship('Event_Collection', 
-            backref='entity1',
-            foreign_keys='Event_Collection.entity_id,Event_Collection.df_world_id')
+                                backref='entity1', 
+                                foreign_keys='Event_Collection.entity_id,'
+                                            'Event_Collection.df_world_id')
+    eventcols2 = db.relationship('Event_Collection', 
+                                backref='entity2', 
+                                foreign_keys='Event_Collection.entity_id2,'
+                                       'Event_Collection.df_world_id')
+
+class Occasion(db.Model):
+    __tablename__ = 'occasions'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+
+class Schedules(db.Model):
+    __tablename__ = 'schedules'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+
 
 class Historical_Figure(db.Model):
     __tablename__ = 'historical_figures'
@@ -315,6 +357,11 @@ class Artifact(db.Model):
     site_id = db.Column(db.Integer)
     structure_local_id = db.Column(db.Integer)
 
+    item_type = db.Column(db.String(20))
+    item_subtype = db.Column(db.String(20))
+    item_description = db.Column(db.String(200))
+    mat = db.Column(db.String(20))
+
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, holder_hfid],
                                  [Historical_Figure.df_world_id,
                                   Historical_Figure.id]), {})
@@ -323,6 +370,16 @@ class Artifact(db.Model):
 
     def __repr__(self):
         return "<Artifact %s>" % (self.name)
+
+class Entity_Population(db.Model):
+    __tablename__ = 'entity_populations'
+
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    race = db.Column(db.String(20))
+    civ_id = db.Column(db.Integer)
+    num = db.Column(db.Integer)
 
 
 
@@ -348,6 +405,7 @@ class Region(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     type = db.Column(db.Enum(*types))
+    coords = db.Column(db.String)
 
 class Underground_Region(db.Model):
     __tablename__ = 'underground_regions'
@@ -356,6 +414,7 @@ class Underground_Region(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Enum('cavern', 'magma', 'underworld'))
+    coords = db.Column(db.String)
 
 
 class Site(db.Model):
@@ -373,8 +432,30 @@ class Site(db.Model):
     rectangle = db.Column(db.String(20))
     type = db.Column(db.Enum(*types))
 
+    civ_id = db.Column(db.Integer)
+    current_owner_id = db.Column(db.Integer)
+
     site_links = db.relationship('Site_Link', backref='site', viewonly=True)
     structures = db.relationship('Structure', backref='site', viewonly=True)
+    event_collections = db.relationship('Event_Collection', backref='site',
+                                        viewonly=True)
+
+'''
+inhabitants = db.Table('inhabitants', db.metadata,
+        db.Column('id', db.Integer, primary_key=True),
+        db.Column('df_world_id', db.Integer),
+        db.Column('site_id', db.Integer),
+        db.Column('structure_id', db.Integer),
+        db.Column('hfid', db.Integer),
+        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
+                                ['historical_figures.df_world_id',
+                                 'historical_figures.id']),
+        db.ForeignKeyConstraint(['df_world_id', 'site_id', 'structure_id'],
+                                ['structures.df_world_id', 
+                                 'structures.site_id',
+                                 'structures.local_id'])
+        )
+'''
 
 class Structure(db.Model):
     __tablename__ = 'structures'
@@ -389,9 +470,12 @@ class Structure(db.Model):
     entity_id = db.Column(db.Integer, primary_key=True)
     local_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    name2 = db.Column(db.String(50))
     type = db.Column(db.Enum(*types))
     subtype = db.Column(db.Enum(*subtypes))
     worship_hfid = db.Column(db.Integer)
+
+    #inhabitants redundant?
 
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, site_id],
                                  [Site.df_world_id, Site.id]),
@@ -563,6 +647,10 @@ class Event_Collection(db.Model):
         [df_world_id, parent_eventcol], [df_world_id, id]), 
                       db.ForeignKeyConstraint(
         [df_world_id, entity_id], [Entity.df_world_id, Entity.id]), 
+                      db.ForeignKeyConstraint(
+        [df_world_id, entity_id2], [Entity.df_world_id, Entity.id]), 
+                      db.ForeignKeyConstraint(
+        [df_world_id, site_id], [Site.df_world_id, Site.id]), 
         {})
 
     children = db.relationship('Event_Collection', remote_side=[id], 
