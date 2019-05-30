@@ -480,8 +480,20 @@ class Historical_Event(db.Model):
     site_id = db.Column(db.Integer)
     unit_id = db.Column(db.Integer)
     site_civ_id = db.Column(db.Integer) # local group?
+    new_site_civ_id = db.Column(db.Integer)
     reason_id = db.Column(db.Integer)
     circumstance_id = db.Column(db.Integer)
+    wcid = db.Column(db.Integer)
+    
+    ## item fields
+    item = db.Column(db.Integer)
+    mat = db.Column(db.String(20))
+    item_type = db.Column(db.String(20))
+    item_subtype = db.Column(db.String(20))
+    mat_type = db.Column(db.Integer)
+    mat_index = db.Column(db.Integer)
+    dye_mat_type = db.Column(db.Integer)
+    ####
   
     # strings
     link_type = db.Column(db.String(20))
@@ -490,6 +502,8 @@ class Historical_Event(db.Model):
     interaction = db.Column(db.String(50))
     action = db.Column(db.Integer)
     circumstance = db.Column(db.String(50))
+    topic = db.Column(db.String(30))
+    first = db.Column(db.Boolean)
     
     __mapper_args__ = {
         'polymorphic_identity':'historical_event',
@@ -685,14 +699,6 @@ class Change_Creature_Type(Historical_Event):
     old_caste = db.Column(db.String(20))
     new_caste = db.Column(db.String(20))
 
-class Competition(Historical_Event):
-    __mapper_args__ = {'polymorphic_identity':'competition'}
-
-    #hfid winner
-    occasion_id = db.Column(db.Integer)
-    schedule_id = db.Column(db.Integer)
-
-    #### List of competitors? is lookup from histfig
 
 class Create_Entity_Position(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'create entity position'}
@@ -724,7 +730,7 @@ class Created_World_Construction(Historical_Event):
 
     #site
     #site_civ
-    wcid = db.Column(db.Integer)
+    # wcid = db.Column(db.Integer)
     master_wcid = db.Column(db.Integer)
     site_id2 = db.Column(db.Integer)
 
@@ -969,13 +975,13 @@ class Item_Stolen(Historical_Event):
     # circumstance_id
 
     ## item fields
-    item = db.Column(db.Integer)
-    mat = db.Column(db.String(20))
-    item_type = db.Column(db.String(20))
-    item_subtype = db.Column(db.String(20))
-    mat_type = db.Column(db.Integer)
-    mat_index = db.Column(db.Integer)
-    dye_mat_type = db.Column(db.Integer)
+    #item = db.Column(db.Integer)
+    #mat = db.Column(db.String(20))
+    #item_type = db.Column(db.String(20))
+    #item_subtype = db.Column(db.String(20))
+    #mat_type = db.Column(db.Integer)
+    #mat_index = db.Column(db.Integer)
+    #dye_mat_type = db.Column(db.Integer)
     ####
 
     # calc?
@@ -983,4 +989,227 @@ class Item_Stolen(Historical_Event):
     # looted_by
     # artifact
 
+class Knowledge_Discovered(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'knowledge discovered'}
+
+    knowledge = db.Column(db.String(50))
+    #first = db.Column(db.Boolean)
+
+class Masterpiece_Event(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':
+                           'masterpiece event'}
+    # entity_id
+    # hfid
+    # site
+    skill_at_time = db.Column(db.Integer)
+
+class Masterpiece_Arch_Constructed(Masterpiece_Event):
+    __mapper_args__ = {'polymorphic_identity':
+                           'masterpiece arch constructed'}
+
+    building_type = db.Column(db.String(50))
+    building_custom = db.Column(db.String(50))
+
+
+class Masterpiece_Dye(Masterpiece_Event):
+    __mapper_args__ = {'polymorphic_identity':'masterpiece dye'}
+
+    dye_mat = db.Column(db.String(50))
+    dye_mat_index = db.Column(db.String(50))
+
+class Masterpiece_Engraving(Masterpiece_Event):
+    __mapper_args__ = {'polymorphic_identity':'masterpiece engraving'}
+
+    art_id = db.Column(db.Integer)
+    art_sub_id = db.Column(db.Integer)
+
+class Masterpiece_Food(Masterpiece_Event):
+    __mapper_args__ = {'polymorphic_identity':'masterpiece food'}
+
+class Masterpiece_Item(Masterpiece_Event):
+    __mapper_args__ = {'polymorphic_identity':'masterpiece item'}
+
+class Masterpiece_Item_Improvement(Masterpiece_Event):
+    __mapper_args__ = {'polymorphic_identity':
+                           'masterpiece item improvement'}
+    improvement_type = db.Column(db.String(50))
+    improvement_subtype = db.Column(db.String(50))
+    imp_mat = db.Column(db.String(50))
+
+    #item
+    #art
+
+class Masterpiece_Lost(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'masterpiece lost'}
+    #hfid  (destroyed by)
+    creation_event = db.Column(db.Integer)
+    #site
+    method = db.Column(db.Integer)
+    # relation to event
+
+class Merchant(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'merchant'}
+
+    # entity_id source
+    # site
+    # entity_id2 destination
+
+class New_Site_Leader(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'new site leader'}
+
+    #entity_id attacker_civ_id
+    #entity_id_2 defender_civ_id
+    #site_civ_id
+    # new_site_civ_id = db.Column(db.Integer)
+    # hfid
+    #site_id
+
+class Occasion_Evt(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'occasion'}
+    #entity_id civid
+    occasion_id = db.Column(db.Integer)
+    schedule_id = db.Column(db.Integer)
+    #location
+
+class Competition(Occasion_Evt):
+    __mapper_args__ = {'polymorphic_identity':'competition'}
+
+    #hfid winner
+    #occasion_id = db.Column(db.Integer)
+    #schedule_id = db.Column(db.Integer)
+
+    #### List of competitors? is lookup from histfig
+
+class Performance(Occasion_Evt):
+    __mapper_args__ = {'polymorphic_identity':'performance'}
+
+class Ceremony(Occasion_Evt):
+    __mapper_args__ = {'polymorphic_identity':'ceremony'}
+
+class Procession(Occasion_Evt):
+    __mapper_args__ = {'polymorphic_identity':'procession'}
+
+class Peace_Accepted(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'peace accepted'}
+    #entity_id source
+    # entity_id2 destination
+    #site_id
+    # topic = db.Column(db.String(30))
+
+class Peace_Rejected(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'peace rejected'}
+    #entity_id source
+    # entity_id2 destination
+    # site_id
+    # topic = db.Column(db.String(30))
+
+class Plundered_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'plunderied site'}
+
+    #entity_id attacker_civ_id
+    #entity_id_2 defender_civ_id
+    #site_civ_id
+
+class Razed_Structure(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'razed structure'}
+
+    #entity_id attacker_civ_id
+    #entity_id_2 defender_civ_id
+    #site_civ_id
+
+class Reclaim_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'reclaim site'}
+
+    # entity_id civ_id
+    # site
+    # site_civ_id 
+
+class Remove_HF_Entity_Link(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'remove hf entity link'}
+
+    # hf
+    # entity_id civ_id
+    # link_type
+    # position
+
+class Remove_HF_Site_Link(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'remove hf site link'}
+
+    # hf
+    # site
+    # structure
+    # entity_id civ
+    # link_type
+    # position
+
+class Replace_Structure(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'repalce structure'}
+    # entity_id civ
+    # site_civ
+    # site
+    # structure
+    new_structure = db.Column(db.Integer)
+
+class Site_Died(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'site died'}
+    # civ_id
+    # site_civ_id
+    # site_id
+    abandoned = db.Column(db.Boolean)
+
+class Site_Dispute(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'site dispute'}
+    #entity_id_1
+    #entity_id_2
+    # site
+    site_id_2 = db.Column(db.Integer)
+    dispute = db.Column(db.String(20))
+
+class Site_Retired(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'site retired'}
+
+    # civ_id
+    # site_civ_id
+    # site_id
+    # first
+   
+class Site_Taken_Over(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'site taken over'}
+    # entity_id atatckerciv
+    # entity_id defender_civ
+    # site_civ
+    # new_site_civ
+    # site
+
+
+class Site_Tribute_Forced(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'site tribute forced'}
+    # entity_id atatckerciv
+    # entity_id defender_civ
+    # site_civ
+    # site
+
+class Sneak_Into_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'sneak into site'}
+    # entity_id atatckerciv
+    # entity_id defender_civ
+    # site_civ
+    # site
+
+class Spotted_Leaving_Site(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'spotted leaving site'}
+    # entity_id atatckerciv
+    # entity_id defender_civ
+    # site_civ
+    # site
+    #hfid spotter_hfid
+
+class Written_Content_Composed(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'written content composed'}
+    # hfid
+    # circumstance
+    # circumstance_id
+    # reason
+    # reason_id
+    # wcid = db.Column(db.Integer)
 
