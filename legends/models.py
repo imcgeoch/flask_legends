@@ -86,12 +86,34 @@ class Entity(db.Model):
                                 backref='entity2', 
                                 foreign_keys='Event_Collection.entity_id2,'
                                        'Event_Collection.df_world_id')
+    memebrs = db.relationship('Historical_Figure',
+                                     backref='member_of',
+                                     secondary='members',
+                                     viewonly=True)
+
+members = db.Table('members', db.metadata,
+        db.Column('id', db.Integer, primary_key=True),
+        db.Column('df_world_id', db.Integer),
+        db.Column('entity_id', db.Integer),
+        db.Column('hfid', db.Integer),
+        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
+                                ['historical_figures.df_world_id',
+                                 'historical_figures.id']),
+        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
+                                ['entities.df_world_id', 
+                                 'entities.id'])
+        )
 
 class Occasion(db.Model):
     __tablename__ = 'occasions'
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
+    entity_id = db.Column(db.Integer)
+
+    name = db.Column(db.String(50))
+    event = db.Column(db.Integer)
+
 
 class Schedules(db.Model):
     __tablename__ = 'schedules'
@@ -99,6 +121,38 @@ class Schedules(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
 
+    occasion_id = db.Column(db.Integer)
+    entity_id = db.Column(db.Integer)
+
+    type = db.Column(db.String(20))
+    reference = db.Column(db.Integer)
+    reference2 = db.Column(db.Integer)
+    item_type = db.Column(db.String(20))
+    item_subtype = db.Column(db.String(20))
+
+class Features(db.Model):
+    __tablename__ = 'features'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    occasion_id = db.Column(db.Integer)
+    schedule_id = db.Column(db.Integer)
+    entity_id = db.Column(db.Integer)
+    
+    type = db.Column(db.String(20))
+    reference = db.Column(db.Integer)
+
+class Entity_Position(db.Model):
+    __tablename__ = 'entity_positions'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    entity_id = db.Column(db.Integer)
+    name = db.Column(db.String(20))
+    name_male = db.Column(db.String(20))
+    name_female = db.Column(db.String(20))
+    spouse_male = db.Column(db.String(20))
+    spouse_female = db.Column(db.String(20))
 
 class Historical_Figure(db.Model):
     __tablename__ = 'historical_figures'
@@ -440,7 +494,7 @@ class Site(db.Model):
     event_collections = db.relationship('Event_Collection', backref='site',
                                         viewonly=True)
 
-'''
+
 inhabitants = db.Table('inhabitants', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
         db.Column('df_world_id', db.Integer),
@@ -455,7 +509,7 @@ inhabitants = db.Table('inhabitants', db.metadata,
                                  'structures.site_id',
                                  'structures.local_id'])
         )
-'''
+
 
 class Structure(db.Model):
     __tablename__ = 'structures'
@@ -497,7 +551,7 @@ class World_Construction(db.Model):
 class Written_Content(db.Model):
     __tablename__ = 'written_contents'
     
-    forms = ['musical composition', 'choreography', 'pom', 'guide',
+    forms = ['musical composition', 'choreography', 'poem', 'guide',
              'essay', 'manual', 'cultural history', 'star chart', 
              'letter', 'short story', 'cultural composition', 'novel', 
              'autobiography', 'comparative biography', 'biography']
