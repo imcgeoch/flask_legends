@@ -28,4 +28,22 @@ def process(elem):
     # that returns a list of obj, name tuples
     # this queues them to be inserted
     pass
-    
+
+class DF_XMLParser():
+    # stack, string
+
+    def start(self, tag, attrib):
+        # push new dict onto stack (if obj)
+        pass
+
+    def end(self, tag):
+        # if obj, pop off stack and add,
+        # otherwise add chars or bool
+        pass
+
+    def data(self, data):
+        # update string
+        pass
+
+    def close(self):
+        pass
