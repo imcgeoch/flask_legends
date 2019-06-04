@@ -3,8 +3,11 @@ from xml.etree.ElementTree import iterparse, XMLParser
 from xml.sax.handler import ContentHandler
 from xml.sax import parse as sax_parse
 
+from .connector import Connector
 
-from ..models import db, DF_World
+from ..models import db, DF_World, Artifact
+
+from .. import create_app
 
 def do_parse(fname1, fname2, worldname):
     world = DF_World(name=worldname)
@@ -14,29 +17,18 @@ def do_parse(fname1, fname2, worldname):
     parse(fname1, "base")
 
 def parse(filename, mode):
+
+    app = create_app()
+    app.app_context().push()
+
     # parser = XMLParser(encoding='CP437', target=DF_XMLParser())
     #itr = iterparse(filename, parser=parser)
+    connector = Connector(db, 'insert', 1)
     with codecs.open(filename, 'r', encoding='CP437') as infile:
         #for line in infile:
         #    parser.feed(line)
-        sax_parse(infile, DF_Handler(print))
+        sax_parse(infile, DF_Handler(connector))
 
-
- #   for _, elm in itr:
-        #do something
-
-        #if in is a top-level object
-        # send it to a processor
- #    pass
-
-def process(elem):
-    # explicit one for each object?
-    # most freedom and simplest, but long and hard to maintain?
-    #
-    # would be something like, look up matching fn and send it off
-    # that returns a list of obj, name tuples
-    # this queues them to be inserted
-    pass
 
 class DF_Handler(ContentHandler):
     stack = []
@@ -47,9 +39,9 @@ class DF_Handler(ContentHandler):
     childFieldNames = {}
     allFieldNames = parentFieldNames.union(childFieldNames)
 
-    def __init__(self, callback):
+    def __init__(self, connector):
         super().__init__()
-        self.callback = callback
+        self.connector = connector
 
 
     def startElement(self, name, attr):
@@ -61,7 +53,7 @@ class DF_Handler(ContentHandler):
     def endElement(self, tag):
         if len(self.stack) > 0:
             if tag in self.parentFieldNames:
-                self.callback(tag, self.stack.pop())
+                self.connector.add(tag, self.stack.pop())
             elif tag in self.childFieldNames:
                 child = self.stack.pop()
                 self.stack[-1][tag] = child 
@@ -70,6 +62,9 @@ class DF_Handler(ContentHandler):
     
     def characters(self, content):
         self.text = content
+
+    def endDocument(self):
+        self.connector.bulk_insert_all()
 
 """
 class DF_XMLParser():
