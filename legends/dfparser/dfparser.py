@@ -1,4 +1,8 @@
+import codecs
 from xml.etree.ElementTree import iterparse, XMLParser
+from xml.sax.handler import ContentHandler
+from xml.sax import parse as sax_parse
+
 
 from ..models import db, DF_World
 
@@ -10,15 +14,20 @@ def do_parse(fname1, fname2, worldname):
     parse(fname1, "base")
 
 def parse(filename, mode):
-    parser = XMLParser('CP437')
-    itr = iterparse(filename, parser=parser)
+    # parser = XMLParser(encoding='CP437', target=DF_XMLParser())
+    #itr = iterparse(filename, parser=parser)
+    with codecs.open(filename, 'r', encoding='CP437') as infile:
+        #for line in infile:
+        #    parser.feed(line)
+        sax_parse(infile, DF_Handler(print))
 
-    for _, elm in itr:
+
+ #   for _, elm in itr:
         #do something
 
         #if in is a top-level object
         # send it to a processor
-        pass
+ #    pass
 
 def process(elem):
     # explicit one for each object?
@@ -29,17 +38,68 @@ def process(elem):
     # this queues them to be inserted
     pass
 
+class DF_Handler(ContentHandler):
+    stack = []
+    name = ''
+    text = ''
+    
+    parentFieldNames = {"artifact"}
+    childFieldNames = {}
+    allFieldNames = parentFieldNames.union(childFieldNames)
+
+    def __init__(self, callback):
+        super().__init__()
+        self.callback = callback
+
+
+    def startElement(self, name, attr):
+        # print("start " + name)
+        if name in self.allFieldNames:
+            self.stack.append({})
+        self.name = name 
+
+    def endElement(self, tag):
+        if len(self.stack) > 0:
+            if tag in self.parentFieldNames:
+                self.callback(tag, self.stack.pop())
+            elif tag in self.childFieldNames:
+                child = self.stack.pop()
+                self.stack[-1][tag] = child 
+            else:
+                self.stack[-1][tag] = self.text or True
+    
+    def characters(self, content):
+        self.text = content
+
+"""
 class DF_XMLParser():
-    # stack, string
+    stack = []
+    name = ''
+    text = ''
+
+    parentFieldNames = {"artifact"}
+    childFieldNames = {"item"}
+    allFieldNames = parentFieldNames.union(childFieldNames)
 
     def start(self, tag, attrib):
-        # push new dict onto stack (if obj)
-        pass
+        # print("start " + tag)
+        if tag in self.allFieldNames:
+            self.stack.append({})
+        self.name = tag
 
     def end(self, tag):
-        # if obj, pop off stack and add,
-        # otherwise add chars or bool
-        pass
+        if len(stack > 0):
+            if tag in self.parentFieldNames:
+                print(tag, self.stack.pop())
+            elif tag in self.childFieldNames:
+                child = self.stack.pop()
+                self.stack[-1][tag] = child 
+            else:
+                self.stack[-1][tag] = self.text or True
+                self.text = ""
+    
+    def characters(content):
+        self.text = content
 
     def data(self, data):
         # update string
@@ -47,3 +107,4 @@ class DF_XMLParser():
 
     def close(self):
         pass
+"""
