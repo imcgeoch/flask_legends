@@ -35,7 +35,7 @@ from .events import Historical_Event, Add_HF_Entity_Link, Add_HF_HF_Link, \
         Site_Tribute_Forced, Sneak_Into_Site, Spotted_Leaving_Site, \
         Written_Content_Composed
 from .histfigs import Historical_Figure, Goal, Sphere, Journey_Pet,\
-        Skill, Interaction_Knowledge, HF_Link, Site_Link, \
+        Skill, Interaction_Knowledge, HF_Link, Site_Link, Entity_Link,\
         Entity_Position_Link, Entity_Reputation, Relationship
 from .culture import Artifact, Written_Content, Style, Musical_Form,\
         Dance_Form, Historical_Era

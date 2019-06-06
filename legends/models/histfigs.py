@@ -118,7 +118,7 @@ class Skill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     df_world_id = db.Column(db.Integer)
     hfid = db.Column(db.Integer)
-    skill = db.String(20) # should prolly be enum
+    skill = db.Column(db.String(20)) # should prolly be enum
     total_ip = db.Column(db.Integer)
 
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
@@ -135,6 +135,22 @@ class Interaction_Knowledge(db.Model):
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
                                  [Historical_Figure.df_world_id,
                                   Historical_Figure.id]), {}) 
+
+class Entity_Link(db.Model):
+    __tablename__ = 'entity_links'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer)
+    hfid = db.Column(db.Integer)
+    entity_id = db.Column(db.Integer)
+    link_type = db.Column(db.String(20))
+
+    __table_args__ = (
+        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
+                                ['historical_figures.df_world_id',
+                                 'historical_figures.id']),
+        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
+                                ['entities.df_world_id', 'entities.id']),
+        {})
 
 class HF_Link(db.Model):
     __tablename__ = 'hf_links'
