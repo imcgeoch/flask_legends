@@ -52,6 +52,7 @@ class Historical_Figure(db.Model):
     interaction_knowledges = db.relationship('Interaction_Knowledge')
     journey_pets = db.relationship('Journey_Pet')
     spheres = db.relationship('Sphere')
+    spheres = db.relationship('Goal')
     structures = db.relationship('Structure', backref='historical_figures',
                                  viewonly=True)
 
@@ -64,7 +65,8 @@ class Goal(db.Model):
     goals = ['create a great work of art', 'immortality', 'master a skill',
              'start a family', 'rule the world', 'fall in love',
              'see the great natural sites', 'become a legendary warrior',
-             'bring peace to the world', 'make a great discovery']
+             'bring peace to the world', 'make a great discovery',
+             'craft a masterwork']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
@@ -159,7 +161,9 @@ class HF_Link(db.Model):
     hfid1 = db.Column(db.Integer)
     hfid2 = db.Column( db.Integer)
     link_strength = db.Column(db.Integer)
-    link_type = db.Column(db.Enum('child','spouse'))
+    link_type = db.Column(db.Enum('child','spouse', 'deity', 'apprentice',
+        'mother', 'father', 'former apprentice', 'master', 
+        'former master',))
 
     other = db.relationship("Historical_Figure", 
             primaryjoin="and_(HF_Link.hfid2==Historical_Figure.id," + 

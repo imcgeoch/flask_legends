@@ -37,7 +37,7 @@ class DF_Handler(ContentHandler):
     
     parentFieldNames = {"artifact", "region", "underground_region",
             "site", "historical_figure"}
-    childFieldNames = {"structure", "entity_link", "hf_skill"}
+    childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link"}
     allFieldNames = parentFieldNames.union(childFieldNames)
 
     def __init__(self, connector):
@@ -50,6 +50,7 @@ class DF_Handler(ContentHandler):
         if name in self.allFieldNames:
             self.stack.append({})
         self.name = name 
+        self.text = ''
 
     def endElement(self, tag):
         if len(self.stack) > 0:
@@ -57,7 +58,7 @@ class DF_Handler(ContentHandler):
                 self.connector.add(tag, self.stack.pop())
             else:
                 val = self.stack.pop() if (tag in self.childFieldNames) \
-                                     else (True if self.text == '\t\t' else self.text)
+                                    else self.text or True 
                 top = self.stack[-1]
                 top[tag] = (top.get(tag) or []) + [val]
 
@@ -67,9 +68,10 @@ class DF_Handler(ContentHandler):
             #            or [child] 
             #else:
             #    self.stack[-1][tag] = self.text or True
+        self.text = ''
     
     def characters(self, content):
-        self.text = content
+        self.text += content
 
     def endDocument(self):
         self.connector.bulk_insert_all()

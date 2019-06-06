@@ -56,6 +56,12 @@ class Connector():
         s.bulk_insert_mappings(Historical_Figure, self.dicts['historical_figure'])
         s.bulk_insert_mappings(Skill, self.dicts['hf_skill'])
         s.bulk_insert_mappings(Entity_Link, self.dicts['entity_link'])
+        s.bulk_insert_mappings(Sphere, self.dicts['sphere'])
+        s.bulk_insert_mappings(Goal, self.dicts['goal'])
+        s.bulk_insert_mappings(Journey_Pet, self.dicts['journey_pet'])
+        s.bulk_insert_mappings(Interaction_Knowledge, 
+                self.dicts['interaction_knowledges'])
+        s.bulk_insert_mappings(HF_Link, self.dicts['hf_link'])
 
         s.commit()
 
@@ -92,13 +98,53 @@ class Connector():
     def add_histfig(self, mapping):
         hf_skill_map = mapping.get('hf_skill') or []
         entity_link_map = mapping.get('entity_link') or []
+        hf_link_map = mapping.get('hf_link') or []
+        spheres = mapping.get('sphere') or []
+        goals = mapping.get('goal') or []
+        journey_pets = mapping.get('journey_pet') or []
+        int_know = mapping.get('interaction_knowledge') or []
+
         for m in hf_skill_map: 
             self.update_dict('hf_skill', 
                              self.add_hf_detail(m, mapping['id'][0]))
         for m in entity_link_map: 
             self.update_dict('entity_link', 
                              self.add_hf_detail(m, mapping['id'][0]))
+        for m in hf_link_map:
+            self.update_dict('hf_link', 
+                             self.add_hf_link(m, mapping['id'][0]))
+        self.add_sphere(spheres, mapping['id'][0])
+        self.add_goal(goals, mapping['id'][0])
+        self.add_pet(journey_pets, mapping['id'][0])
+        self.add_int_know(int_know, mapping['id'][0])
         return self.add_simple(mapping)
+
+    def add_sphere(self, lst, hfid):
+        maps = [{'df_world_id':self.world_id, 'hfid':hfid, 
+                  'sphere':sphere} for sphere in lst]
+        self.update_dict('sphere', maps)
+    
+    def add_goal(self, lst, hfid):
+        maps = [{'df_world_id':self.world_id, 'hfid':hfid, 
+                  'goal':goal} for goal in lst]
+
+        self.update_dict('goal', maps)
+    def add_pet(self, lst, hfid):
+        maps = [{'df_world_id':self.world_id, 'hfid':hfid, 
+                  'journey_pet':pet} for pet in lst]
+
+        self.update_dict('journey_pet', maps)
+    def add_int_know(self, lst, hfid):
+        maps = [{'df_world_id':self.world_id, 'hfid':hfid, 
+                  'interaction_knowledge':know} for know in lst]
+
+        self.update_dict('interaction_knowledges', maps)
+    def add_hf_link(self, mapping, hfid):
+        mapping = self.get_first(mapping)
+        mapping['hfid1'] = hfid
+        mapping['hfid2'] = mapping['hfid']
+        mapping['df_world_id'] = self.world_id
+        return [mapping]
 
     def add_hf_detail(self, mapping, hfid):
         mapping = self.get_first(mapping)
