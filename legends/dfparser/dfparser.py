@@ -37,7 +37,9 @@ class DF_Handler(ContentHandler):
     
     parentFieldNames = {"artifact", "region", "underground_region",
             "site", "historical_figure"}
-    childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link"}
+    childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
+                       "site_link","entity_reputation", 
+                       "entity_position_link", "relationship_profile_hf_visual"}
     allFieldNames = parentFieldNames.union(childFieldNames)
 
     def __init__(self, connector):

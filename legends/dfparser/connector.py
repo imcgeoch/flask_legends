@@ -62,6 +62,13 @@ class Connector():
         s.bulk_insert_mappings(Interaction_Knowledge, 
                 self.dicts['interaction_knowledges'])
         s.bulk_insert_mappings(HF_Link, self.dicts['hf_link'])
+        s.bulk_insert_mappings(Site_Link, self.dicts['site_link'])
+        s.bulk_insert_mappings(Entity_Position_Link, 
+                 self.dicts['entity_position_link'])
+        s.bulk_insert_mappings(Entity_Reputation, 
+                 self.dicts['entity_reputation'])
+        s.bulk_insert_mappings(Relationship, 
+                 self.dicts['relationship'])
 
         s.commit()
 
@@ -98,11 +105,17 @@ class Connector():
     def add_histfig(self, mapping):
         hf_skill_map = mapping.get('hf_skill') or []
         entity_link_map = mapping.get('entity_link') or []
+        site_link_map = mapping.get('site_link') or []
+        entity_position_link_map = mapping.get('entity_position_link') or []
+        entity_reputation_map = mapping.get('entity_reputation') or []
         hf_link_map = mapping.get('hf_link') or []
+        relationship_map = mapping.get('relationship_profile_hf_visual')\
+                or []
         spheres = mapping.get('sphere') or []
         goals = mapping.get('goal') or []
         journey_pets = mapping.get('journey_pet') or []
         int_know = mapping.get('interaction_knowledge') or []
+
 
         for m in hf_skill_map: 
             self.update_dict('hf_skill', 
@@ -110,9 +123,21 @@ class Connector():
         for m in entity_link_map: 
             self.update_dict('entity_link', 
                              self.add_hf_detail(m, mapping['id'][0]))
+        for m in site_link_map: 
+            self.update_dict('site_link', 
+                             self.add_hf_detail(m, mapping['id'][0]))
+        for m in entity_position_link_map: 
+            self.update_dict('entity_position_link', 
+                             self.add_hf_detail(m, mapping['id'][0]))
+        for m in entity_reputation_map:
+            self.update_dict('entity_reputation', 
+                    self.add_hf_detail(m, mapping['id'][0]))
         for m in hf_link_map:
             self.update_dict('hf_link', 
                              self.add_hf_link(m, mapping['id'][0]))
+        for m in relationship_map:
+            self.update_dict('relationship', 
+                             self.add_hf_relationship(m, mapping['id'][0]))
         self.add_sphere(spheres, mapping['id'][0])
         self.add_goal(goals, mapping['id'][0])
         self.add_pet(journey_pets, mapping['id'][0])
@@ -143,6 +168,14 @@ class Connector():
         mapping = self.get_first(mapping)
         mapping['hfid1'] = hfid
         mapping['hfid2'] = mapping['hfid']
+        mapping['df_world_id'] = self.world_id
+        return [mapping]
+    
+    def add_hf_relationship(self, mapping, hfid):
+        mapping = self.get_first(mapping)
+        mapping['hfid1'] = hfid
+        mapping['hfid2'] = mapping['hf_id']
+        mapping['rep'] = mapping.get('rep_buddy') or -1# fix in db
         mapping['df_world_id'] = self.world_id
         return [mapping]
 
