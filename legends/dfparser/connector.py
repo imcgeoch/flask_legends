@@ -47,28 +47,21 @@ class Connector():
         # then clears it out
         # print(self.dicts)
         s = self.db.session
-        s.bulk_insert_mappings(Artifact, self.dicts['artifact'])
-        s.bulk_insert_mappings(Region, self.dicts['region'])
-        s.bulk_insert_mappings(Underground_Region, self.dicts['ugregion'])
-        s.bulk_insert_mappings(Site, self.dicts['site'])
-        s.bulk_insert_mappings(Structure, self.dicts['structure'])
-        
-        s.bulk_insert_mappings(Historical_Figure, self.dicts['historical_figure'])
-        s.bulk_insert_mappings(Skill, self.dicts['hf_skill'])
-        s.bulk_insert_mappings(Entity_Link, self.dicts['entity_link'])
-        s.bulk_insert_mappings(Sphere, self.dicts['sphere'])
-        s.bulk_insert_mappings(Goal, self.dicts['goal'])
-        s.bulk_insert_mappings(Journey_Pet, self.dicts['journey_pet'])
-        s.bulk_insert_mappings(Interaction_Knowledge, 
-                self.dicts['interaction_knowledges'])
-        s.bulk_insert_mappings(HF_Link, self.dicts['hf_link'])
-        s.bulk_insert_mappings(Site_Link, self.dicts['site_link'])
-        s.bulk_insert_mappings(Entity_Position_Link, 
-                 self.dicts['entity_position_link'])
-        s.bulk_insert_mappings(Entity_Reputation, 
-                 self.dicts['entity_reputation'])
-        s.bulk_insert_mappings(Relationship, 
-                 self.dicts['relationship'])
+        tables = {(Artifact, 'artifact'), (Region, 'region'),
+            (Underground_Region, 'ugregion'), (Site, 'site'),
+            (Structure, 'structure'),
+            (Historical_Figure, 'historical_figure'), 
+            (Skill, 'hf_skill'), (Entity_Link, 'entity_link'),
+            (Sphere, 'sphere'), (Goal, 'goal'),
+            (Journey_Pet, 'journey_pet'),
+            (Interaction_Knowledge, 'interaction_knowledges'),
+            (HF_Link, 'hf_link'), (Site_Link, 'site_link'),
+            (Entity_Position_Link, 'entity_position_link'),
+            (Entity_Reputation, 'entity_reputation'),
+            (Relationship, 'relationship')}
+
+        for obj, key in tables:
+            s.bulk_insert_mappings(obj, self.dicts[key])
 
         s.commit()
 
@@ -175,7 +168,7 @@ class Connector():
         mapping = self.get_first(mapping)
         mapping['hfid1'] = hfid
         mapping['hfid2'] = mapping['hf_id']
-        mapping['rep'] = mapping.get('rep_buddy') or -1# fix in db
+        mapping['rep'] = mapping.get('rep_buddy') # fix in db
         mapping['df_world_id'] = self.world_id
         return [mapping]
 
