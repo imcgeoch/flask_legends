@@ -23,17 +23,12 @@ class Connector():
         # (according to size or soemthing tbd)
         # print(name, mapping)
 
-        if name == 'artifact':
-            self.update_dict('artifact', self.add_artifact(mapping))
-        if name == 'region':
-            self.update_dict('region', self.add_simple(mapping))
-        if name == 'underground_region':
-            self.update_dict('ugregion', self.add_simple(mapping))
-        if name == 'site':
-            self.update_dict('site', self.add_site(mapping))
-        if name == 'historical_figure':
-            self.update_dict('historical_figure', self.add_histfig(mapping))
-
+        update_fns = {'artifact':self.add_artifact, 
+                      'region':self.add_simple, 
+                      'underground_region':self.add_simple,
+                      'site':self.add_site,
+                      'historical_figure':self.add_histfig}
+        self.update_dict(name, update_fns[name].__call__(mapping))
 
     def update_dict(self, name, mapping):
         if name in self.dicts:
@@ -48,7 +43,7 @@ class Connector():
         # print(self.dicts)
         s = self.db.session
         tables = {(Artifact, 'artifact'), (Region, 'region'),
-            (Underground_Region, 'ugregion'), (Site, 'site'),
+            (Underground_Region, 'underground_region'), (Site, 'site'),
             (Structure, 'structure'),
             (Historical_Figure, 'historical_figure'), 
             (Skill, 'hf_skill'), (Entity_Link, 'entity_link'),
