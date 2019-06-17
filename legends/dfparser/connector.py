@@ -40,7 +40,13 @@ class Connector():
                          ('entity_reputation', None), 
                          ('hf_link', self.add_two_hf_child('hfid')),
                          ('relationship_profile_hf_visual',
-                          self.add_two_hf_child('hf_id'))}
+                          self.add_two_hf_child('hf_id')),
+                         ('sphere', self.make_add_hf_detail('sphere')),
+                         ('goal', self.make_add_hf_detail('goal')),
+                         ('journey_pet', 
+                             self.make_add_hf_detail('journey_pet')),
+                         ('interaction_knowledge',
+                         self.make_add_hf_detail('interaction_knowledge'))}
 
     def add(self, name, mapping):
         # takes a dict mapping keys to fields 
@@ -102,16 +108,14 @@ class Connector():
     
     def add_histfig(self, mapping):
         hfid = mapping['id'][0]
-        for child, func in self.hf_children:
+
+        for child_name, func in self.hf_children:
             func = func or self.add_hf_child
-            detail_map = mapping.get(child) or []
-            for item in detail_map:
-                maps = func.__call__(item, hfid)
-                self.update_dict(child, maps)
-        for detail in self.hf_details:
-            lst = mapping.get(detail) or []
-            maps = self.add_hf_detail(lst, hfid, detail)
-            self.update_dict(detail, maps)
+            children = mapping.get(child_name) or []
+            for child in children:
+                maps = func(child, hfid)
+                self.update_dict(child_name, maps)
+        
         return self.add_simple(mapping)
 
     def add_hf_detail(self, lst, hfid, name):
@@ -119,6 +123,15 @@ class Connector():
                   name:item} for item in lst]
         return maps
 
+    def add_single_hf_detail(self, item, hfid, name):
+        mp = {'df_world_id':self.world_id, 'hfid':hfid, name:item} 
+        return [mp]
+
+    def make_add_hf_detail(self, name):
+        def f(item, hfid):
+            mp = {'df_world_id':self.world_id, 'hfid':hfid, name:item} 
+            return [mp]
+        return f
      
     def add_two_hf_child(self, name):
         def f(mapping, hfid):
