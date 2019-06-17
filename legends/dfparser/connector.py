@@ -19,8 +19,6 @@ class Connector():
             (Entity_Reputation, 'entity_reputation'),
             (Relationship, 'relationship_profile_hf_visual')}
 
-    hf_details = ['sphere', 'goal', 'journey_pet', 'interaction_knowledge']
-    
     def __init__(self, db, mode, world_id):
         # takes a connection to our db
         self.db = db
@@ -58,7 +56,7 @@ class Connector():
         # (according to size or soemthing tbd)
         # print(name, mapping)
 
-        self.update_dict(name, self.update_fns[name].__call__(mapping))
+        self.update_dict(name, self.update_fns[name](mapping))
 
     def update_dict(self, name, mapping):
         if name in self.dicts:
@@ -117,15 +115,6 @@ class Connector():
                 self.update_dict(child_name, maps)
         
         return self.add_simple(mapping)
-
-    def add_hf_detail(self, lst, hfid, name):
-        maps = [{'df_world_id':self.world_id, 'hfid':hfid,
-                  name:item} for item in lst]
-        return maps
-
-    def add_single_hf_detail(self, item, hfid, name):
-        mp = {'df_world_id':self.world_id, 'hfid':hfid, name:item} 
-        return [mp]
 
     def make_add_hf_detail(self, name):
         def f(item, hfid):
