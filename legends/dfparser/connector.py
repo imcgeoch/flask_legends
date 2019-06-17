@@ -5,13 +5,42 @@ import pprint
 class Connector():
 
     dicts = {}
+    
+    tables = {(Artifact, 'artifact'), (Region, 'region'),
+            (Underground_Region, 'underground_region'), (Site, 'site'),
+            (Structure, 'structure'),
+            (Historical_Figure, 'historical_figure'), 
+            (Skill, 'hf_skill'), (Entity_Link, 'entity_link'),
+            (Sphere, 'sphere'), (Goal, 'goal'),
+            (Journey_Pet, 'journey_pet'),
+            (Interaction_Knowledge, 'interaction_knowledge'),
+            (HF_Link, 'hf_link'), (Site_Link, 'site_link'),
+            (Entity_Position_Link, 'entity_position_link'),
+            (Entity_Reputation, 'entity_reputation'),
+            (Relationship, 'relationship_profile_hf_visual')}
 
+    hf_details = ['sphere', 'goal', 'journey_pet', 'interaction_knowledge']
+    
     def __init__(self, db, mode, world_id):
         # takes a connection to our db
         self.db = db
         self.mode = mode
         self.world_id = world_id
         self.pp = pprint.PrettyPrinter()
+    
+        self.update_fns = {'artifact':self.add_artifact, 
+                  'region':self.add_simple, 
+                  'underground_region':self.add_simple,
+                  'site':self.add_site,
+                  'historical_figure':self.add_histfig}
+        self.hf_children = {('hf_skill', None),
+                         ('entity_link', None),
+                         ('site_link', None),
+                         ('entity_position_link', None),
+                         ('entity_reputation', None), 
+                         ('hf_link', self.add_two_hf_child('hfid')),
+                         ('relationship_profile_hf_visual',
+                          self.add_two_hf_child('hf_id'))}
 
     def add(self, name, mapping):
         # takes a dict mapping keys to fields 
@@ -23,12 +52,7 @@ class Connector():
         # (according to size or soemthing tbd)
         # print(name, mapping)
 
-        update_fns = {'artifact':self.add_artifact, 
-                      'region':self.add_simple, 
-                      'underground_region':self.add_simple,
-                      'site':self.add_site,
-                      'historical_figure':self.add_histfig}
-        self.update_dict(name, update_fns[name].__call__(mapping))
+        self.update_dict(name, self.update_fns[name].__call__(mapping))
 
     def update_dict(self, name, mapping):
         if name in self.dicts:
@@ -42,20 +66,8 @@ class Connector():
         # then clears it out
         # print(self.dicts)
         s = self.db.session
-        tables = {(Artifact, 'artifact'), (Region, 'region'),
-            (Underground_Region, 'underground_region'), (Site, 'site'),
-            (Structure, 'structure'),
-            (Historical_Figure, 'historical_figure'), 
-            (Skill, 'hf_skill'), (Entity_Link, 'entity_link'),
-            (Sphere, 'sphere'), (Goal, 'goal'),
-            (Journey_Pet, 'journey_pet'),
-            (Interaction_Knowledge, 'interaction_knowledges'),
-            (HF_Link, 'hf_link'), (Site_Link, 'site_link'),
-            (Entity_Position_Link, 'entity_position_link'),
-            (Entity_Reputation, 'entity_reputation'),
-            (Relationship, 'relationship')}
 
-        for obj, key in tables:
+        for obj, key in self.tables:
             s.bulk_insert_mappings(obj, self.dicts[key])
 
         s.commit()
@@ -69,8 +81,7 @@ class Connector():
         return [mapping]
     
     def add_artifact(self, mapping):
-        mapping = self.get_first(mapping)
-        mapping['df_world_id'] = self.world_id
+        mapping = self.add_simple(mapping)[0]
         mapping['written_content_id'] = \
             mapping.get('page_written_content_id') or \
             mapping.get('writing_written_contnet_id')
@@ -84,92 +95,42 @@ class Connector():
         return self.add_simple(mapping)
 
     def add_structure(self, mapping, site):
-        mapping = self.get_first(mapping)
+        mapping = self.add_simple(mapping)[0]
         mapping['site_id'] = site[0]
         mapping['entity_id'] = mapping.get('entity_id') or -1
-        mapping['df_world_id'] = self.world_id
         return [mapping]
     
     def add_histfig(self, mapping):
-        hf_skill_map = mapping.get('hf_skill') or []
-        entity_link_map = mapping.get('entity_link') or []
-        site_link_map = mapping.get('site_link') or []
-        entity_position_link_map = mapping.get('entity_position_link') or []
-        entity_reputation_map = mapping.get('entity_reputation') or []
-        hf_link_map = mapping.get('hf_link') or []
-        relationship_map = mapping.get('relationship_profile_hf_visual')\
-                or []
-        spheres = mapping.get('sphere') or []
-        goals = mapping.get('goal') or []
-        journey_pets = mapping.get('journey_pet') or []
-        int_know = mapping.get('interaction_knowledge') or []
-
-
-        for m in hf_skill_map: 
-            self.update_dict('hf_skill', 
-                             self.add_hf_detail(m, mapping['id'][0]))
-        for m in entity_link_map: 
-            self.update_dict('entity_link', 
-                             self.add_hf_detail(m, mapping['id'][0]))
-        for m in site_link_map: 
-            self.update_dict('site_link', 
-                             self.add_hf_detail(m, mapping['id'][0]))
-        for m in entity_position_link_map: 
-            self.update_dict('entity_position_link', 
-                             self.add_hf_detail(m, mapping['id'][0]))
-        for m in entity_reputation_map:
-            self.update_dict('entity_reputation', 
-                    self.add_hf_detail(m, mapping['id'][0]))
-        for m in hf_link_map:
-            self.update_dict('hf_link', 
-                             self.add_hf_link(m, mapping['id'][0]))
-        for m in relationship_map:
-            self.update_dict('relationship', 
-                             self.add_hf_relationship(m, mapping['id'][0]))
-        self.add_sphere(spheres, mapping['id'][0])
-        self.add_goal(goals, mapping['id'][0])
-        self.add_pet(journey_pets, mapping['id'][0])
-        self.add_int_know(int_know, mapping['id'][0])
+        hfid = mapping['id'][0]
+        for child, func in self.hf_children:
+            func = func or self.add_hf_child
+            detail_map = mapping.get(child) or []
+            for item in detail_map:
+                maps = func.__call__(item, hfid)
+                self.update_dict(child, maps)
+        for detail in self.hf_details:
+            lst = mapping.get(detail) or []
+            maps = self.add_hf_detail(lst, hfid, detail)
+            self.update_dict(detail, maps)
         return self.add_simple(mapping)
 
-    def add_sphere(self, lst, hfid):
-        maps = [{'df_world_id':self.world_id, 'hfid':hfid, 
-                  'sphere':sphere} for sphere in lst]
-        self.update_dict('sphere', maps)
-    
-    def add_goal(self, lst, hfid):
-        maps = [{'df_world_id':self.world_id, 'hfid':hfid, 
-                  'goal':goal} for goal in lst]
+    def add_hf_detail(self, lst, hfid, name):
+        maps = [{'df_world_id':self.world_id, 'hfid':hfid,
+                  name:item} for item in lst]
+        return maps
 
-        self.update_dict('goal', maps)
-    def add_pet(self, lst, hfid):
-        maps = [{'df_world_id':self.world_id, 'hfid':hfid, 
-                  'journey_pet':pet} for pet in lst]
+     
+    def add_two_hf_child(self, name):
+        def f(mapping, hfid):
+            mapping = self.add_simple(mapping)[0]
+            mapping['hfid1'] = hfid
+            mapping['hfid2'] = mapping[name]
+            mapping['rep'] = mapping.get('rep_buddy') # fix in db
+            return [mapping]
+        return f
 
-        self.update_dict('journey_pet', maps)
-    def add_int_know(self, lst, hfid):
-        maps = [{'df_world_id':self.world_id, 'hfid':hfid, 
-                  'interaction_knowledge':know} for know in lst]
-
-        self.update_dict('interaction_knowledges', maps)
-    def add_hf_link(self, mapping, hfid):
-        mapping = self.get_first(mapping)
-        mapping['hfid1'] = hfid
-        mapping['hfid2'] = mapping['hfid']
-        mapping['df_world_id'] = self.world_id
-        return [mapping]
-    
-    def add_hf_relationship(self, mapping, hfid):
-        mapping = self.get_first(mapping)
-        mapping['hfid1'] = hfid
-        mapping['hfid2'] = mapping['hf_id']
-        mapping['rep'] = mapping.get('rep_buddy') # fix in db
-        mapping['df_world_id'] = self.world_id
-        return [mapping]
-
-    def add_hf_detail(self, mapping, hfid):
-        mapping = self.get_first(mapping)
+    def add_hf_child(self, mapping, hfid):
+        mapping = self.add_simple(mapping)[0]
         mapping['hfid'] = hfid
-        mapping['df_world_id'] = self.world_id
         return [mapping]
 
