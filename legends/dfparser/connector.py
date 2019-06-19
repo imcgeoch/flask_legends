@@ -18,7 +18,8 @@ class Connector():
             (Entity_Position_Link, 'entity_position_link'),
             (Entity_Reputation, 'entity_reputation'),
             (Relationship, 'relationship_profile_hf_visual'),
-            (Entity_Population, 'entity_population')}
+            (Entity_Population, 'entity_population'),
+            (Entity, 'entity')}
 
     def __init__(self, db, mode, world_id):
         # takes a connection to our db
@@ -32,7 +33,8 @@ class Connector():
                   'underground_region':self.add_simple,
                   'site':self.add_site,
                   'historical_figure':self.add_histfig,
-                  'entity_population':self.add_simple}
+                  'entity_population':self.add_simple,
+                  'entity':self.add_simple}
         self.hf_children = {('hf_skill', None),
                          ('entity_link', None),
                          ('site_link', None),
