@@ -35,6 +35,16 @@ class Entity(db.Model):
                                      secondary='members',
                                      viewonly=True)
 
+class Entity_Population(db.Model):
+    __tablename__ = 'entity_populations'
+
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    race = db.Column(db.String(20))
+    civ_id = db.Column(db.Integer)
+    num = db.Column(db.Integer)
+
 # Details on Entity from extended 
 
 class Occasion(db.Model):

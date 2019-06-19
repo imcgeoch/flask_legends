@@ -40,5 +40,5 @@ from .histfigs import Historical_Figure, Goal, Sphere, Journey_Pet,\
 from .culture import Artifact, Written_Content, Style, Musical_Form,\
         Dance_Form, Historical_Era
 from .civilizations import Entity, Occasion, Schedules, Features, \
-        Entity_Position, Site, Structure
+        Entity_Position, Site, Structure, Entity_Population
 from .collections import Event_Collection 

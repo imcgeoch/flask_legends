@@ -248,7 +248,7 @@ class Relationship(db.Model):
     last_meet_seconds72 = db.Column(db.Integer)
     last_meet_year = db.Column(db.Integer)
     meet_count = db.Column(db.Integer)
-    rep = db.Column(db.Integer) # only one of buddy, info source ever used
+    rep_buddy = db.Column(db.Integer) 
 
     other = db.relationship("Historical_Figure", primaryjoin=
     "and_(Relationship.hfid2==Historical_Figure.id," + 

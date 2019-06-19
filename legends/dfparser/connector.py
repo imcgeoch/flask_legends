@@ -72,7 +72,7 @@ class Connector():
         s = self.db.session
 
         for obj, key in self.tables:
-            s.bulk_insert_mappings(obj, self.dicts[key])
+            s.bulk_insert_mappings(obj, self.dicts.get(key) or {})
 
         s.commit()
 
@@ -127,7 +127,7 @@ class Connector():
             mapping = self.add_simple(mapping)[0]
             mapping['hfid1'] = hfid
             mapping['hfid2'] = mapping[name]
-            mapping['rep'] = mapping.get('rep_buddy') # fix in db
+            #mapping['rep'] = mapping.get('rep_buddy') # fix in db
             return [mapping]
         return f
 
