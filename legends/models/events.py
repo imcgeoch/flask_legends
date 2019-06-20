@@ -21,12 +21,88 @@ class Historical_Event(db.Model):
     entity_id2 = db.Column(db.Integer)
     artifact_id = db.Column(db.Integer)
     site_id = db.Column(db.Integer)
+    site_id2 = db.Column(db.Integer)
     unit_id = db.Column(db.Integer)
     site_civ_id = db.Column(db.Integer) # local group?
     new_site_civ_id = db.Column(db.Integer)
     reason_id = db.Column(db.Integer)
     circumstance_id = db.Column(db.Integer)
     wcid = db.Column(db.Integer)
+    # copied up
+    building = db.Column(db.Integer)
+    agreement_id = db.Column(db.Integer)
+    position_profile_id = db.Column(db.Integer)
+    claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure'))
+    dest_site_id = db.Column(db.Integer)
+    dest_structure_id = db.Column(db.Integer)
+    dest_entity_id = db.Column(db.Integer)
+    source_site_id = db.Column(db.Integer)
+    source_structure_id = db.Column(db.Integer)
+    source_entity_id = db.Column(db.Integer)
+    from_original = db.Column(db.Boolean)
+    new_artifact_id = db.Column(db.Integer)
+    identity_id = db.Column(db.Integer)
+    abuse_type = db.Column(db.String)
+    body_state = db.Column(db.String(20))
+    old_job = db.Column(db.String(20))
+    new_job = db.Column(db.String(20))
+    subregion_id = db.Column(db.Integer)
+    state = db.Column(db.String(20))
+    old_race = db.Column(db.String(20))
+    new_race = db.Column(db.String(20))
+    old_caste = db.Column(db.String(20))
+    new_caste = db.Column(db.String(20))
+    master_wcid = db.Column(db.Integer)
+    race = db.Column(db.String(20))
+    caste = db.Column(db.String(20))
+    law_type = db.Column(db.Enum('add', 'remove')) #add or remove
+    law = db.Column(db.String(50))
+    result = db.Column(db.String(20))
+    situation = db.Column(db.String(50))
+    slayer_race = db.Column(db.String(20))
+    slayer_caste = db.Column(db.String(20))
+    slayer_item_id = db.Column(db.Integer)
+    slayer_shooter_item_id = db.Column(db.Integer)
+    cause = db.Column(db.String(20))
+    interaction_action = db.Column(db.String(20))
+    interaction_string = db.Column(db.String(20))
+    source = db.Column(db.Integer)
+    secret_goal = db.Column(db.String(20))
+    secret_text = db.Column(db.String(50))
+    pets = db.Column(db.String(50))
+    unit_type = db.Column(db.String(20))
+    relationship = db.Column(db.String(20))
+    ghost = db.Column(db.String(20))
+    subtype = db.Column(db.String(20))
+    returned = db.Column(db.Boolean)
+    woundee_race = db.Column(db.Integer)
+    woundee_caste = db.Column(db.Integer)
+    body_part = db.Column(db.Integer)
+    injury_type = db.Column(db.Integer)
+    part_lost = db.Column(db.Integer)
+    identity_id1 = db.Column(db.Integer)
+    identity_id2 = db.Column(db.Integer)
+    hf_rep_1_of_2 = db.Column(db.String(20))
+    hf_rep_2_of_1 = db.Column(db.String(20))
+    outcome = db.Column(db.String(25))
+    knowledge = db.Column(db.String(50))
+    skill_at_time = db.Column(db.Integer)
+    building_type = db.Column(db.String(50))
+    building_custom = db.Column(db.String(50))
+    dye_mat = db.Column(db.String(50))
+    dye_mat_index = db.Column(db.String(50))
+    art_id = db.Column(db.Integer)
+    art_sub_id = db.Column(db.Integer)
+    improvement_type = db.Column(db.String(50))
+    improvement_subtype = db.Column(db.String(50))
+    imp_mat = db.Column(db.String(50))
+    creation_event = db.Column(db.Integer)
+    method = db.Column(db.Integer)
+    occasion_id = db.Column(db.Integer)
+    schedule_id = db.Column(db.Integer)
+    abandoned = db.Column(db.Boolean)
+    dispute = db.Column(db.String(20))
+
     
     ## item fields
     item = db.Column(db.Integer)
@@ -58,7 +134,7 @@ class Add_HF_Entity_Link(Historical_Event):
     # to be calc'd or not?
     # link_type = db.Column(db.String(20))
     # hfid = db.Column(db.Integer) 
-    #position = db.Column(db.String(20))
+    # position = db.Column(db.String(20))
     
     __mapper_args__ = { 'polymorphic_identity':'add hf entity link'}
 
@@ -79,12 +155,12 @@ class Add_HF_Site_Link(Historical_Event):
     # link_type = db.Column(db.String(20))
     # hfid = db.Column(db.Integer)
     # entity_id = db.Column(db.Integer)
-    building = db.Column(db.Integer)
+    # building = db.Column(db.Integer)
 
 class Agreement_Formed(Historical_Event):
     __mapper_args__ = { 'polymorphic_identity':'agreement formed'}
 
-    agreement_id = db.Column(db.Integer)
+    #agreement_id = db.Column(db.Integer)
     #hfid = db.Column(db.Integer)
     #site_id = db.Column(db.Integer)
     #artifact_id = db.Column(db.Integer)
@@ -98,20 +174,20 @@ class Artifact_Claim_Formed(Historical_Event):
     #hfid = db.Column(db.Integer)
     #artifact_id = db.Column(db.Integer)
     #entity_id = db.Column(db.Integer)
-    position_profile_id = db.Column(db.Integer)
-    claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure'))
+    #position_profile_id = db.Column(db.Integer)
+    #claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure'))
 
 class Artifact_Copied(Historical_Event):
     __mapper_args__ = { 'polymorphic_identity':'artifact copied'}
 
     # artifact_id = db.Column(db.Integer)
-    dest_site_id = db.Column(db.Integer)
-    dest_structure_id = db.Column(db.Integer)
-    dest_entity_id = db.Column(db.Integer)
-    source_site_id = db.Column(db.Integer)
-    source_structure_id = db.Column(db.Integer)
-    source_entity_id = db.Column(db.Integer)
-    from_original = db.Column(db.Boolean)
+    #dest_site_id = db.Column(db.Integer)
+    #dest_structure_id = db.Column(db.Integer)
+    #dest_entity_id = db.Column(db.Integer)
+    #source_site_id = db.Column(db.Integer)
+    #source_structure_id = db.Column(db.Integer)
+    #source_entity_id = db.Column(db.Integer)
+    #from_original = db.Column(db.Boolean)
 
 class Artifact_Created(Historical_Event):
     __mapper_args__ = { 'polymorphic_identity':'artifact created'}
@@ -184,7 +260,7 @@ class Artifact_Stored(Historical_Event):
 
 class Artifact_Transformed(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'artifact transformed'}
-    new_artifact_id = db.Column(db.Integer)
+    # new_artifact_id = db.Column(db.Integer)
     # artifact_id
     # unit_id
     # site_id
@@ -194,7 +270,7 @@ class Assume_Identity(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'assume identity'}
 
     #hfid
-    identity_id = db.Column(db.Integer)
+    #identity_id = db.Column(db.Integer)
     #entity_id
 
 class Attacked_Site(Historical_Event):
@@ -211,36 +287,36 @@ class Body_Abused(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'body abused'}
     # hfid
     # entity_id
-    abuse_type = db.Column(db.Integer)
+    # abuse_type = db.Column(db.Integer)
     #site 
 
 class Change_HF_Body_State(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'change hf body state'}
     #hfid
-    body_state = db.Column(db.String(20))
+    #body_state = db.Column(db.String(20))
     #siteid
-    building_id = db.Column(db.Integer)
+    #building_id = db.Column(db.Integer)
 
 class Change_HF_Job(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'change hf job'}
-    old_job = db.Column(db.String(20))
-    new_job = db.Column(db.String(20))
+    #    old_job = db.Column(db.String(20))
+    #    new_job = db.Column(db.String(20))
     #hfid
 
 class Change_HF_State(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'change hf state'}
-    subregion_id = db.Column(db.Integer)
+    #subregion_id = db.Column(db.Integer)
     #hfid = db.Column(db.Integer)
-    state = db.Column(db.String(20))
+    #state = db.Column(db.String(20))
 
 class Change_Creature_Type(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'change creature type'}
     #hfid1 changer
     #hfid2 changee
-    old_race = db.Column(db.String(20))
-    new_race = db.Column(db.String(20))
-    old_caste = db.Column(db.String(20))
-    new_caste = db.Column(db.String(20))
+    #old_race = db.Column(db.String(20))
+    #new_race = db.Column(db.String(20))
+    #old_caste = db.Column(db.String(20))
+    #new_caste = db.Column(db.String(20))
 
 
 class Create_Entity_Position(Historical_Event):
@@ -274,8 +350,8 @@ class Created_World_Construction(Historical_Event):
     #site
     #site_civ
     # wcid = db.Column(db.Integer)
-    master_wcid = db.Column(db.Integer)
-    site_id2 = db.Column(db.Integer)
+    # master_wcid = db.Column(db.Integer)
+    # site_id2 = db.Column(db.Integer)
 
 class Creature_Devoured(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'creature devoured'}
@@ -285,8 +361,8 @@ class Creature_Devoured(Historical_Event):
     # entity
     # site
 
-    race = db.Column(db.String(20))
-    caste = db.Column(db.String(20))
+    # race = db.Column(db.String(20))
+    # caste = db.Column(db.String(20))
    
 class Destroyed_Site(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'destroyed site'}
@@ -313,8 +389,8 @@ class Entity_Law(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'entity law'}
     #hfid
     #entity id
-    law_type = db.Column(db.Enum('add', 'remove')) #add or remove
-    law = db.Column(db.String(50))
+    #    law_type = db.Column(db.Enum('add', 'remove')) #add or remove
+    #    law = db.Column(db.String(50))
 
 class Entity_Primary_Criminals(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'entity primary criminals'}
@@ -327,7 +403,7 @@ class Entity_Searched_Site(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'entity searched site'}
     # edid (searcher civ)
     # siteid
-    result = db.Column(db.String(20))
+    # result = db.Column(db.String(20))
 
 class Field_Battle(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'field battle'}
@@ -360,7 +436,7 @@ class HF_Attacked_Site(Historical_Event):
 class HF_Confronted(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf confronted'}
     # hfid
-    situation = db.Column(db.String(50))
+    # situation = db.Column(db.String(50))
     # reason = db.Column(db.String(50))
     # location
 
@@ -378,11 +454,11 @@ class HF_Died(Historical_Event):
     # hfid2 slayer
     # artifact_id ?
     # location
-    slayer_race = db.Column(db.String(20))
-    slayer_caste = db.Column(db.String(20))
-    slayer_item_id = db.Column(db.Integer)
-    slayer_shooter_item_id = db.Column(db.Integer)
-    cause = db.Column(db.String(20))
+    #    slayer_race = db.Column(db.String(20))
+    #    slayer_caste = db.Column(db.String(20))
+    #    slayer_item_id = db.Column(db.Integer)
+    #    slayer_shooter_item_id = db.Column(db.Integer)
+    #    cause = db.Column(db.String(20))
 
 class HF_Does_Interaction(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf does interaction'}
@@ -391,14 +467,14 @@ class HF_Does_Interaction(Historical_Event):
     #hfid target_hfid
     #location
     #interaction = db.Column(db.String(50))
-    interaction_action = db.Column(db.String(20))
-    interaction_string = db.Column(db.String(20))
-    source = db.Column(db.Integer)
+    # interaction_action = db.Column(db.String(20))
+    #  interaction_string = db.Column(db.String(20))
+    #  source = db.Column(db.Integer)
 class HF_Gains_Secret_Goal(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf gains secret goal'}
 
     #hfid
-    secret_goal = db.Column(db.String(20))
+    #secret_goal = db.Column(db.String(20))
 
 class HF_Learns_Secret(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf learns secret'}
@@ -407,12 +483,12 @@ class HF_Learns_Secret(Historical_Event):
     #hfid teacher
     #artifact_id
     #interaction = db.Column(db.String(50))
-    secret_text = db.Column(db.String(50))
+    # secret_text = db.Column(db.String(50))
 
 class HF_New_Pet(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf new pet'}
     # hfid group/grouphfid
-    pets = db.Column(db.String(50))
+    # pets = db.Column(db.String(50))
     # location
 
 class HF_Prayed_Inside_Structure(Historical_Event):
@@ -439,14 +515,14 @@ class HF_Recruited_Unit_Type_For_Entity(Historical_Event):
     #hfid
     #entityid
     #siteid
-    unit_type = db.Column(db.String(20))
+    # unit_type = db.Column(db.String(20))
 
 class HF_Relationship_Denied(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf relationship denied'}
 
     #hdif seeker_hfid
     #hfid2 target_hfid
-    relationship = db.Column(db.String(20))
+    #relationship = db.Column(db.String(20))
     #reason
     #reason_id = db.Column(db.Integer)
 
@@ -460,7 +536,7 @@ class HF_Revived(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf revived'}
 
     #hfid
-    ghost = db.Column(db.String(20))
+    # ghost = db.Column(db.String(20))
 
 class HF_Simple_Battle(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf simple battle'}
@@ -475,7 +551,7 @@ class HF_Travel(Historical_Event):
 
     # hfid
     # location
-    returned = db.Column(db.Boolean)
+    # returned = db.Column(db.Boolean)
 
 class HF_Wounded(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'hf wounded'}
@@ -483,11 +559,11 @@ class HF_Wounded(Historical_Event):
     # hfid woundee
     # hfid2 wounder
     # location
-    woundee_race = db.Column(db.Integer)
-    woundee_caste = db.Column(db.Integer)
-    body_part = db.Column(db.Integer)
-    injury_type = db.Column(db.Integer)
-    part_lost = db.Column(db.Integer)
+    # woundee_race = db.Column(db.Integer)
+    # woundee_caste = db.Column(db.Integer)
+    # body_part = db.Column(db.Integer)
+    # injury_type = db.Column(db.Integer)
+    # part_lost = db.Column(db.Integer)
 
 class HFs_Formed_Reputation_Relationship(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':
@@ -495,17 +571,17 @@ class HFs_Formed_Reputation_Relationship(Historical_Event):
     #hfid1
     #hfid2
     #location
-    identity_id1 = db.Column(db.Integer)
-    identity_id2 = db.Column(db.Integer)
-    hf_rep_1_of_2 = db.Column(db.String(20))
-    hf_rep_2_of_1 = db.Column(db.String(20))
+    # identity_id1 = db.Column(db.Integer)
+    # identity_id2 = db.Column(db.Integer)
+    # hf_rep_1_of_2 = db.Column(db.String(20))
+    # hf_rep_2_of_1 = db.Column(db.String(20))
 
 class Insurrection_Started(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'insurrection started'}
 
     #entity_id target_civ_id
     #site_id
-    outcome = db.Column(db.String(25))
+    #outcome = db.Column(db.String(25))
 
 class Item_Stolen(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'item stolen'}
@@ -535,7 +611,7 @@ class Item_Stolen(Historical_Event):
 class Knowledge_Discovered(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'knowledge discovered'}
 
-    knowledge = db.Column(db.String(50))
+    # knowledge = db.Column(db.String(50))
     #first = db.Column(db.Boolean)
 
 class Masterpiece_Event(Historical_Event):
@@ -544,27 +620,27 @@ class Masterpiece_Event(Historical_Event):
     # entity_id
     # hfid
     # site
-    skill_at_time = db.Column(db.Integer)
+    # skill_at_time = db.Column(db.Integer)
 
 class Masterpiece_Arch_Constructed(Masterpiece_Event):
     __mapper_args__ = {'polymorphic_identity':
                            'masterpiece arch constructed'}
 
-    building_type = db.Column(db.String(50))
-    building_custom = db.Column(db.String(50))
+    #building_type = db.Column(db.String(50))
+    #building_custom = db.Column(db.String(50))
 
 
 class Masterpiece_Dye(Masterpiece_Event):
     __mapper_args__ = {'polymorphic_identity':'masterpiece dye'}
 
-    dye_mat = db.Column(db.String(50))
-    dye_mat_index = db.Column(db.String(50))
+    # dye_mat = db.Column(db.String(50))
+    # dye_mat_index = db.Column(db.String(50))
 
 class Masterpiece_Engraving(Masterpiece_Event):
     __mapper_args__ = {'polymorphic_identity':'masterpiece engraving'}
 
-    art_id = db.Column(db.Integer)
-    art_sub_id = db.Column(db.Integer)
+    #art_id = db.Column(db.Integer)
+    #art_sub_id = db.Column(db.Integer)
 
 class Masterpiece_Food(Masterpiece_Event):
     __mapper_args__ = {'polymorphic_identity':'masterpiece food'}
@@ -575,9 +651,9 @@ class Masterpiece_Item(Masterpiece_Event):
 class Masterpiece_Item_Improvement(Masterpiece_Event):
     __mapper_args__ = {'polymorphic_identity':
                            'masterpiece item improvement'}
-    improvement_type = db.Column(db.String(50))
-    improvement_subtype = db.Column(db.String(50))
-    imp_mat = db.Column(db.String(50))
+    # improvement_type = db.Column(db.String(50))
+    # improvement_subtype = db.Column(db.String(50))
+    # imp_mat = db.Column(db.String(50))
 
     #item
     #art
@@ -585,9 +661,9 @@ class Masterpiece_Item_Improvement(Masterpiece_Event):
 class Masterpiece_Lost(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'masterpiece lost'}
     #hfid  (destroyed by)
-    creation_event = db.Column(db.Integer)
     #site
-    method = db.Column(db.Integer)
+    # creation_event = db.Column(db.Integer)
+    # method = db.Column(db.Integer)
     # relation to event
 
 class Merchant(Historical_Event):
@@ -610,8 +686,8 @@ class New_Site_Leader(Historical_Event):
 class Occasion_Evt(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'occasion'}
     #entity_id civid
-    occasion_id = db.Column(db.Integer)
-    schedule_id = db.Column(db.Integer)
+    #occasion_id = db.Column(db.Integer)
+    #schedule_id = db.Column(db.Integer)
     #location
 
 class Competition(Occasion_Evt):
@@ -698,15 +774,15 @@ class Site_Died(Historical_Event):
     # civ_id
     # site_civ_id
     # site_id
-    abandoned = db.Column(db.Boolean)
+    # abandoned = db.Column(db.Boolean)
 
 class Site_Dispute(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'site dispute'}
     #entity_id_1
     #entity_id_2
     # site
-    site_id_2 = db.Column(db.Integer)
-    dispute = db.Column(db.String(20))
+    # site_id_2 = db.Column(db.Integer)
+    # dispute = db.Column(db.String(20))
 
 class Site_Retired(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'site retired'}

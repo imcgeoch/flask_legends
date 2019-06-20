@@ -19,7 +19,8 @@ class Connector():
             (Entity_Reputation, 'entity_reputation'),
             (Relationship, 'relationship_profile_hf_visual'),
             (Entity_Population, 'entity_population'),
-            (Entity, 'entity')}
+            (Entity, 'entity'), 
+            (Historical_Event, 'historical_event')}
 
     def __init__(self, db, mode, world_id):
         # takes a connection to our db
@@ -34,7 +35,8 @@ class Connector():
                   'site':self.add_site,
                   'historical_figure':self.add_histfig,
                   'entity_population':self.add_simple,
-                  'entity':self.add_simple}
+                  'entity':self.add_simple,
+                  'historical_event':self.add_historical_event}
         self.hf_children = {('hf_skill', None),
                          ('entity_link', None),
                          ('site_link', None),
@@ -140,3 +142,35 @@ class Connector():
         mapping['hfid'] = hfid
         return [mapping]
 
+    def add_historical_event(self, mapping):
+        mapping = self.add_simple(mapping)[0]
+        mapping['hfid'] = mapping.get('hfid') or\
+                          mapping.get('hist_figure_id') or\
+                          mapping.get('giver_hist_figure_id') or\
+                          mapping.get('attacker_general_hfid') or\
+                          mapping.get('group_1_hfid') or\
+                          mapping.get('spotter_hfid')
+        mapping['hfid2'] = mapping.get('hfid2') or\
+                           mapping.get('hfid_target') or\
+                           mapping.get('receiver_hist_figure_id') or\
+                           mapping.get('defender_general_hfid') or\
+                           mapping.get('group_2_hfid')
+        mapping['entity_id'] = mapping.get('entity_id') or\
+                               mapping.get('giver_entity_id') or\
+                               mapping.get('attacker_civ_id') or\
+                               mapping.get('civ_id') or\
+                               mapping.get('attacker') or\
+                               mapping.get('entity_id_1')
+        mapping['entity_id2'] = mapping.get('receiver_entity_id') or\
+                                mapping.get('defender_civ_id') or\
+                                mapping.get('defender') or\
+                                mapping.get('involved') or\
+                                mapping.get('entity_id_2')
+        mapping['building'] = mapping.get('building') or\
+                              mapping.get('building_id')
+        mapping['site_id'] = mapping.get('site_id') or\
+                             mapping.get('site_id1')
+        mapping['site_id2'] = mapping.get('site_id2') or\
+                              mapping.get('site_id_2')
+        
+        return [mapping]
