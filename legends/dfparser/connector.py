@@ -11,7 +11,6 @@ class Connector():
 
 
      
-    styles = set()
     dicts = {}
     
     tables = {(Artifact, 'artifact'), (Region, 'region'),
@@ -32,7 +31,8 @@ class Connector():
             (Event_Collection, 'historical_event_collection'),
             (Historical_Era, 'historical_era'),
             (Style, 'style'),
-            (Written_Content, 'written_content')
+            (Written_Content, 'written_content'),
+            (Poetic_Form, 'poetic_form')
             }
     aux_tables = {(eventcol_eventcol_link, 'evtcol_evtcol'),
                   (eventcol_event_link, 'evtcol_event'),
@@ -58,7 +58,8 @@ class Connector():
                   'historical_event':self.add_historical_event,
                   'historical_event_collection':self.add_evtcol,
                   'historical_era':self.add_simple,
-                  'written_content':self.add_written_content}
+                  'written_content':self.add_written_content,
+                  'poetic_form':self.add_simple}
         self.hf_children = {('hf_skill', None),
                          ('entity_link', None),
                          ('site_link', None),
@@ -98,7 +99,6 @@ class Connector():
         # then clears it out
         # print(self.dicts)
 
-        print(self.styles)
         s = self.db.session
 
         for obj, key in self.tables:
@@ -246,6 +246,5 @@ class Connector():
             self.update_dict('style', mp)
         mapping = self.add_simple(mapping)[0]
 
-        self.styles.add(mapping['form'])
         return [mapping]
 

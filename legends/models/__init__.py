@@ -38,7 +38,7 @@ from .histfigs import Historical_Figure, Goal, Sphere, Journey_Pet,\
         Skill, Interaction_Knowledge, HF_Link, Site_Link, Entity_Link,\
         Entity_Position_Link, Entity_Reputation, Relationship
 from .culture import Artifact, Written_Content, Style, Musical_Form,\
-        Dance_Form, Historical_Era
+        Dance_Form, Historical_Era, Poetic_Form
 from .civilizations import Entity, Occasion, Schedules, Features, \
         Entity_Position, Site, Structure, Entity_Population
 from .collections import Event_Collection 
