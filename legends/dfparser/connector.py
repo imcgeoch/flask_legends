@@ -1,4 +1,9 @@
 from ..models import *
+from ..models.collections import eventcol_eventcol_link,\
+                                 eventcol_event_link,\
+                                 eventcol_attackers,\
+                                 eventcol_defenders,\
+                                 eventcol_noncoms
 
 import pprint
 
@@ -20,7 +25,15 @@ class Connector():
             (Relationship, 'relationship_profile_hf_visual'),
             (Entity_Population, 'entity_population'),
             (Entity, 'entity'), 
-            (Historical_Event, 'historical_event')}
+            (Historical_Event, 'historical_event'),
+            (Event_Collection, 'historical_event_collection'),
+            }
+    aux_tables = {(eventcol_eventcol_link, 'evtcol_evtcol'),
+                  (eventcol_event_link, 'evtcol_event'),
+                  (eventcol_attackers, 'attacking_hfid'),
+                  (eventcol_defenders, 'defending_hfid'),
+                  (eventcol_noncoms, 'noncom_hfid')
+                  }
 
     def __init__(self, db, mode, world_id):
         # takes a connection to our db
@@ -36,7 +49,8 @@ class Connector():
                   'historical_figure':self.add_histfig,
                   'entity_population':self.add_simple,
                   'entity':self.add_simple,
-                  'historical_event':self.add_historical_event}
+                  'historical_event':self.add_historical_event,
+                  'historical_event_collection':self.add_evtcol}
         self.hf_children = {('hf_skill', None),
                          ('entity_link', None),
                          ('site_link', None),
@@ -79,6 +93,11 @@ class Connector():
 
         for obj, key in self.tables:
             s.bulk_insert_mappings(obj, self.dicts.get(key) or {})
+  
+        for tab, key in self.aux_tables:
+            s.execute(tab.insert(self.dicts.get(key)))
+        #s.execute(eventcol_eventcol_link.insert(
+        #self.dicts.get('evtcol_evtcol')))
 
         s.commit()
 
@@ -144,6 +163,8 @@ class Connector():
 
     def add_historical_event(self, mapping):
         mapping = self.add_simple(mapping)[0]
+
+        # losts of aliases
         mapping['hfid'] = mapping.get('hfid') or\
                           mapping.get('hist_figure_id') or\
                           mapping.get('giver_hist_figure_id') or\
@@ -174,3 +195,36 @@ class Connector():
                               mapping.get('site_id_2')
         
         return [mapping]
+
+    def add_evtcol(self, mapping):
+        evtcol_id = mapping['id'][0]
+
+        # TODO : Squad
+
+        # TODO : Refactor out redundency 
+
+        for evtcol in mapping.get('eventcol') or []:
+            mp = [{'df_world_id':self.world_id, 'eventcol_id1':evtcol_id,
+                   'eventcol_id2':evtcol}]
+            self.update_dict('evtcol_evtcol', mp)
+        for event in mapping.get('event') or []:
+            mp = [{'df_world_id':self.world_id, 'eventcol_id':evtcol_id,
+                   'event_id':event}]
+            self.update_dict('evtcol_event', mp)
+        for col in ['attacking_hfid', 'defending_hfid', 'noncom_hfid']:
+            for event in mapping.get(col) or []:
+                mp = [{'df_world_id':self.world_id, 
+                    'eventcol_id':evtcol_id, 'hfid':event}]
+                self.update_dict(col, mp)
+        mapping = self.add_simple(mapping)[0]
+
+        mapping['entity_id'] = mapping.get('entity_id') or\
+                               mapping.get('civ_id') or\
+                               mapping.get('attacking_enid')
+        mapping['entity_id2'] = mapping.get('entity_id2') or\
+                                mapping.get('defending_enid')
+
+
+       
+        return [mapping]
+

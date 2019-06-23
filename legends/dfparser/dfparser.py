@@ -37,7 +37,7 @@ class DF_Handler(ContentHandler):
     
     parentFieldNames = {"artifact", "region", "underground_region",
             "site", "historical_figure", "entity_population", "entity",
-            "historical_event"}
+            "historical_event", "historical_event_collection"}
     childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
                        "site_link","entity_reputation", 
                        "entity_position_link", "relationship_profile_hf_visual"}
