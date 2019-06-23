@@ -9,6 +9,9 @@ import pprint
 
 class Connector():
 
+
+     
+    styles = set()
     dicts = {}
     
     tables = {(Artifact, 'artifact'), (Region, 'region'),
@@ -27,6 +30,9 @@ class Connector():
             (Entity, 'entity'), 
             (Historical_Event, 'historical_event'),
             (Event_Collection, 'historical_event_collection'),
+            (Historical_Era, 'historical_era'),
+            (Style, 'style'),
+            (Written_Content, 'written_content')
             }
     aux_tables = {(eventcol_eventcol_link, 'evtcol_evtcol'),
                   (eventcol_event_link, 'evtcol_event'),
@@ -50,7 +56,9 @@ class Connector():
                   'entity_population':self.add_simple,
                   'entity':self.add_simple,
                   'historical_event':self.add_historical_event,
-                  'historical_event_collection':self.add_evtcol}
+                  'historical_event_collection':self.add_evtcol,
+                  'historical_era':self.add_simple,
+                  'written_content':self.add_written_content}
         self.hf_children = {('hf_skill', None),
                          ('entity_link', None),
                          ('site_link', None),
@@ -89,6 +97,8 @@ class Connector():
         # calls db.bulk_insert for each thing in dicts
         # then clears it out
         # print(self.dicts)
+
+        print(self.styles)
         s = self.db.session
 
         for obj, key in self.tables:
@@ -223,8 +233,19 @@ class Connector():
                                mapping.get('attacking_enid')
         mapping['entity_id2'] = mapping.get('entity_id2') or\
                                 mapping.get('defending_enid')
-
-
        
+        return [mapping]
+
+    def add_written_content(self, mapping):
+        wc_id = mapping['id'][0]
+
+        for style in mapping.get('style') or []:
+            style, magnitude = style.split(':') 
+            mp = [{'df_world_id':self.world_id, 'content_id':wc_id,
+                'style':style, 'magnitude':magnitude}]
+            self.update_dict('style', mp)
+        mapping = self.add_simple(mapping)[0]
+
+        self.styles.add(mapping['form'])
         return [mapping]
 
