@@ -92,7 +92,8 @@ class Sphere(db.Model):
                'youth', 'longevity', 'song', 'truth', 'crafts', 
                'family', 'children', 'murder', 'healing', 
                'lightning', 'dreams', 'rumors', 'fish', 'fishing', 
-               'hunting', 'strength', 'light', 'thunder', 'food']
+               'hunting', 'strength', 'light', 'thunder', 'food', 
+               'rebirth', 'muck']
     
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)

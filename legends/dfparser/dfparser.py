@@ -14,16 +14,17 @@ def do_parse(fname1, fname2, worldname):
     db.session.add(world)
     db.session.commit()
     world_id = world.id
-    parse(fname1, "base")
+    parse(fname1, "base", world_id)
 
-def parse(filename, mode):
+def parse(filename, mode, world_id):
 
     app = create_app()
     app.app_context().push()
 
     # parser = XMLParser(encoding='CP437', target=DF_XMLParser())
     #itr = iterparse(filename, parser=parser)
-    connector = Connector(db, 'insert', 1)
+    connector = Connector(db, 'insert', world_id)
+    print(connector)
     with codecs.open(filename, 'r', encoding='CP437') as infile:
         #for line in infile:
         #    parser.feed(line)
@@ -38,7 +39,8 @@ class DF_Handler(ContentHandler):
     parentFieldNames = {"artifact", "region", "underground_region",
             "site", "historical_figure", "entity_population", "entity",
             "historical_event", "historical_event_collection", 
-            "historical_era", "written_content", "poetic_form"}
+            "historical_era", "written_content", "poetic_form", 
+            "musical_form", "dance_form"}
     childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
                        "site_link","entity_reputation", 
                        "entity_position_link", "relationship_profile_hf_visual"}

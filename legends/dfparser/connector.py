@@ -32,7 +32,9 @@ class Connector():
             (Historical_Era, 'historical_era'),
             (Style, 'style'),
             (Written_Content, 'written_content'),
-            (Poetic_Form, 'poetic_form')
+            (Poetic_Form, 'poetic_form'),
+            (Musical_Form, 'musical_form'),
+            (Dance_Form, 'dance_form')
             }
     aux_tables = {(eventcol_eventcol_link, 'evtcol_evtcol'),
                   (eventcol_event_link, 'evtcol_event'),
@@ -47,6 +49,8 @@ class Connector():
         self.mode = mode
         self.world_id = world_id
         self.pp = pprint.PrettyPrinter()
+
+        self.counter = 0
     
         self.update_fns = {'artifact':self.add_artifact, 
                   'region':self.add_simple, 
@@ -59,7 +63,9 @@ class Connector():
                   'historical_event_collection':self.add_evtcol,
                   'historical_era':self.add_simple,
                   'written_content':self.add_written_content,
-                  'poetic_form':self.add_simple}
+                  'poetic_form':self.add_simple,
+                  'musical_form':self.add_simple,
+                  'dance_form':self.add_simple}
         self.hf_children = {('hf_skill', None),
                          ('entity_link', None),
                          ('site_link', None),
@@ -86,6 +92,11 @@ class Connector():
         # print(name, mapping)
 
         self.update_dict(name, self.update_fns[name](mapping))
+        self.counter = self.counter + 1
+        if self.counter > 10000:
+            self.counter = 0
+            self.bulk_insert_all()
+
 
     def update_dict(self, name, mapping):
         if name in self.dicts:
@@ -103,9 +114,11 @@ class Connector():
 
         for obj, key in self.tables:
             s.bulk_insert_mappings(obj, self.dicts.get(key) or {})
+            self.dicts[key] = []
   
         for tab, key in self.aux_tables:
             s.execute(tab.insert(self.dicts.get(key)))
+            self.dicts[key] = []
         #s.execute(eventcol_eventcol_link.insert(
         #self.dicts.get('evtcol_evtcol')))
 

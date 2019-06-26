@@ -126,7 +126,7 @@ class Structure(db.Model):
 
     types = ['underworld spire', 'inn tavern', 'market', 'temple',
              'dungeon', 'keep', 'tomb', 'mead hall', 'library']
-    subtypes = ['catacombs', 'standard']
+    subtypes = ['catacombs', 'standard', 'sewers']
     
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)

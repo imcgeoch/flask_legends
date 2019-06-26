@@ -36,7 +36,8 @@ class Written_Content(db.Model):
     forms = ['musical composition', 'choreography', 'poem', 'guide',
              'essay', 'manual', 'cultural history', 'star chart', 
              'letter', 'short story', 'cultural comparison', 'novel', 
-             'autobiography', 'comparative biography', 'biography']
+             'autobiography', 'comparative biography', 'biography',
+             'chronicle','dictionary','play']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
