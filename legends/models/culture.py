@@ -35,8 +35,9 @@ class Written_Content(db.Model):
     
     forms = ['musical composition', 'choreography', 'poem', 'guide',
              'essay', 'manual', 'cultural history', 'star chart', 
-             'letter', 'short story', 'cultural composition', 'novel', 
-             'autobiography', 'comparative biography', 'biography']
+             'letter', 'short story', 'cultural comparison', 'novel', 
+             'autobiography', 'comparative biography', 'biography',
+             'chronicle','dictionary','play']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
@@ -59,7 +60,7 @@ class Style(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     df_world_id = db.Column(db.Integer)
     content_id = db.Column(db.Integer)
-    style = db.Column(db.String(10)) #should be enum
+    style = db.Column(db.String(20)) #should be enum
     magnitude = db.Column(db.Integer)
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, content_id],
                                  [Written_Content.df_world_id,

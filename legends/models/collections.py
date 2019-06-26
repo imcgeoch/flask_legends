@@ -1,5 +1,7 @@
 from . import db
 
+## TODO : Squad!
+
 eventcol_event_link = db.Table('eventcol_event_link', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
         db.Column('df_world_id', db.Integer),
@@ -38,7 +40,7 @@ eventcol_attackers = db.Table('eventcol_attackers', db.metadata,
                                 ['event_collections.df_world_id',
                                  'event_collections.id'])
         )
-eventcol_attackers = db.Table('eventcol_defenders', db.metadata,
+eventcol_defenders = db.Table('eventcol_defenders', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
         db.Column('df_world_id', db.Integer),
         db.Column('eventcol_id', db.Integer),

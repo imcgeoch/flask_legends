@@ -52,6 +52,7 @@ class Historical_Figure(db.Model):
     interaction_knowledges = db.relationship('Interaction_Knowledge')
     journey_pets = db.relationship('Journey_Pet')
     spheres = db.relationship('Sphere')
+    spheres = db.relationship('Goal')
     structures = db.relationship('Structure', backref='historical_figures',
                                  viewonly=True)
 
@@ -64,7 +65,8 @@ class Goal(db.Model):
     goals = ['create a great work of art', 'immortality', 'master a skill',
              'start a family', 'rule the world', 'fall in love',
              'see the great natural sites', 'become a legendary warrior',
-             'bring peace to the world', 'make a great discovery']
+             'bring peace to the world', 'make a great discovery',
+             'craft a masterwork']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
@@ -90,7 +92,8 @@ class Sphere(db.Model):
                'youth', 'longevity', 'song', 'truth', 'crafts', 
                'family', 'children', 'murder', 'healing', 
                'lightning', 'dreams', 'rumors', 'fish', 'fishing', 
-               'hunting', 'strength', 'light', 'thunder', 'food']
+               'hunting', 'strength', 'light', 'thunder', 'food', 
+               'rebirth', 'muck']
     
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
@@ -118,7 +121,7 @@ class Skill(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     df_world_id = db.Column(db.Integer)
     hfid = db.Column(db.Integer)
-    skill = db.String(20) # should prolly be enum
+    skill = db.Column(db.String(20)) # should prolly be enum
     total_ip = db.Column(db.Integer)
 
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
@@ -136,6 +139,22 @@ class Interaction_Knowledge(db.Model):
                                  [Historical_Figure.df_world_id,
                                   Historical_Figure.id]), {}) 
 
+class Entity_Link(db.Model):
+    __tablename__ = 'entity_links'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer)
+    hfid = db.Column(db.Integer)
+    entity_id = db.Column(db.Integer)
+    link_type = db.Column(db.String(20))
+
+    __table_args__ = (
+        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
+                                ['historical_figures.df_world_id',
+                                 'historical_figures.id']),
+        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
+                                ['entities.df_world_id', 'entities.id']),
+        {})
+
 class HF_Link(db.Model):
     __tablename__ = 'hf_links'
     id = db.Column(db.Integer, primary_key=True)
@@ -143,7 +162,9 @@ class HF_Link(db.Model):
     hfid1 = db.Column(db.Integer)
     hfid2 = db.Column( db.Integer)
     link_strength = db.Column(db.Integer)
-    link_type = db.Column(db.Enum('child','spouse'))
+    link_type = db.Column(db.Enum('child','spouse', 'deity', 'apprentice',
+        'mother', 'father', 'former apprentice', 'master', 
+        'former master',))
 
     other = db.relationship("Historical_Figure", 
             primaryjoin="and_(HF_Link.hfid2==Historical_Figure.id," + 
@@ -228,7 +249,7 @@ class Relationship(db.Model):
     last_meet_seconds72 = db.Column(db.Integer)
     last_meet_year = db.Column(db.Integer)
     meet_count = db.Column(db.Integer)
-    rep = db.Column(db.Integer) # only one of buddy, info source ever used
+    rep_buddy = db.Column(db.Integer) 
 
     other = db.relationship("Historical_Figure", primaryjoin=
     "and_(Relationship.hfid2==Historical_Figure.id," + 
