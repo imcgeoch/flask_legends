@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 from ..models import *
 from . import bp
@@ -17,6 +17,9 @@ def world_index():
 
 @bp.route('/<world_id>/histfigs')
 def hf_index(world_id):
-    hfs = Historical_Figure.query.filter_by(df_world_id=world_id).limit(1000).all()
-    print(hfs[781].deity)
+    after = request.args.get('after')
+    hfs = Historical_Figure.query\
+                           .filter_by(df_world_id=world_id)\
+                           .limit(1000)\
+                           .offset(after).all()
     return render_template('histfigs.html', hfs=hfs)
