@@ -112,6 +112,8 @@ class Connector():
 
         s = self.db.session
 
+        # TODO:
+        # See if we can cause these to be split if they're too big
         for obj, key in self.tables:
             s.bulk_insert_mappings(obj, self.dicts.get(key) or {})
             self.dicts[key] = []

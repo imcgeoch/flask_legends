@@ -4,7 +4,7 @@ from flask import Flask
 from flask_migrate import Migrate
 
 from config import Config
-from legends import explorer
+from legends.explorer import views
 
 
 def create_app(test_config=None):
@@ -28,7 +28,7 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate = Migrate(app, db)
 
-    app.register_blueprint(explorer.bp)
+    app.register_blueprint(explorer.views.bp)
 
     @app.route('/hello')
     def hello():
