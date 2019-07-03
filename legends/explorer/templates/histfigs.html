@@ -1,12 +1,13 @@
 <html>
-	<head>
-					<title>Histfigs</title>
-	</head>
-	<body>
-					{% for hf in hfs %}
-					<div> {{ hf.name }} the {{ hf.race }}{% if hf.deity %}-formed god {% endif %}
-					</div>
-					{% endfor %}
-	</body>
+  <head>
+    <title>Histfigs</title>
+  </head>
+    <body>
+      {% for hf in hfs %}
+      <div> {{ hf.name }} the 
+	     {% if hf.deity %}god with the form of a{% endif %} {{ hf.race }}
+      </div>
+      {% endfor %}
+  <body>
 </html>
 
