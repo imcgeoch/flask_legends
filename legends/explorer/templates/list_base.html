@@ -1,0 +1,11 @@
+<html>
+	<head>
+		<title>{% block page_title%}{% endblock %}</title>
+	</head>
+	<body>
+		<h1>{% block title %}{% endblock %}</h1>
+		{% for item in items %}
+		{% block content scoped %}{% endblock %}
+	  {% endfor %}
+	</body>
+</html>

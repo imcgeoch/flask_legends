@@ -1,0 +1,52 @@
+{% extends "detail_base.html" %}
+
+
+{% block page_title%}
+<h1>Hisorical Figure: {{ hf.name }} </h1> 
+{% endblock %}
+
+{% block content %}
+  <h2> Details: </h2>
+	<div>
+  {{ hf.name | title }} was a {{ hf.race }}. 
+	{{ pronoun | title }} was born in 
+	{% if hf.birth_year > 0 %}
+	  {{ hf.birth_year}} 
+	{% else %} 
+	  a time before time 
+	{% endif %}
+  and 
+  {% if hf.death_year == -1 %}
+	  still lives.
+	{% else %}
+		died in {{ hf.death_year }}.
+	{% endif %}
+  </div>
+	<h2> Links: </h2>
+	<h3> Historical Figures </h3>
+	{% for hf_link in hf.hf_links %}
+	{% set item = hf_link.other%}
+	
+	<div> <a href={{ url_for('explorer.hf_detail', world_id=item.df_world_id, hfid=item.id)}}>{{ item.id }}</a>: The 
+		{% if item.deity %} 
+		  deity with the form of a 
+		{% endif %} 
+		{{ item.race }} {{ item.name | title}}, 
+		{{ posessive }} {{ hf_link.link_type}} </div>
+	{% endfor %}
+	<h3> Sites </h3>
+	{% for site_link in hf.site_links %}
+	{% set site = site_link.site %}
+	{{ site.id }}: {{ site.name }}, {{ posessive }} {{ site_link.link_type }}
+	{% endfor %}
+	<h3> Events </h3>
+	<ul>
+  {% for event in events %}
+	<li>{{ event.id }}: In {{ event.year }}, {{ event.type }} </li>
+	{% endfor %}
+  {% for event in rendered_events %}
+	<li> {{ event }} </li>
+	{% endfor %}
+	</ul>
+
+{% endblock %}
