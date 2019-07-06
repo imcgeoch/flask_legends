@@ -43,4 +43,4 @@ def hf_detail(world_id, hfid):
 
     return render_template('histfig_detail.html', hf=hf, 
                            pronoun=pronoun, posessive=posessive,
-                           events=events.all(), rendered_events=rendered_events)
+                           events=events, rendered_events=[])
