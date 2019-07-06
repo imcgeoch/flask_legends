@@ -539,7 +539,7 @@ class HF_Revived(Historical_Event):
     # ghost = db.Column(db.String(20))
 
 class HF_Simple_Battle(Historical_Event):
-    __mapper_args__ = {'polymorphic_identity':'hf simple battle'}
+    __mapper_args__ = {'polymorphic_identity':'hf simple battle event'}
 
     #hfid group_1_hfid
     #hfid2 group_2_hfid
