@@ -41,11 +41,8 @@
 	{% endfor %}
 	<h3> Events </h3>
 	<ul>
-  {% for event in events %}
-	<li>{{ event.id }}: In {{ event.year }}, {{ event.type }} </li>
-	{% endfor %}
-  {% for event in rendered_events %}
-	<li> {{ event }} </li>
+	{% for event in events %}
+	<li> {{ event | render_event }} </li>
 	{% endfor %}
 	</ul>
 

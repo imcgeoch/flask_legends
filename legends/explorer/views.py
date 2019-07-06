@@ -7,6 +7,10 @@ from . import bp
 
 # bp = Blueprint('explorer', __name__, template_folder='templates')
 
+@bp.app_template_filter('render_event')
+def render_event(event):
+    return render_template('events/default.html', event=event) 
+
 @bp.route('/')
 @bp.route('/index')
 def index():
