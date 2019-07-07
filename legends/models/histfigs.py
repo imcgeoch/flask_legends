@@ -56,6 +56,31 @@ class Historical_Figure(db.Model):
     structures = db.relationship('Structure', backref='historical_figures',
                                  viewonly=True)
 
+    prim_events = db.relationship('Historical_Event', backref='hf', 
+                    primaryjoin='and_(Historical_Event.hfid == ' +
+                                        'Historical_Figure.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Historical_Figure.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True)
+
+    sec_events = db.relationship('Historical_Event', backref='hf2', 
+                    primaryjoin='and_(Historical_Event.hfid2 == ' +
+                                        'Historical_Figure.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Historical_Figure.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True)
+    
+    all_events = db.relationship('Historical_Event', 
+                    primaryjoin='and_(' +
+                                   'or_(Historical_Event.hfid == ' +
+                                        'Historical_Figure.id,' +
+                                   'Historical_Event.hfid2 == ' +
+                                        'Historical_Figure.id),' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Historical_Figure.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True)
+
+
     def __repr__(self):
         return "<Historical Figure %s>" % (self.name)
 

@@ -38,12 +38,15 @@ def hf_detail(world_id, hfid):
                           .first()
     pronoun = 'he' if hf.caste == 'MALE' else 'she'
     posessive = 'his' if hf.caste == 'MALE' else 'her'
-    
+    ''' 
     events = Historical_Event.query\
                              .filter(Historical_Event.df_world_id == world_id,
                                         or_(Historical_Event.hfid==hfid, 
                                             Historical_Event.hfid2==hfid))\
                              .limit(250).offset(evt_after)
+    '''
+    events = hf.all_events
+    print(events)
 
     return render_template('histfig_detail.html', hf=hf, 
                            pronoun=pronoun, posessive=posessive,
