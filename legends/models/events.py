@@ -832,6 +832,10 @@ class Written_Content_Composed(Historical_Event):
     # reason_id
     # wcid = db.Column(db.Integer)
 
+class Poetic_Form_Created(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'poetic form created'}
+
+
 competitors = db.Table('competitors', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
         db.Column('df_world_id', db.Integer),
