@@ -34,6 +34,33 @@ class Entity(db.Model):
                                      backref='member_of',
                                      secondary='members',
                                      viewonly=True)
+    
+    prim_events = db.relationship('Historical_Event', backref='entity', 
+                    primaryjoin='and_(Historical_Event.entity_id == ' +
+                                        'Entity.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Entity.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True, 
+                    viewonly=True)
+
+    sec_events = db.relationship('Historical_Event', backref='entity_2', 
+                    primaryjoin='and_(Historical_Event.entity_id2 == ' +
+                                        'Entity.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Entity.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True,
+                    viewonly=True)
+    
+    all_events = db.relationship('Historical_Event', 
+                    primaryjoin='and_(' +
+                                   'or_(Historical_Event.entity_id == ' +
+                                        'Entity.id,' +
+                                   'Historical_Event.entity_id2 == ' +
+                                        'Entity.id),' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Entity.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True,
+                    viewonly=True)
 
 class Entity_Population(db.Model):
     __tablename__ = 'entity_populations'
