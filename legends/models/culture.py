@@ -19,6 +19,14 @@ class Artifact(db.Model):
     item_subtype = db.Column(db.String(20))
     item_description = db.Column(db.String(200))
     mat = db.Column(db.String(20))
+    
+    events = db.relationship('Historical_Event', backref='artifact', 
+                    primaryjoin='and_(Historical_Event.artifact_id == ' +
+                                        'Artifact.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Artifact.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True, 
+                    viewonly=True)
 
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, holder_hfid],
                                  ['historical_figures.df_world_id',
