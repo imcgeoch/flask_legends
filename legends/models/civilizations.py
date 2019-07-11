@@ -169,6 +169,33 @@ class Site(db.Model):
     structures = db.relationship('Structure', backref='site', viewonly=True)
     event_collections = db.relationship('Event_Collection', backref='site',
                                         viewonly=True)
+    
+    prim_events = db.relationship('Historical_Event', backref='site', 
+                    primaryjoin='and_(Historical_Event.site_id == ' +
+                                        'Site.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Site.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True, 
+                    viewonly=True)
+
+    sec_events = db.relationship('Historical_Event', backref='site_2', 
+                    primaryjoin='and_(Historical_Event.site_id2 == ' +
+                                        'Site.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Site.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True,
+                    viewonly=True)
+    
+    all_events = db.relationship('Historical_Event', 
+                    primaryjoin='and_(' +
+                                   'or_(Historical_Event.site_id == ' +
+                                        'Site.id,' +
+                                   'Historical_Event.site_id2 == ' +
+                                        'Site.id),' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Site.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True,
+                    viewonly=True)
 
 class Structure(db.Model):
     __tablename__ = 'structures'
