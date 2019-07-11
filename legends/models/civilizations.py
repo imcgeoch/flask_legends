@@ -50,6 +50,24 @@ class Entity(db.Model):
                                          'Entity.df_world_id)',
                     foreign_keys=[id, df_world_id], uselist=True,
                     viewonly=True)
+
+    site_civ_events = db.relationship('Historical_Event', 
+                                      backref='site_civ', 
+                    primaryjoin='and_(Historical_Event.site_civ_id == ' +
+                                        'Entity.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Entity.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True, 
+                    viewonly=True)
+    
+    new_site_civ_events = db.relationship('Historical_Event', 
+                                      backref='new_site_civ', 
+        primaryjoin='and_(Historical_Event.new_site_civ_id == ' +
+                                        'Entity.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Entity.df_world_id)',
+        foreign_keys=[id, df_world_id], uselist=True, 
+        viewonly=True)
     
     all_events = db.relationship('Historical_Event', 
                     primaryjoin='and_(' +
@@ -57,6 +75,10 @@ class Entity(db.Model):
                                         'Entity.id,' +
                                    'Historical_Event.entity_id2 == ' +
                                         'Entity.id),' +
+                                   'Historical_Event.site_civ_id == ' +
+                                        'Entity.id,' +
+                                   'Historical_Event.new_site_civ_id == ' +
+                                        'Entity.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Entity.df_world_id)',
                     foreign_keys=[id, df_world_id], uselist=True,
