@@ -30,6 +30,13 @@ class Region(db.Model):
     name = db.Column(db.String(50))
     type = db.Column(db.Enum(*types))
     coords = db.Column(db.String)
+    
+    events = db.relationship('Historical_Event', backref='region', 
+                    primaryjoin='and_(Historical_Event.subregion_id == ' +
+                                        'Region.id,' +
+                                      'Historical_Event.df_world_id == ' +
+                                         'Region.df_world_id)',
+                    foreign_keys=[id, df_world_id], uselist=True)
 
 class Underground_Region(db.Model):
     __tablename__ = 'underground_regions'

@@ -56,6 +56,11 @@ class Historical_Figure(db.Model):
     structures = db.relationship('Structure', backref='historical_figures',
                                  viewonly=True)
 
+
+
+    def first_name(self):
+        return self.name.split(" ")[0] 
+
     prim_events = db.relationship('Historical_Event', backref='hf', 
                     primaryjoin='and_(Historical_Event.hfid == ' +
                                         'Historical_Figure.id,' +

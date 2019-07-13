@@ -1,1 +1,6 @@
-In {{ event.year }}, {{ event.type }}.
+In {{ event.year }}, 
+{% if event.type == 'hf simple battle event' %}
+{% include 'events/hf_simple_battle_event.html' %}
+{% else %}
+{{ event.type }}.
+{% endif %}

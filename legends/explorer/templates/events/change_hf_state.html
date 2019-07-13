@@ -1,0 +1,12 @@
+In {{ event.year }},
+
+{% if event.state == 'settled' %}
+{{ event.hf[0].name }} ceased to wander and settled down.
+{% elif event.state == 'wandering' %}
+{{ event.hf[0].name }} began wondering the world. 
+{% elif event.state == 'visiting' %}
+{{ event.hf[0].name }} stopped to visit somewhere. 
+{% elif event.state == 'visiting' %}
+{{ event.hf[0].name }} begame a refugee.
+{% endif %}
+
