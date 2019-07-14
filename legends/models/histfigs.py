@@ -37,6 +37,9 @@ class Historical_Figure(db.Model):
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='historical_figure',
                              viewonly=True)
+    entity_links =  db.relationship('Entity_Link',
+                             backref='historical_figure',
+                             viewonly=True)
 
     hf_links = db.relationship('HF_Link', backref='this_histfig',
             foreign_keys='HF_Link.hfid1,HF_Link.df_world_id')
@@ -52,7 +55,7 @@ class Historical_Figure(db.Model):
     interaction_knowledges = db.relationship('Interaction_Knowledge')
     journey_pets = db.relationship('Journey_Pet')
     spheres = db.relationship('Sphere')
-    spheres = db.relationship('Goal')
+    goals = db.relationship('Goal')
     structures = db.relationship('Structure', backref='historical_figures',
                                  viewonly=True)
 
@@ -123,12 +126,12 @@ class Sphere(db.Model):
                'family', 'children', 'murder', 'healing', 
                'lightning', 'dreams', 'rumors', 'fish', 'fishing', 
                'hunting', 'strength', 'light', 'thunder', 'food', 
-               'rebirth', 'muck']
+               'rebirth', 'muck', 'art', 'inspiration', 'sky', 'wind']
     
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
     hfid = db.Column(db.Integer, primary_key=True)
-    sphere = db.Column(db.Enum(*spheres), primary_key=True)
+    sphere = db.Column(db.String(20), primary_key=True)
     
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
                                  [Historical_Figure.df_world_id,

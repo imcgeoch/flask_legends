@@ -22,6 +22,9 @@ class Entity(db.Model):
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='entity',
                              viewonly=True)
+    entity_links =  db.relationship('Entity_Link',
+                             backref='entity',
+                             viewonly=True)
     eventcols1 = db.relationship('Event_Collection', 
                                 backref='entity1', 
                                 foreign_keys='Event_Collection.entity_id,'
