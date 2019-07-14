@@ -58,6 +58,20 @@ def entity_detail(world_id, entity_id):
                               .first()
     return render_template('entity_detail.html', context=context)
 
+
+@bp.route('/<world_id>/artifact/<artifact_id>')
+def artifact_detail(world_id, artifact_id):
+    context = {}
+    evt_after = request.args.get('evt_after') or 0
+    context['artifact'] = Artifact.query\
+                              .filter_by(df_world_id=world_id, id=artifact_id)\
+                              .first()
+    return render_template('artifact_detail.html', context=context)
+
+
 @bp.route('/<world_id>/site/<site_id>')
 def site_detail(world_id, site_id):
     return "placeholder for site %s" % (site_id)
+
+
+
