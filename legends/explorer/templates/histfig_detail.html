@@ -9,6 +9,7 @@
   <h2> Details: </h2>
 	<div>
   {{ hf.name | title }} was a {{ hf.race }}. 
+	{% if not hf.deity and not hf.force%}
 	{{ pronoun | title }} was born in 
 	{% if hf.birth_year > 0 %}
 	  {{ hf.birth_year}} 
@@ -21,17 +22,53 @@
 	{% else %}
 		died in {{ hf.death_year }}.
 	{% endif %}
+  {% elif hf.deity %}
+	{{ pronoun | title }} was a deity. 
+  {% elif hf.force %}
+	{{ pronoun | title }} was a force of nature. 
+	{% endif %}
+	{% if hf.spheres | length > 1 %}
+	{{ pronoun | title }} is associated with 
+	{% for sphere in hf.spheres[0:-1] %}
+	{{ sphere.sphere }}, 
+	{% endfor %}
+	and {{ hf.spheres[-1].sphere }}
+	{% elif hf.spheres | length == 1 %}
+	{{ pronoun | title }} is associated with {{ hf.spheres[0].sphere }}.
+	{% endif %}
   </div>
+
+	{% if hf.goals %}
+  <h2> Goals </h2>
+  <ul>
+		{% for goal in hf.goals %}
+		<li> {{ goal.goal }} </li>
+		{% endfor %}
+	</ul>
+	{% endif %}
 	<h2> Links: </h2>
+  <h3> Positions </h3>
+	<ul>
+	{% for position_link in hf.entity_position_links %}
+	<li> The {{position_link.position_profile_id}} of {{ position_link.entity.name }} 
+		from {{ position_link.start_year }} {% if position_link.end_year %} to {{ position_link.end_year }} {% endif %}</li>
+	{% endfor %}
+  </ul>
+	<h3> Entities </h2>
+	<ul>
+	{% for entity_link in hf.entity_links %}
+	<li> {{ entity_link.entity.name }} ({{ entity_link.link_type }})</li>
+	{% endfor %}
+  </ul>
 	<h3> Historical Figures </h3>
 	{% for hf_link in hf.hf_links %}
 	{% set item = hf_link.other%}
 	
-	<div> <a href={{ url_for('explorer.hf_detail', world_id=item.df_world_id, hfid=item.id)}}>{{ item.id }}</a>: The 
+	<div> The 
 		{% if item.deity %} 
 		  deity with the form of a 
 		{% endif %} 
-		{{ item.race }} {{ item.name | title}}, 
+		{{ item.race }} <a href={{ url_for('explorer.hf_detail', world_id=item.df_world_id, hfid=item.id)}}>{{ item.name | title }}</a>, 
 		{{ posessive }} {{ hf_link.link_type}} </div>
 	{% endfor %}
 	<h3> Sites </h3>
@@ -39,7 +76,7 @@
 	{% set site = site_link.site %}
 	{{ site.id }}: {{ site.name }}, {{ posessive }} {{ site_link.link_type }}
 	{% endfor %}
-	<h3> Events </h3>
+	<h2> Events </h2>
 	<ul>
 	{% for event in events %}
 	<li>{% include 'events/default.html' %} </li>
