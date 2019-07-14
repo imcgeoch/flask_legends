@@ -77,11 +77,11 @@ class Entity(db.Model):
                                    'or_(Historical_Event.entity_id == ' +
                                         'Entity.id,' +
                                    'Historical_Event.entity_id2 == ' +
-                                        'Entity.id),' +
+                                        'Entity.id,' +
                                    'Historical_Event.site_civ_id == ' +
                                         'Entity.id,' +
                                    'Historical_Event.new_site_civ_id == ' +
-                                        'Entity.id,' +
+                                        'Entity.id),' +
                                       'Historical_Event.df_world_id == ' +
                                          'Entity.df_world_id)',
                     foreign_keys=[id, df_world_id], uselist=True,
