@@ -1,6 +1,8 @@
-In {{ event.year }}, 
+In {{ event.year }},
 {% if event.type == 'hf simple battle event' %}
 {% include 'events/hf_simple_battle_event.html' %}
+{% elif event.type == 'created site' %}
+{% include 'events/created_site.html' %}
 {% else %}
 {{ event.type }}.
 {% endif %}

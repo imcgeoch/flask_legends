@@ -1,0 +1,17 @@
+{% extends "detail_base.html" %}
+
+{% block page_title%}
+<h1>Entity: {{ context['entity'].name }} </h1> 
+{% endblock %}
+
+{% block content %}
+<h2>Details:</h2>
+{{ context['entity'].name | title }} was an entity.
+
+	<h2> Events </h2>
+	<ul>
+	{% for event in context['entity'].all_events %}
+	<li>{% include 'events/default.html' %} </li>
+	{% endfor %}
+	</ul>
+{% endblock %}
