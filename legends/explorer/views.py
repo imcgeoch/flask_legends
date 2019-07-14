@@ -40,6 +40,15 @@ def hf_detail(world_id, hfid):
                            pronoun=pronoun, posessive=posessive,
                            events=events, rendered_events=[])
 
+@bp.route('/<world_id>/entities')
+def entity_list(world_id):
+    after = request.args.get('after') or 0
+    entities = Entity.query\
+                     .filter_by(df_world_id=world_id)\
+                     .limit(250).offset(after)
+
+    return render_template('entity_list.html', items=entities)
+
 @bp.route('/<world_id>/entity/<entity_id>')
 def entity_detail(world_id, entity_id):
     context = {}
