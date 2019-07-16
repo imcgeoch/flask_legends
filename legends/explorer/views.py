@@ -69,6 +69,17 @@ def artifact_detail(world_id, artifact_id):
     return render_template('artifact_detail.html', context=context)
 
 
+@bp.route('/<world_id>/artifacts')
+def artifact_list(world_id):
+    after = request.args.get('after') or 0
+    artifacts = Artifact.query\
+                     .filter_by(df_world_id=world_id)\
+                     .limit(250).offset(after)
+
+    return render_template('artifact_list.html', items=artifacts)
+
+
+
 @bp.route('/<world_id>/site/<site_id>')
 def site_detail(world_id, site_id):
     return "placeholder for site %s" % (site_id)
