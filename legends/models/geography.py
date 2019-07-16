@@ -28,7 +28,7 @@ class Region(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    type = db.Column(db.Enum(*types))
+    type = db.Column(db.Enum(*types, name='region_types'))
     coords = db.Column(db.String)
     
     events = db.relationship('Historical_Event', backref='region', 
@@ -44,7 +44,7 @@ class Underground_Region(db.Model):
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.Enum('cavern', 'magma', 'underworld'))
+    type = db.Column(db.Enum('cavern', 'magma', 'underworld', name='ug_region_types'))
     coords = db.Column(db.String)
 
 class World_Construction(db.Model):

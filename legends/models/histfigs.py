@@ -104,7 +104,7 @@ class Goal(db.Model):
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
     hfid = db.Column(db.Integer, primary_key=True)
-    goal = db.Column(db.Enum(*goals), primary_key=True)
+    goal = db.Column(db.Enum(*goals, name='goal_types'), primary_key=True)
 
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
                                  [Historical_Figure.df_world_id,
@@ -197,7 +197,7 @@ class HF_Link(db.Model):
     link_strength = db.Column(db.Integer)
     link_type = db.Column(db.Enum('child','spouse', 'deity', 'apprentice',
         'mother', 'father', 'former apprentice', 'master', 
-        'former master',))
+        'former master', name='hf_link_type'))
 
     other = db.relationship("Historical_Figure", 
             primaryjoin="and_(HF_Link.hfid2==Historical_Figure.id," + 
@@ -220,7 +220,7 @@ class Site_Link(db.Model):
     df_world_id = db.Column(db.Integer)
     hfid = db.Column(db.Integer)
     entity_id = db.Column(db.Integer)
-    link_type = db.Column(db.Enum(*types))
+    link_type = db.Column(db.Enum(*types, name='site_link_types'))
     occupation_id = db.Column(db.Integer)
     site_id = db.Column(db.Integer)
     sub_id = db.Column(db.Integer)

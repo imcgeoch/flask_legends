@@ -51,7 +51,7 @@ class Written_Content(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
-    form = db.Column(db.Enum(*forms))
+    form = db.Column(db.Enum(*forms, name='wc_form_types'))
     form_id = db.Column(db.Integer) # use primaryjoin with form_id == TYPE 
     author_hfid = db.Column(db.Integer)
     author_roll = db.Column(db.Integer)

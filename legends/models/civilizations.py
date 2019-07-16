@@ -163,7 +163,7 @@ class Site(db.Model):
     name = db.Column(db.String(50))
     coords = db.Column(db.String(10))
     rectangle = db.Column(db.String(20))
-    type = db.Column(db.Enum(*types))
+    type = db.Column(db.Enum(*types, name='site_types'))
 
     civ_id = db.Column(db.Integer)
     current_owner_id = db.Column(db.Integer)
@@ -222,8 +222,8 @@ class Structure(db.Model):
     local_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     name2 = db.Column(db.String(50))
-    type = db.Column(db.Enum(*types))
-    subtype = db.Column(db.Enum(*subtypes))
+    type = db.Column(db.Enum(*types, name='structure_types'))
+    subtype = db.Column(db.Enum(*subtypes, name='structure_subtypes'))
     worship_hfid = db.Column(db.Integer)
 
     #inhabitants redundant?

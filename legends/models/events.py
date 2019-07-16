@@ -32,7 +32,7 @@ class Historical_Event(db.Model):
     building = db.Column(db.Integer)
     agreement_id = db.Column(db.Integer)
     position_profile_id = db.Column(db.Integer)
-    claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure'))
+    claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure', name='claim_types'))
     dest_site_id = db.Column(db.Integer)
     dest_structure_id = db.Column(db.Integer)
     dest_entity_id = db.Column(db.Integer)
@@ -55,7 +55,7 @@ class Historical_Event(db.Model):
     master_wcid = db.Column(db.Integer)
     race = db.Column(db.String(20))
     caste = db.Column(db.String(20))
-    law_type = db.Column(db.Enum('add', 'remove')) #add or remove
+    law_type = db.Column(db.Enum('add', 'remove', name='law_types')) #add or remove
     law = db.Column(db.String(50))
     result = db.Column(db.String(20))
     situation = db.Column(db.String(50))
