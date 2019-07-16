@@ -723,7 +723,7 @@ class Peace_Rejected(Historical_Event):
     # topic = db.Column(db.String(30))
 
 class Plundered_Site(Historical_Event):
-    __mapper_args__ = {'polymorphic_identity':'plunderied site'}
+    __mapper_args__ = {'polymorphic_identity':'plundered site'}
 
     #entity_id attacker_civ_id
     #entity_id_2 defender_civ_id

@@ -77,11 +77,11 @@ class Entity(db.Model):
                                    'or_(Historical_Event.entity_id == ' +
                                         'Entity.id,' +
                                    'Historical_Event.entity_id2 == ' +
-                                        'Entity.id),' +
+                                        'Entity.id,' +
                                    'Historical_Event.site_civ_id == ' +
                                         'Entity.id,' +
                                    'Historical_Event.new_site_civ_id == ' +
-                                        'Entity.id,' +
+                                        'Entity.id),' +
                                       'Historical_Event.df_world_id == ' +
                                          'Entity.df_world_id)',
                     foreign_keys=[id, df_world_id], uselist=True,
@@ -172,6 +172,14 @@ class Site(db.Model):
     structures = db.relationship('Structure', backref='site', viewonly=True)
     event_collections = db.relationship('Event_Collection', backref='site',
                                         viewonly=True)
+    
+    stored_artifacts = db.relationship('Artifact', backref='storage_site', 
+                                       primaryjoin='and_(Artifact.site_id == '+
+                                                         'Site.id,' +
+                                                         'Artifact.df_world_id ==' +
+                                                         'Site.df_world_id)',
+                                     foreign_keys=[id, df_world_id],
+                                      viewonly=True)
     
     prim_events = db.relationship('Historical_Event', backref='site', 
                     primaryjoin='and_(Historical_Event.site_id == ' +
