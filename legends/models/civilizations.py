@@ -34,7 +34,9 @@ class Entity(db.Model):
                              viewonly=True)
     entity_links =  db.relationship('Entity_Link',
                              backref='entity',
-                             viewonly=True)
+                             viewonly=True, foreign_keys=[id, df_world_id],
+                             primaryjoin=jb('Entity', 'Entity_Reputation',
+                                    ('id', 'entity_id')))
     eventcols1 = db.relationship('Event_Collection', 
                                 backref='entity1', 
                                 foreign_keys='Event_Collection.entity_id,'

@@ -40,7 +40,10 @@ class Historical_Figure(db.Model):
                                                ('id', 'hfid')))
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='historical_figure',
-                             viewonly=True)
+                             viewonly=True, foreign_keys=[id, df_world_id],
+                             primaryjoin=jb('Historical_Figure', 
+                                            'Entity_Reputation',
+                                               ('id', 'hfid')))
     entity_links =  db.relationship('Entity_Link',
                              backref='historical_figure',
                              viewonly=True)
@@ -252,13 +255,6 @@ class Entity_Reputation(db.Model):
     first_ageless_year = db.Column(db.Integer)
     unsolved_murders = db.Column(db.Integer)
   
-    __table_args__ = (
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
-                                ['entities.df_world_id', 'entities.id']),
-        {})
 
 class Relationship(db.Model):
     __tablename__ = 'relationship'
