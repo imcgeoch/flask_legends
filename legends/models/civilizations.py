@@ -31,12 +31,15 @@ class Entity(db.Model):
                                     ('id', 'entity_id')))
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='entity',
-                             viewonly=True)
-    entity_links =  db.relationship('Entity_Link',
-                             backref='entity',
                              viewonly=True, foreign_keys=[id, df_world_id],
                              primaryjoin=jb('Entity', 'Entity_Reputation',
                                     ('id', 'entity_id')))
+    entity_links =  db.relationship('Entity_Link',
+                             backref='entity',
+                             viewonly=True, foreign_keys=[id, df_world_id],
+                             primaryjoin=jb('Entity', 'Entity_Link',
+                                    ('id', 'entity_id')))
+
     eventcols1 = db.relationship('Event_Collection', 
                                 backref='entity1', 
                                 foreign_keys='Event_Collection.entity_id,'

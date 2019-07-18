@@ -46,7 +46,10 @@ class Historical_Figure(db.Model):
                                                ('id', 'hfid')))
     entity_links =  db.relationship('Entity_Link',
                              backref='historical_figure',
-                             viewonly=True)
+                             viewonly=True, foreign_keys=[id, df_world_id],
+                             primaryjoin=jb('Historical_Figure', 
+                                            'Entity_Link',
+                                               ('id', 'hfid')))
 
     hf_links = db.relationship('HF_Link', backref='this_histfig',
             foreign_keys='HF_Link.hfid1,HF_Link.df_world_id')
@@ -189,13 +192,6 @@ class Entity_Link(db.Model):
     entity_id = db.Column(db.Integer)
     link_type = db.Column(db.String(20))
 
-    __table_args__ = (
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
-                                ['entities.df_world_id', 'entities.id']),
-        {})
 
 class HF_Link(db.Model):
     __tablename__ = 'hf_links'
