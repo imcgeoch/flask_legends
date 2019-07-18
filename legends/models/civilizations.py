@@ -1,5 +1,5 @@
 from . import db
-from .join_builder import join_builder as jb
+from .join_builder import join_builder as jb, table_join_builder as tjb
 
 # Civs and Local Govts
 
@@ -51,7 +51,11 @@ class Entity(db.Model):
     members = db.relationship('Historical_Figure',
                                      backref='member_of',
                                      secondary='members',
-                                     viewonly=True)
+                                     viewonly=True,
+                              primaryjoin=tjb('Entity', 'members', 
+                                            ('id', 'entity_id')),
+                              secondaryjoin=tjb('Historical_Figure', 'members', 
+                                             ('id', 'hfid')))
     
     prim_events = db.relationship('Historical_Event', backref='entity', 
                     primaryjoin='and_(Historical_Event.entity_id == ' +
@@ -256,12 +260,6 @@ members = db.Table('members', db.metadata,
         db.Column('df_world_id', db.Integer),
         db.Column('entity_id', db.Integer),
         db.Column('hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
-                                ['entities.df_world_id', 
-                                 'entities.id'])
         )
 
 inhabitants = db.Table('inhabitants', db.metadata,
