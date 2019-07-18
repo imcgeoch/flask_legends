@@ -218,15 +218,13 @@ class Structure(db.Model):
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
     site_id = db.Column(db.Integer, primary_key=True)
-    entity_id = db.Column(db.Integer, primary_key=True)
+    entity_id = db.Column(db.Integer)
     local_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     name2 = db.Column(db.String(50))
     type = db.Column(db.Enum(*types, name='structure_types'))
     subtype = db.Column(db.Enum(*subtypes, name='structure_subtypes'))
     worship_hfid = db.Column(db.Integer)
-
-    #inhabitants redundant?
 
     __table_args__ = (db.ForeignKeyConstraint([df_world_id, site_id],
                                  [Site.df_world_id, Site.id]),
