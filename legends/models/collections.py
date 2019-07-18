@@ -102,10 +102,10 @@ class Event_Collection(db.Model):
 
     __table_args__ = (db.ForeignKeyConstraint(
         [df_world_id, parent_eventcol], [df_world_id, id]), 
-                      db.ForeignKeyConstraint(
-        [df_world_id, entity_id], ['entities.df_world_id', 'entities.id']), 
-                      db.ForeignKeyConstraint(
-        [df_world_id, entity_id2], ['entities.df_world_id', 'entities.id']),
+#                      db.ForeignKeyConstraint(
+#        [df_world_id, entity_id], ['entities.df_world_id', 'entities.id']), 
+#                      db.ForeignKeyConstraint(
+#        [df_world_id, entity_id2], ['entities.df_world_id', 'entities.id']),
                       db.ForeignKeyConstraint(
         [df_world_id, site_id], ['sites.df_world_id', 'sites.id']), 
         {})

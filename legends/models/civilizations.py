@@ -40,14 +40,14 @@ class Entity(db.Model):
                              primaryjoin=jb('Entity', 'Entity_Link',
                                     ('id', 'entity_id')))
 
-    eventcols1 = db.relationship('Event_Collection', 
-                                backref='entity1', 
-                                foreign_keys='Event_Collection.entity_id,'
-                                            'Event_Collection.df_world_id')
-    eventcols2 = db.relationship('Event_Collection', 
-                                backref='entity2', 
-                                foreign_keys='Event_Collection.entity_id2,'
-                                       'Event_Collection.df_world_id')
+    eventcols1 = db.relationship('Event_Collection', backref='entity1', 
+                                foreign_keys=[id, df_world_id],
+                                primaryjoin=jb('Entity', 'Event_Collection',
+                                    ('id', 'entity_id')))
+    eventcols2 = db.relationship('Event_Collection', backref='entity2', 
+                                foreign_keys=[id, df_world_id],
+                                primaryjoin=jb('Entity', 'Event_Collection',
+                                    ('id', 'entity_id2')))
     members = db.relationship('Historical_Figure',
                                      backref='member_of',
                                      secondary='members',
