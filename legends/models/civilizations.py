@@ -1,4 +1,5 @@
 from . import db
+from .join_builder import join_builder as jb
 
 # Civs and Local Govts
 
@@ -12,8 +13,13 @@ class Entity(db.Model):
     type = db.Column(db.String(20))
     claims = db.Column(db.String)
 
+    #site_links = db.relationship('Site_Link', backref='entity', 
+    #                             viewonly=True)
     site_links = db.relationship('Site_Link', backref='entity', 
-                                 viewonly=True)
+                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Entity', 
+                                                'Site_Link', 
+                                               ('id', 'entity_id')))
     structures = db.relationship('Structure', backref='entity',
                                  viewonly=True)
     entity_position_links = db.relationship('Entity_Position_Link',
@@ -168,7 +174,11 @@ class Site(db.Model):
     civ_id = db.Column(db.Integer)
     current_owner_id = db.Column(db.Integer)
 
-    site_links = db.relationship('Site_Link', backref='site', viewonly=True)
+    site_links = db.relationship('Site_Link', backref='site', 
+                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Site', 
+                                                'Site_Link', 
+                                               ('id', 'site_id')))
     structures = db.relationship('Structure', backref='site', viewonly=True)
     event_collections = db.relationship('Event_Collection', backref='site',
                                         viewonly=True)

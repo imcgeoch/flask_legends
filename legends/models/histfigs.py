@@ -1,4 +1,5 @@
 from . import db
+from .join_builder import join_builder as jb
 
 
 class Historical_Figure(db.Model):
@@ -48,7 +49,9 @@ class Historical_Figure(db.Model):
             foreign_keys='Relationship.hfid1,Relationship.df_world_id')
     
     site_links = db.relationship('Site_Link', backref='historical_figure', 
-                                 viewonly=True)
+                                 viewonly=True, foreign_keys = [id, df_world_id],
+                                 primaryjoin=jb('Historical_Figure', 'Site_Link', 
+                                                ('id', 'hfid')))
 
     skills = db.relationship('Skill')
 
@@ -224,7 +227,8 @@ class Site_Link(db.Model):
     occupation_id = db.Column(db.Integer)
     site_id = db.Column(db.Integer)
     sub_id = db.Column(db.Integer)
-    
+   
+    '''
     __table_args__ =( 
         db.ForeignKeyConstraint(['df_world_id', 'hfid'],
                                 ['historical_figures.df_world_id',
@@ -235,6 +239,7 @@ class Site_Link(db.Model):
                                 ['sites.df_world_id', 'sites.id'],
                                 ), 
         {})
+    '''
 
 class Entity_Position_Link(db.Model):
     __tablename__ = 'entity_position_links'
