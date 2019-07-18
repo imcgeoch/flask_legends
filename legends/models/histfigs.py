@@ -60,9 +60,9 @@ class Historical_Figure(db.Model):
     spheres = db.relationship('Sphere')
     goals = db.relationship('Goal')
     structures = db.relationship('Structure', backref='historical_figures',
-                                 viewonly=True)
-
-
+                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Historical_Figure', 'Structure',
+                                                ('id', 'worship_hfid')))
 
     def first_name(self):
         return self.name.split(" ")[0] 
@@ -228,19 +228,6 @@ class Site_Link(db.Model):
     site_id = db.Column(db.Integer)
     sub_id = db.Column(db.Integer)
    
-    '''
-    __table_args__ =( 
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
-                                ['entities.df_world_id', 'entities.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'site_id'],
-                                ['sites.df_world_id', 'sites.id'],
-                                ), 
-        {})
-    '''
-
 class Entity_Position_Link(db.Model):
     __tablename__ = 'entity_position_links'
     id = db.Column(db.Integer, primary_key=True)

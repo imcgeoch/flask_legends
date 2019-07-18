@@ -17,11 +17,13 @@ class Entity(db.Model):
     #                             viewonly=True)
     site_links = db.relationship('Site_Link', backref='entity', 
                                  viewonly=True, foreign_keys=[id, df_world_id],
-                                 primaryjoin=jb('Entity', 
-                                                'Site_Link', 
+                                 primaryjoin=jb('Entity', 'Site_Link', 
                                                ('id', 'entity_id')))
     structures = db.relationship('Structure', backref='entity',
-                                 viewonly=True)
+                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Entity', 'Structure',
+                                                ('id', 'entity_id')))
+
     entity_position_links = db.relationship('Entity_Position_Link',
                                 backref='entity',
                                 viewonly=True)
@@ -179,7 +181,11 @@ class Site(db.Model):
                                  primaryjoin=jb('Site', 
                                                 'Site_Link', 
                                                ('id', 'site_id')))
-    structures = db.relationship('Structure', backref='site', viewonly=True)
+
+    structures = db.relationship('Structure', backref='site', viewonly=True,
+                                 foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Site', 'Structure', 
+                                                ('id', 'site_id')))
     event_collections = db.relationship('Event_Collection', backref='site',
                                         viewonly=True)
     
@@ -235,14 +241,6 @@ class Structure(db.Model):
     type = db.Column(db.Enum(*types, name='structure_types'))
     subtype = db.Column(db.Enum(*subtypes, name='structure_subtypes'))
     worship_hfid = db.Column(db.Integer)
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, site_id],
-                                 [Site.df_world_id, Site.id]),
-                      db.ForeignKeyConstraint([df_world_id, entity_id],
-                                 [Entity.df_world_id, Entity.id]),
-                      db.ForeignKeyConstraint([df_world_id, worship_hfid],
-                                 ['historical_figures.df_world_id',
-                                  'historical_figures.id']), {})
 
 # Intermediate tables
 
