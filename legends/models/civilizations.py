@@ -26,7 +26,9 @@ class Entity(db.Model):
 
     entity_position_links = db.relationship('Entity_Position_Link',
                                 backref='entity',
-                                viewonly=True)
+                                viewonly=True, foreign_keys=[id, df_world_id],
+                                primaryjoin=jb('Entity', 'Entity_Position_Link',
+                                    ('id', 'entity_id')))
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='entity',
                              viewonly=True)

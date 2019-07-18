@@ -34,7 +34,10 @@ class Historical_Figure(db.Model):
                           viewonly=True)
     entity_position_links = db.relationship('Entity_Position_Link',
                                 backref='historical_figure',
-                                viewonly=True)
+                                viewonly=True, foreign_keys=[id, df_world_id],
+                                primaryjoin=jb('Historical_Figure', 
+                                               'Entity_Position_Link',
+                                               ('id', 'hfid')))
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='historical_figure',
                              viewonly=True)
@@ -237,14 +240,7 @@ class Entity_Position_Link(db.Model):
     start_year = db.Column(db.Integer)
     end_year = db.Column(db.Integer)
     position_profile_id = db.Column(db.Integer)
-  
-    __table_args__ = (
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
-                                ['entities.df_world_id', 'entities.id']),
-        {})
+
 
 class Entity_Reputation(db.Model):
     __tablename__ = 'entity_reputations'
