@@ -204,12 +204,10 @@ class Site(db.Model):
                                                 ('id', 'site_id')))
     
     stored_artifacts = db.relationship('Artifact', backref='storage_site', 
-                                       primaryjoin='and_(Artifact.site_id == '+
-                                                         'Site.id,' +
-                                                         'Artifact.df_world_id ==' +
-                                                         'Site.df_world_id)',
-                                     foreign_keys=[id, df_world_id],
-                                      viewonly=True)
+                                       primaryjoin=jb('Site', 'Artifact',
+                                                      ('id', 'site_id')),
+                                       foreign_keys=[id, df_world_id],
+                                       viewonly=True)
     
     prim_events = db.relationship('Historical_Event', backref='site', 
                     primaryjoin='and_(Historical_Event.site_id == ' +
