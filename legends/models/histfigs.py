@@ -26,7 +26,12 @@ class Historical_Figure(db.Model):
     ent_pop_id = db.Column(db.Integer)
 
     held_artifacts = db.relationship('Artifact', backref='holder_hf', 
-                                      viewonly=True)
+                                     foreign_keys='Artifact.holder_hfid,'
+                                                  'Artifact.df_world_id',
+                                     primaryjoin=jb('Historical_Figure',
+                                                    'Artifact',
+                                                    ('id', 'holder_hfid')),
+                                     viewonly=True)
 
     competitions = db.relationship('Competition', 
                           secondary='competitors',

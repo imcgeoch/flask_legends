@@ -29,11 +29,6 @@ class Artifact(db.Model):
                     foreign_keys=[id, df_world_id], uselist=True, 
                     viewonly=True)
 
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, holder_hfid],
-                                 ['historical_figures.df_world_id',
-                                  'historical_figures.id']), {})
-
-    # add lookup to written_contents
 
     def __repr__(self):
         return "<Artifact %s>" % (self.name)
