@@ -1,5 +1,5 @@
 from . import db
-from .join_builder import join_builder as jb
+from .join_builder import join_builder as jb, table_join_builder as tjb
 
 ## TODO : Squad!
 
@@ -15,18 +15,13 @@ eventcol_event_link = db.Table('eventcol_event_link', db.metadata,
                                 ['historical_events.df_world_id',
                                  'historical_events.id'])
         )
+        
 
 eventcol_eventcol_link = db.Table('eventcol_eventcol_link', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
         db.Column('df_world_id', db.Integer),
         db.Column('eventcol_id1', db.Integer),
         db.Column('eventcol_id2', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'eventcol_id1'],
-                                ['event_collections.df_world_id',
-                                 'event_collections.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'eventcol_id2'],
-                                ['event_collections.df_world_id',
-                                 'event_collections.id']),
         )
 
 eventcol_attackers = db.Table('eventcol_attackers', db.metadata,
@@ -101,25 +96,23 @@ class Event_Collection(db.Model):
     attacking_enid = db.synonym(entity_id)
     defending_enid = db.synonym(entity_id2)
 
-#   __table_args__ = (db.ForeignKeyConstraint(
-#        [df_world_id, parent_eventcol], [df_world_id, id]), 
-#                      db.ForeignKeyConstraint(
-#        [df_world_id, entity_id], ['entities.df_world_id', 'entities.id']), 
-#                      db.ForeignKeyConstraint(
-#        [df_world_id, entity_id2], ['entities.df_world_id', 'entities.id']),
-#                      db.ForeignKeyConstraint(
-#        [df_world_id, site_id], ['sites.df_world_id', 'sites.id']), 
-#        {})
-
     children = db.relationship('Event_Collection', remote_side=[id], 
                                backref='parent', viewonly=True,
                                foreign_keys=[df_world_id, parent_eventcol],
                                primaryjoin=jb("Event_Collection",
                                               "Event_Collection",
                                               ("id", "parent_eventcol")))
+
     linked_collections = db.relationship('Event_Collection',
-      secondary='eventcol_eventcol_link',backref='parent_linked',
-      foreign_keys='eventcol_eventcol_link.c.eventcol_id1', viewonly=True)
+                                         secondary='eventcol_eventcol_link', 
+                                         backref='linking_collection',
+                                         viewonly=True,
+                                         primaryjoin=tjb("Event_Collection", 
+                                                     "eventcol_eventcol_link",
+                                                     ("id", "eventcol_id1")),
+                                         secondaryjoin=tjb("Event_Collection", 
+                                                       "eventcol_eventcol_link",
+                                                       ("id", "eventcol_id2")))
 
     linked_events = db.relationship('Historical_Event', viewonly=True, 
             secondary='eventcol_event_link', backref='collections')
