@@ -50,6 +50,14 @@ class Historical_Figure(db.Model):
                              primaryjoin=jb('Historical_Figure', 
                                             'Entity_Link',
                                                ('id', 'hfid')))
+    written_contents = db.relationship('Written_Content',
+                                       backref='author',
+                                       viewonly=True, 
+                                       foreign_keys="Written_Content.df_world_id,"
+                                                    "Written_Content.author_hfid",
+                                       primaryjoin=jb('Historical_Figure',
+                                                      'Written_Content',
+                                                      ('id', 'author_hfid')))
 
     hf_links = db.relationship('HF_Link', backref='this_histfig',
             foreign_keys='HF_Link.hfid1,HF_Link.df_world_id')

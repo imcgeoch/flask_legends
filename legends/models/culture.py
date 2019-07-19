@@ -56,13 +56,8 @@ class Written_Content(db.Model):
     author_hfid = db.Column(db.Integer)
     author_roll = db.Column(db.Integer)
 
-
-
     styles = db.relationship('Style')
     
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, author_hfid],
-                                 ['historical_figures.df_world_id',
-                                  'historical_figures.id']), {})
 
 class Style(db.Model):
     __tablename__ = 'styles'
