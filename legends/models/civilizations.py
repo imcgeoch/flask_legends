@@ -254,6 +254,16 @@ class Structure(db.Model):
     subtype = db.Column(db.Enum(*subtypes, name='structure_subtypes'))
     worship_hfid = db.Column(db.Integer)
 
+    inhabitants = db.relationship('Historical_Figure',
+                                     backref='home_structure',
+                                     secondary='inhabitants',
+                                     viewonly=True,
+                              primaryjoin=tjb('Structure', 'inhabitants', 
+                                            ('local_id', 'structure_id'), 
+                                            ('site_id', 'site_id')),
+                              secondaryjoin=tjb('Historical_Figure', 'inhabitants', 
+                                             ('id', 'hfid')))
+
 # Intermediate tables
 
 members = db.Table('members', db.metadata,
@@ -269,12 +279,5 @@ inhabitants = db.Table('inhabitants', db.metadata,
         db.Column('site_id', db.Integer),
         db.Column('structure_id', db.Integer),
         db.Column('hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'site_id', 'structure_id'],
-                                ['structures.df_world_id', 
-                                 'structures.site_id',
-                                 'structures.local_id'])
         )
 
