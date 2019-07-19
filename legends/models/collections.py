@@ -1,4 +1,5 @@
 from . import db
+from .join_builder import join_builder as jb
 
 ## TODO : Squad!
 
@@ -100,18 +101,22 @@ class Event_Collection(db.Model):
     attacking_enid = db.synonym(entity_id)
     defending_enid = db.synonym(entity_id2)
 
-    __table_args__ = (db.ForeignKeyConstraint(
-        [df_world_id, parent_eventcol], [df_world_id, id]), 
+#   __table_args__ = (db.ForeignKeyConstraint(
+#        [df_world_id, parent_eventcol], [df_world_id, id]), 
 #                      db.ForeignKeyConstraint(
 #        [df_world_id, entity_id], ['entities.df_world_id', 'entities.id']), 
 #                      db.ForeignKeyConstraint(
 #        [df_world_id, entity_id2], ['entities.df_world_id', 'entities.id']),
 #                      db.ForeignKeyConstraint(
 #        [df_world_id, site_id], ['sites.df_world_id', 'sites.id']), 
-        {})
+#        {})
 
     children = db.relationship('Event_Collection', remote_side=[id], 
-                               backref='parent', viewonly=True)
+                               backref='parent', viewonly=True,
+                               foreign_keys=[df_world_id, parent_eventcol],
+                               primaryjoin=jb("Event_Collection",
+                                              "Event_Collection",
+                                              ("id", "parent_eventcol")))
     linked_collections = db.relationship('Event_Collection',
       secondary='eventcol_eventcol_link',backref='parent_linked',
       foreign_keys='eventcol_eventcol_link.c.eventcol_id1', viewonly=True)
