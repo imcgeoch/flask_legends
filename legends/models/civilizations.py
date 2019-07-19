@@ -198,7 +198,10 @@ class Site(db.Model):
                                  primaryjoin=jb('Site', 'Structure', 
                                                 ('id', 'site_id')))
     event_collections = db.relationship('Event_Collection', backref='site',
-                                        viewonly=True)
+                                        viewonly=True, 
+                                        foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Site', 'Event_Collection', 
+                                                ('id', 'site_id')))
     
     stored_artifacts = db.relationship('Artifact', backref='storage_site', 
                                        primaryjoin='and_(Artifact.site_id == '+

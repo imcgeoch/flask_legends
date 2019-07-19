@@ -106,8 +106,8 @@ class Event_Collection(db.Model):
 #        [df_world_id, entity_id], ['entities.df_world_id', 'entities.id']), 
 #                      db.ForeignKeyConstraint(
 #        [df_world_id, entity_id2], ['entities.df_world_id', 'entities.id']),
-                      db.ForeignKeyConstraint(
-        [df_world_id, site_id], ['sites.df_world_id', 'sites.id']), 
+#                      db.ForeignKeyConstraint(
+#        [df_world_id, site_id], ['sites.df_world_id', 'sites.id']), 
         {})
 
     children = db.relationship('Event_Collection', remote_side=[id], 
