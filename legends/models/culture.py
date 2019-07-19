@@ -1,4 +1,5 @@
 from . import db
+from .join_builder import join_builder as jb
 
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
@@ -56,7 +57,12 @@ class Written_Content(db.Model):
     author_hfid = db.Column(db.Integer)
     author_roll = db.Column(db.Integer)
 
-    styles = db.relationship('Style')
+    styles = db.relationship('Style', 
+                             foreign_keys="Style.df_world_id,"
+                                          "Style.content_id",
+                             primaryjoin=jb("Written_Content", 
+                                            "Style",
+                                            ("id", "content_id")))
     
 
 class Style(db.Model):
@@ -67,9 +73,6 @@ class Style(db.Model):
     content_id = db.Column(db.Integer)
     style = db.Column(db.String(20)) #should be enum
     magnitude = db.Column(db.Integer)
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, content_id],
-                                 [Written_Content.df_world_id,
-                                  Written_Content.id]), {})
 
 class Musical_Form(db.Model):
     __tablename__ = 'musical_forms'
