@@ -74,13 +74,30 @@ class Historical_Figure(db.Model):
                                  viewonly=True, foreign_keys = [id, df_world_id],
                                  primaryjoin=jb('Historical_Figure', 'Site_Link', 
                                                 ('id', 'hfid')))
+    skills = db.relationship('Skill', viewonly=True, 
+                            foreign_keys="Skill.hfid,Skill.df_world_id",
+                            primaryjoin=jb("Historical_Figure", 
+                                           "Skill", ("id", "hfid")))
 
-    skills = db.relationship('Skill')
-
-    interaction_knowledges = db.relationship('Interaction_Knowledge')
-    journey_pets = db.relationship('Journey_Pet')
-    spheres = db.relationship('Sphere')
-    goals = db.relationship('Goal')
+    interaction_knowledges = db.relationship('Interaction_Knowledge', 
+                                 viewonly=True, 
+                                 foreign_keys="Interaction_Knowledge.hfid,"
+                                              "Interaction_Knowledge.df_world_id",
+                                 primaryjoin=jb("Historical_Figure", 
+                                                "Interaction_Knowledge", 
+                                                ("id", "hfid")))
+    journey_pets = db.relationship('Journey_Pet', viewonly=True, 
+                            foreign_keys="Journey_Pet.hfid,Journey_Pet.df_world_id",
+                            primaryjoin=jb("Historical_Figure", 
+                                           "Journey_Pet", ("id", "hfid")))
+    spheres = db.relationship('Sphere', viewonly=True, 
+                            foreign_keys="Sphere.hfid,Sphere.df_world_id",
+                            primaryjoin=jb("Historical_Figure", 
+                                           "Sphere", ("id", "hfid")))
+    goals = db.relationship('Goal', viewonly=True, 
+                            foreign_keys="Goal.hfid,Goal.df_world_id",
+                            primaryjoin=jb("Historical_Figure", 
+                                           "Goal", ("id", "hfid")))
     structures = db.relationship('Structure', backref='historical_figures',
                                  viewonly=True, foreign_keys=[id, df_world_id],
                                  primaryjoin=jb('Historical_Figure', 'Structure',
@@ -131,10 +148,6 @@ class Goal(db.Model):
     hfid = db.Column(db.Integer, primary_key=True)
     goal = db.Column(db.Enum(*goals, name='goal_types'), primary_key=True)
 
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), {})
-
 class Sphere(db.Model):
     __tablename__ = 'spheres'
 
@@ -157,11 +170,6 @@ class Sphere(db.Model):
                             primary_key=True)
     hfid = db.Column(db.Integer, primary_key=True)
     sphere = db.Column(db.String(20), primary_key=True)
-    
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), {})
-
 
 class Journey_Pet(db.Model):
     __tablename__ = 'journey_pets'
@@ -170,10 +178,6 @@ class Journey_Pet(db.Model):
     hfid = db.Column(db.Integer)
     journey_pet = db.Column(db.String(20))
 
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), {}) 
 class Skill(db.Model):
     __tablename__ = 'skills'
     id = db.Column(db.Integer, primary_key=True)
@@ -182,20 +186,12 @@ class Skill(db.Model):
     skill = db.Column(db.String(20)) # should prolly be enum
     total_ip = db.Column(db.Integer)
 
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), {}) 
-                                 
 class Interaction_Knowledge(db.Model):
     __tablename__ = 'interaction_knowledges'
     id = db.Column(db.Integer, primary_key=True)
     df_world_id = db.Column(db.Integer)
     hfid = db.Column(db.Integer)
     interaction_knowledge = db.Column(db.String(12)) #what is the meaning?
-    
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), {}) 
 
 class Entity_Link(db.Model):
     __tablename__ = 'entity_links'
@@ -204,7 +200,6 @@ class Entity_Link(db.Model):
     hfid = db.Column(db.Integer)
     entity_id = db.Column(db.Integer)
     link_type = db.Column(db.String(20))
-
 
 class HF_Link(db.Model):
     __tablename__ = 'hf_links'
