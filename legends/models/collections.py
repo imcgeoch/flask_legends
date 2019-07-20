@@ -8,12 +8,6 @@ eventcol_event_link = db.Table('eventcol_event_link', db.metadata,
         db.Column('df_world_id', db.Integer),
         db.Column('event_id', db.Integer),
         db.Column('eventcol_id', db.Integer),
-        #db.ForeignKeyConstraint(['df_world_id', 'eventcol_id'],
-        #                        ['event_collections.df_world_id',
-        #                         'event_collections.id']),
-        #db.ForeignKeyConstraint(['df_world_id', 'event_id'],
-        #                        ['historical_events.df_world_id',
-        #                         'historical_events.id'])
         )
         
 
@@ -29,36 +23,18 @@ eventcol_attackers = db.Table('eventcol_attackers', db.metadata,
         db.Column('df_world_id', db.Integer),
         db.Column('eventcol_id', db.Integer),
         db.Column('hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'eventcol_id'],
-                                ['event_collections.df_world_id',
-                                 'event_collections.id'])
         )
 eventcol_defenders = db.Table('eventcol_defenders', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
         db.Column('df_world_id', db.Integer),
         db.Column('eventcol_id', db.Integer),
         db.Column('hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'eventcol_id'],
-                                ['event_collections.df_world_id',
-                                 'event_collections.id'])
         )
 eventcol_noncoms = db.Table('eventcol_noncoms', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
         db.Column('df_world_id', db.Integer),
         db.Column('eventcol_id', db.Integer),
         db.Column('hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'eventcol_id'],
-                                ['event_collections.df_world_id',
-                                 'event_collections.id'])
         )
 
 class Event_Collection(db.Model):
@@ -125,12 +101,37 @@ class Event_Collection(db.Model):
                                                    "eventcol_event_link",
                                                    ("id", "event_id")))
 
-    attackers = db.relationship('Historical_Figure', viewonly=True,
-            secondary='eventcol_attackers', backref='attacker_collections')
-    defender = db.relationship('Historical_Figure', viewonly=True,
-            secondary='eventcol_defenders', backref='defender_collections')
-    noncoms = db.relationship('Historical_Figure', viewonly=True,
-            secondary='eventcol_attackers', backref='noncom_collections')
+    attackers = db.relationship('Historical_Figure', 
+                                viewonly=True,
+                                secondary='eventcol_attackers',
+                                backref='attacker_collections',
+                                primaryjoin=tjb("Event_Collection", 
+                                                "eventcol_attackers",
+                                                ("id", "eventcol_id")),
+                                secondaryjoin=tjb("Historical_Figure", 
+                                                  "eventcol_attackers",
+                                                  ("id", "hfid")))
 
+    defenders = db.relationship('Historical_Figure', 
+                                viewonly=True,
+                                secondary='eventcol_defenders',
+                                backref='defender_collections',
+                                primaryjoin=tjb("Event_Collection", 
+                                                "eventcol_defenders",
+                                                ("id", "eventcol_id")),
+                                secondaryjoin=tjb("Historical_Figure", 
+                                                  "eventcol_defenders",
+                                                  ("id", "hfid")))
+
+    noncoms = db.relationship('Historical_Figure', 
+                                viewonly=True,
+                                secondary='eventcol_noncoms',
+                                backref='noncom_collections',
+                                primaryjoin=tjb("Event_Collection", 
+                                                "eventcol_noncoms",
+                                                ("id", "eventcol_id")),
+                                secondaryjoin=tjb("Historical_Figure", 
+                                                  "eventcol_noncoms",
+                                                  ("id", "hfid")))
 
 
