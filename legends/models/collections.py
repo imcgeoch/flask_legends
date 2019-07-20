@@ -8,12 +8,12 @@ eventcol_event_link = db.Table('eventcol_event_link', db.metadata,
         db.Column('df_world_id', db.Integer),
         db.Column('event_id', db.Integer),
         db.Column('eventcol_id', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'eventcol_id'],
-                                ['event_collections.df_world_id',
-                                 'event_collections.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'event_id'],
-                                ['historical_events.df_world_id',
-                                 'historical_events.id'])
+        #db.ForeignKeyConstraint(['df_world_id', 'eventcol_id'],
+        #                        ['event_collections.df_world_id',
+        #                         'event_collections.id']),
+        #db.ForeignKeyConstraint(['df_world_id', 'event_id'],
+        #                        ['historical_events.df_world_id',
+        #                         'historical_events.id'])
         )
         
 
@@ -105,7 +105,7 @@ class Event_Collection(db.Model):
 
     linked_collections = db.relationship('Event_Collection',
                                          secondary='eventcol_eventcol_link', 
-                                         backref='linking_collection',
+                                         backref='linking_collections',
                                          viewonly=True,
                                          primaryjoin=tjb("Event_Collection", 
                                                      "eventcol_eventcol_link",
@@ -114,8 +114,16 @@ class Event_Collection(db.Model):
                                                        "eventcol_eventcol_link",
                                                        ("id", "eventcol_id2")))
 
-    linked_events = db.relationship('Historical_Event', viewonly=True, 
-            secondary='eventcol_event_link', backref='collections')
+    linked_events = db.relationship('Historical_Event', 
+                                     viewonly=True, 
+                                     secondary='eventcol_event_link',
+                                     backref='collections',
+                                     primaryjoin=tjb("Event_Collection", 
+                                                 "eventcol_event_link",
+                                                 ("id", "eventcol_id")),
+                                     secondaryjoin=tjb("Historical_Event", 
+                                                   "eventcol_event_link",
+                                                   ("id", "event_id")))
 
     attackers = db.relationship('Historical_Figure', viewonly=True,
             secondary='eventcol_attackers', backref='attacker_collections')
