@@ -1,5 +1,5 @@
 from . import db
-from .join_builder import join_builder as jb
+from .join_builder import join_builder as jb, table_join_builder as tjb
 
 
 class Historical_Figure(db.Model):
@@ -36,6 +36,12 @@ class Historical_Figure(db.Model):
     competitions = db.relationship('Competition', 
                           secondary='competitors',
                           backref='competitors', 
+                          primaryjoin=tjb('Historical_Figure',
+                                          'competitors',
+                                          ('id', 'competitor_hfid')),
+                          secondaryjoin=tjb('Historical_Event',
+                                            'competitors',
+                                            ('id', 'event_id')),
                           viewonly=True)
     entity_position_links = db.relationship('Entity_Position_Link',
                                 backref='historical_figure',

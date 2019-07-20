@@ -841,11 +841,5 @@ competitors = db.Table('competitors', db.metadata,
         db.Column('df_world_id', db.Integer),
         db.Column('event_id', db.Integer),
         db.Column('competitor_hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'competitor_hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'event_id'],
-                                ['historical_events.df_world_id',
-                                 'historical_events.id'])
         )
 
