@@ -65,9 +65,12 @@ class Historical_Figure(db.Model):
                                                       ('id', 'author_hfid')))
 
     hf_links = db.relationship('HF_Link', backref='this_histfig',
-            foreign_keys='HF_Link.hfid1,HF_Link.df_world_id')
+            foreign_keys='HF_Link.hfid1,HF_Link.df_world_id',
+            viewonly=True,
+            primaryjoin=jb('Historical_Figure', 'HF_Link', ('id', 'hfid1')))
     hf_relationships = db.relationship('Relationship', 
-            backref='this_histfig',
+            backref='this_histfig', primaryjoin=jb('Historical_Figure', 
+                                                    'Relationship', ('id', 'hfid1')),
             foreign_keys='Relationship.hfid1,Relationship.df_world_id')
     
     site_links = db.relationship('Site_Link', backref='historical_figure', 
@@ -212,17 +215,9 @@ class HF_Link(db.Model):
         'mother', 'father', 'former apprentice', 'master', 
         'former master', name='hf_link_type'))
 
-    other = db.relationship("Historical_Figure", 
+    other = db.relationship("Historical_Figure", foreign_keys=[df_world_id, hfid2],
             primaryjoin="and_(HF_Link.hfid2==Historical_Figure.id," + 
                 "HF_Link.df_world_id==Historical_Figure.df_world_id)")
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid1],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), 
-                      db.ForeignKeyConstraint([df_world_id, hfid2],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), 
-                      {})
 
 class Site_Link(db.Model):
     __tablename__ = 'site_links'
@@ -272,16 +267,7 @@ class Relationship(db.Model):
     meet_count = db.Column(db.Integer)
     rep_buddy = db.Column(db.Integer) 
 
-    other = db.relationship("Historical_Figure", primaryjoin=
+    other = db.relationship("Historical_Figure", foreign_keys=[df_world_id, hfid2],
+            primaryjoin=
     "and_(Relationship.hfid2==Historical_Figure.id," + 
     "Relationship.df_world_id==Historical_Figure.df_world_id)")
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, hfid1],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), 
-                      db.ForeignKeyConstraint([df_world_id, hfid2],
-                                 [Historical_Figure.df_world_id,
-                                  Historical_Figure.id]), 
-                      {})
-
-
