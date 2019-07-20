@@ -5,7 +5,7 @@ from .join_builder import join_builder as jb, table_join_builder as tjb
 class Historical_Figure(db.Model):
     __tablename__ = 'historical_figures'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -152,7 +152,7 @@ class Goal(db.Model):
              'bring peace to the world', 'make a great discovery',
              'craft a masterwork']
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     hfid = db.Column(db.Integer, primary_key=True)
     goal = db.Column(db.Enum(*goals, name='goal_types'), primary_key=True)
@@ -175,7 +175,7 @@ class Sphere(db.Model):
                'hunting', 'strength', 'light', 'thunder', 'food', 
                'rebirth', 'muck', 'art', 'inspiration', 'sky', 'wind']
     
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     hfid = db.Column(db.Integer, primary_key=True)
     sphere = db.Column(db.String(20), primary_key=True)

@@ -5,7 +5,7 @@ from .join_builder import join_builder as jb, table_join_builder as tjb
 
 class Entity(db.Model):
     __tablename__ = 'entities'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -109,7 +109,7 @@ class Entity(db.Model):
 class Entity_Population(db.Model):
     __tablename__ = 'entity_populations'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     race = db.Column(db.String(20))
@@ -120,7 +120,7 @@ class Entity_Population(db.Model):
 
 class Occasion(db.Model):
     __tablename__ = 'occasions'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     entity_id = db.Column(db.Integer)
@@ -130,7 +130,7 @@ class Occasion(db.Model):
 
 class Schedules(db.Model):
     __tablename__ = 'schedules'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
 
@@ -145,7 +145,7 @@ class Schedules(db.Model):
 
 class Features(db.Model):
     __tablename__ = 'features'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     occasion_id = db.Column(db.Integer)
@@ -157,7 +157,7 @@ class Features(db.Model):
 
 class Entity_Position(db.Model):
     __tablename__ = 'entity_positions'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     entity_id = db.Column(db.Integer)
@@ -176,7 +176,7 @@ class Site(db.Model):
              'town', 'vault', 'hillocks', 'dark pits', 'hamlet',
             'tomb', 'mountain halls', 'camp', 'lair', 'shrine']
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -243,7 +243,7 @@ class Structure(db.Model):
              'dungeon', 'keep', 'tomb', 'mead hall', 'library']
     subtypes = ['catacombs', 'standard', 'sewers']
     
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     site_id = db.Column(db.Integer, primary_key=True)
     entity_id = db.Column(db.Integer)

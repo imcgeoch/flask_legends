@@ -6,7 +6,7 @@ from . import db
 class Historical_Event(db.Model):
     __tablename__ = 'historical_events'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50))

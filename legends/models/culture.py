@@ -4,7 +4,7 @@ from .join_builder import join_builder as jb
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))

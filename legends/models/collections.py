@@ -38,7 +38,7 @@ eventcol_noncoms = db.Table('eventcol_noncoms', db.metadata,
 
 class Event_Collection(db.Model):
     __tablename__ = 'event_collections'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
 
