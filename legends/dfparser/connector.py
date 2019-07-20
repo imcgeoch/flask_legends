@@ -81,6 +81,10 @@ class Connector():
                          ('interaction_knowledge',
                          self.make_add_hf_detail('interaction_knowledge'))}
 
+        self.db.session.add(DF_World(id=world_id))
+        self.db.session.commit()
+
+
     def add(self, name, mapping):
         # takes a dict mapping keys to fields 
         # from an xml parser, by calling appropriate helper

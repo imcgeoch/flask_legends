@@ -8,8 +8,8 @@ class Historical_Figure(db.Model):
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    race = db.Column(db.String(20))
+    name = db.Column(db.String(100))
+    race = db.Column(db.String(40))
     caste = db.Column(db.String(10))
     deity = db.Column(db.Boolean) # Self-closing in xml
     force = db.Column(db.Boolean) # Self-closing in xml
@@ -185,14 +185,14 @@ class Journey_Pet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     df_world_id = db.Column(db.Integer)
     hfid = db.Column(db.Integer)
-    journey_pet = db.Column(db.String(20))
+    journey_pet = db.Column(db.String(40))
 
 class Skill(db.Model):
     __tablename__ = 'skills'
     id = db.Column(db.Integer, primary_key=True)
     df_world_id = db.Column(db.Integer)
     hfid = db.Column(db.Integer)
-    skill = db.Column(db.String(20)) # should prolly be enum
+    skill = db.Column(db.String(40)) # should prolly be enum
     total_ip = db.Column(db.Integer)
 
 class Interaction_Knowledge(db.Model):

@@ -7,8 +7,8 @@ class Artifact(db.Model):
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    name_string = db.Column(db.String(50))
+    name = db.Column(db.String(100))
+    name_string = db.Column(db.String(100))
     page_number = db.Column(db.Integer)
     # page_written_content_id = db.Column(db.Integer) redundant scroll vs book
     written_content_id = db.Column(db.Integer)
@@ -46,7 +46,7 @@ class Written_Content(db.Model):
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50))
+    title = db.Column(db.String(100))
     form = db.Column(db.Enum(*forms, name='wc_form_types'))
     form_id = db.Column(db.Integer) # use primaryjoin with form_id == TYPE 
     author_hfid = db.Column(db.Integer)
