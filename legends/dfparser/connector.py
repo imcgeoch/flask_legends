@@ -97,7 +97,7 @@ class Connector():
 
         self.update_dict(name, self.update_fns[name](mapping))
         self.counter = self.counter + 1
-        if self.counter > 10000:
+        if self.counter > 100000:
             self.counter = 0
             self.bulk_insert_all()
 
