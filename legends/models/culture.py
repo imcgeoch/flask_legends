@@ -41,9 +41,9 @@ class Written_Content(db.Model):
              'essay', 'manual', 'cultural history', 'star chart', 
              'letter', 'short story', 'cultural comparison', 'novel', 
              'autobiography', 'comparative biography', 'biography',
-             'chronicle','dictionary','play']
+             'chronicle','dictionary','play','encyclopedia']
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
@@ -72,7 +72,7 @@ class Style(db.Model):
 class Musical_Form(db.Model):
     __tablename__ = 'musical_forms'
     
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
@@ -80,14 +80,14 @@ class Musical_Form(db.Model):
 class Poetic_Form(db.Model):
     __tablename__ = 'poetic_forms'
     
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
 
 class Dance_Form(db.Model):
     __tablename__ = 'dance_forms'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
@@ -95,7 +95,7 @@ class Dance_Form(db.Model):
 class Historical_Era(db.Model):
     __tablename__ = 'historical_eras'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     name = db.Column(db.String(50), primary_key=True)
     start_year = db.Column(db.Integer)

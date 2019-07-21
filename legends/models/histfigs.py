@@ -218,7 +218,7 @@ class HF_Link(db.Model):
     hfid2 = db.Column( db.Integer)
     link_strength = db.Column(db.Integer)
     link_type = db.Column(db.Enum('child','spouse', 'deity', 'apprentice',
-        'mother', 'father', 'former apprentice', 'master', 
+        'mother', 'father', 'former apprentice', 'master', 'prisoner', 'imprisoner',
         'former master', name='hf_link_type'))
 
     other = db.relationship("Historical_Figure", foreign_keys=[df_world_id, hfid2],
@@ -228,7 +228,7 @@ class HF_Link(db.Model):
 class Site_Link(db.Model):
     __tablename__ = 'site_links'
 
-    types = ['lair', 'home structure', 'seat of power', 'occupation']
+    types = ['lair', 'home structure', 'seat of power', 'occupation', 'hangout']
 
     id = db.Column(db.Integer, primary_key=True)
     df_world_id = db.Column(db.Integer)

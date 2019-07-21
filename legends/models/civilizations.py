@@ -174,7 +174,7 @@ class Site(db.Model):
 
     types = ['cave', 'fortress', 'dark fortress', 'forest retreat',
              'town', 'vault', 'hillocks', 'dark pits', 'hamlet',
-            'tomb', 'mountain halls', 'camp', 'lair', 'shrine']
+            'tomb', 'mountain halls', 'camp', 'lair', 'shrine', 'tower']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)

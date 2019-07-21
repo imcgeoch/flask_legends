@@ -63,7 +63,7 @@ class Historical_Event(db.Model):
     slayer_caste = db.Column(db.String(20))
     slayer_item_id = db.Column(db.Integer)
     slayer_shooter_item_id = db.Column(db.Integer)
-    cause = db.Column(db.String(20))
+    cause = db.Column(db.String(30))
     interaction_action = db.Column(db.String(20))
     interaction_string = db.Column(db.String(20))
     source = db.Column(db.Integer)
