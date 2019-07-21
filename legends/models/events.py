@@ -838,7 +838,7 @@ class Poetic_Form_Created(Historical_Event):
 
 competitors = db.Table('competitors', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id',  db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('event_id', db.Integer),
         db.Column('competitor_hfid', db.Integer),
         )

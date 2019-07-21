@@ -267,15 +267,15 @@ class Structure(db.Model):
 # Intermediate tables
 
 members = db.Table('members', db.metadata,
-        db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('id', db.Integer,  primary_key=True),
+        db.Column('df_world_id', db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('entity_id', db.Integer),
         db.Column('hfid', db.Integer),
         )
 
 inhabitants = db.Table('inhabitants', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id', db.Integer,  db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('site_id', db.Integer),
         db.Column('structure_id', db.Integer),
         db.Column('hfid', db.Integer),

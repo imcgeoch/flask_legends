@@ -183,14 +183,14 @@ class Sphere(db.Model):
 class Journey_Pet(db.Model):
     __tablename__ = 'journey_pets'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid = db.Column(db.Integer)
     journey_pet = db.Column(db.String(40))
 
 class Skill(db.Model):
     __tablename__ = 'skills'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid = db.Column(db.Integer)
     skill = db.Column(db.String(40)) # should prolly be enum
     total_ip = db.Column(db.Integer)
@@ -198,14 +198,14 @@ class Skill(db.Model):
 class Interaction_Knowledge(db.Model):
     __tablename__ = 'interaction_knowledges'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid = db.Column(db.Integer)
     interaction_knowledge = db.Column(db.String(12)) #what is the meaning?
 
 class Entity_Link(db.Model):
     __tablename__ = 'entity_links'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid = db.Column(db.Integer)
     entity_id = db.Column(db.Integer)
     link_type = db.Column(db.String(20))
@@ -213,7 +213,7 @@ class Entity_Link(db.Model):
 class HF_Link(db.Model):
     __tablename__ = 'hf_links'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid1 = db.Column(db.Integer)
     hfid2 = db.Column( db.Integer)
     link_strength = db.Column(db.Integer)
@@ -231,7 +231,7 @@ class Site_Link(db.Model):
     types = ['lair', 'home structure', 'seat of power', 'occupation', 'hangout']
 
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid = db.Column(db.Integer)
     entity_id = db.Column(db.Integer)
     link_type = db.Column(db.Enum(*types, name='site_link_types'))
@@ -242,7 +242,7 @@ class Site_Link(db.Model):
 class Entity_Position_Link(db.Model):
     __tablename__ = 'entity_position_links'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid = db.Column(db.Integer)
     entity_id = db.Column(db.Integer)
     start_year = db.Column(db.Integer)
@@ -253,7 +253,7 @@ class Entity_Position_Link(db.Model):
 class Entity_Reputation(db.Model):
     __tablename__ = 'entity_reputations'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid = db.Column(db.Integer)
     entity_id = db.Column(db.Integer)
     first_ageless_season_count = db.Column(db.Integer)
@@ -264,7 +264,7 @@ class Entity_Reputation(db.Model):
 class Relationship(db.Model):
     __tablename__ = 'relationship'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     hfid1 = db.Column(db.Integer)
     hfid2 = db.Column(db.Integer)
     known_identity_id = db.Column(db.Integer)

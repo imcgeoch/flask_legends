@@ -64,7 +64,7 @@ class Style(db.Model):
     __tablename__ = 'styles'
 
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     content_id = db.Column(db.Integer)
     style = db.Column(db.String(20)) #should be enum
     magnitude = db.Column(db.Integer)

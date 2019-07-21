@@ -5,33 +5,33 @@ from .join_builder import join_builder as jb, table_join_builder as tjb
 
 eventcol_event_link = db.Table('eventcol_event_link', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id', db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('event_id', db.Integer),
         db.Column('eventcol_id', db.Integer),
         )
 
 eventcol_eventcol_link = db.Table('eventcol_eventcol_link', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id', db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('eventcol_id1', db.Integer),
         db.Column('eventcol_id2', db.Integer),
         )
 
 eventcol_attackers = db.Table('eventcol_attackers', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id', db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('eventcol_id', db.Integer),
         db.Column('hfid', db.Integer),
         )
 eventcol_defenders = db.Table('eventcol_defenders', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id', db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('eventcol_id', db.Integer),
         db.Column('hfid', db.Integer),
         )
 eventcol_noncoms = db.Table('eventcol_noncoms', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id', db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('eventcol_id', db.Integer),
         db.Column('hfid', db.Integer),
         )
