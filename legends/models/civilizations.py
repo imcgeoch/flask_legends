@@ -213,25 +213,30 @@ class Site(db.Model):
     current_owner_id = db.Column(db.Integer)
 
     site_links = db.relationship('Site_Link', backref='site', 
-                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 viewonly=True,
+                                 foreign_keys="Site_Link.df_world_id,"
+                                              "Site_Link.id",
                                  primaryjoin=jb('Site', 
                                                 'Site_Link', 
                                                ('id', 'site_id')))
 
     structures = db.relationship('Structure', backref='site', viewonly=True,
-                                 foreign_keys=[id, df_world_id],
+                                 foreign_keys="Structure.df_world_id,"
+                                              "Structure.site_id",
                                  primaryjoin=jb('Site', 'Structure', 
                                                 ('id', 'site_id')))
     event_collections = db.relationship('Event_Collection', backref='site',
                                         viewonly=True, 
-                                        foreign_keys=[id, df_world_id],
+                                        foreign_keys="Event_Collection.df_world_id,"
+                                                     "Event_Collection.site_id",
                                  primaryjoin=jb('Site', 'Event_Collection', 
                                                 ('id', 'site_id')))
     
     stored_artifacts = db.relationship('Artifact', backref='storage_site', 
                                        primaryjoin=jb('Site', 'Artifact',
                                                       ('id', 'site_id')),
-                                       foreign_keys=[id, df_world_id],
+                                       foreign_keys="Artifact.df_world_id,"
+                                                    "Artifact.site_id",
                                        viewonly=True)
     
     prim_events = db.relationship('Historical_Event', backref='site', 
@@ -239,7 +244,9 @@ class Site(db.Model):
                                         'Site.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Site.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True, 
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.site_id",
+                    uselist=True, 
                     viewonly=True)
 
     sec_events = db.relationship('Historical_Event', backref='site_2', 
@@ -247,7 +254,9 @@ class Site(db.Model):
                                         'Site.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Site.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True,
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.site_id2",
+                    uselist=True,
                     viewonly=True)
     
     all_events = db.relationship('Historical_Event', 
@@ -258,7 +267,10 @@ class Site(db.Model):
                                         'Site.id),' +
                                       'Historical_Event.df_world_id == ' +
                                          'Site.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True,
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.site_id,"
+                                 "Historical_Event.site_id2",
+                    uselist=True,
                     viewonly=True)
 
 class Structure(db.Model):
