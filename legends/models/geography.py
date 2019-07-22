@@ -2,7 +2,7 @@ from . import db
 
 class Landmass(db.Model):
     __tablename__ = 'landmasses'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -11,7 +11,7 @@ class Landmass(db.Model):
 
 class Mountain_Peak(db.Model):
     __tablename__ = 'mountain_peaks'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
 
@@ -24,11 +24,11 @@ class Region(db.Model):
     types = ['Wetland', 'Grassland', 'Hills', 'Desert', 'Forest',
              'Mountains', 'Lake', 'Ocean', 'Tundra', 'Glacier']
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
-    type = db.Column(db.Enum(*types))
+    type = db.Column(db.Enum(*types, name='region_types'))
     coords = db.Column(db.String)
     
     events = db.relationship('Historical_Event', backref='region', 
@@ -41,15 +41,15 @@ class Region(db.Model):
 class Underground_Region(db.Model):
     __tablename__ = 'underground_regions'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.Enum('cavern', 'magma', 'underworld'))
+    type = db.Column(db.Enum('cavern', 'magma', 'underworld', name='ug_region_types'))
     coords = db.Column(db.String)
 
 class World_Construction(db.Model):
     __tablename__ = 'world_constructions'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))

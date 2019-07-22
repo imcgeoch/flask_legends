@@ -6,7 +6,7 @@ from . import db
 class Historical_Event(db.Model):
     __tablename__ = 'historical_events'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50))
@@ -32,7 +32,7 @@ class Historical_Event(db.Model):
     building = db.Column(db.Integer)
     agreement_id = db.Column(db.Integer)
     position_profile_id = db.Column(db.Integer)
-    claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure'))
+    claim = db.Column(db.Enum('heirloom', 'symbol', 'treasure', name='claim_types'))
     dest_site_id = db.Column(db.Integer)
     dest_structure_id = db.Column(db.Integer)
     dest_entity_id = db.Column(db.Integer)
@@ -48,22 +48,22 @@ class Historical_Event(db.Model):
     new_job = db.Column(db.String(20))
     subregion_id = db.Column(db.Integer)
     state = db.Column(db.String(20))
-    old_race = db.Column(db.String(20))
-    new_race = db.Column(db.String(20))
+    old_race = db.Column(db.String(40))
+    new_race = db.Column(db.String(40))
     old_caste = db.Column(db.String(20))
     new_caste = db.Column(db.String(20))
     master_wcid = db.Column(db.Integer)
     race = db.Column(db.String(20))
     caste = db.Column(db.String(20))
-    law_type = db.Column(db.Enum('add', 'remove')) #add or remove
+    law_type = db.Column(db.Enum('add', 'remove', name='law_types')) #add or remove
     law = db.Column(db.String(50))
     result = db.Column(db.String(20))
     situation = db.Column(db.String(50))
-    slayer_race = db.Column(db.String(20))
+    slayer_race = db.Column(db.String(40))
     slayer_caste = db.Column(db.String(20))
     slayer_item_id = db.Column(db.Integer)
     slayer_shooter_item_id = db.Column(db.Integer)
-    cause = db.Column(db.String(20))
+    cause = db.Column(db.String(30))
     interaction_action = db.Column(db.String(20))
     interaction_string = db.Column(db.String(20))
     source = db.Column(db.Integer)
@@ -73,7 +73,7 @@ class Historical_Event(db.Model):
     unit_type = db.Column(db.String(20))
     relationship = db.Column(db.String(20))
     ghost = db.Column(db.String(20))
-    subtype = db.Column(db.String(20))
+    subtype = db.Column(db.String(30))
     returned = db.Column(db.Boolean)
     woundee_race = db.Column(db.Integer)
     woundee_caste = db.Column(db.Integer)
@@ -85,7 +85,7 @@ class Historical_Event(db.Model):
     hf_rep_1_of_2 = db.Column(db.String(20))
     hf_rep_2_of_1 = db.Column(db.String(20))
     outcome = db.Column(db.String(25))
-    knowledge = db.Column(db.String(50))
+    knowledge = db.Column(db.String(100))
     skill_at_time = db.Column(db.Integer)
     building_type = db.Column(db.String(50))
     building_custom = db.Column(db.String(50))
@@ -838,14 +838,8 @@ class Poetic_Form_Created(Historical_Event):
 
 competitors = db.Table('competitors', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id',  db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('event_id', db.Integer),
         db.Column('competitor_hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'competitor_hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'event_id'],
-                                ['historical_events.df_world_id',
-                                 'historical_events.id'])
         )
 

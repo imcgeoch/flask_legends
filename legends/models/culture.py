@@ -1,13 +1,14 @@
 from . import db
+from .join_builder import join_builder as jb
 
 class Artifact(db.Model):
     __tablename__ = 'artifacts'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    name_string = db.Column(db.String(50))
+    name = db.Column(db.String(100))
+    name_string = db.Column(db.String(100))
     page_number = db.Column(db.Integer)
     # page_written_content_id = db.Column(db.Integer) redundant scroll vs book
     written_content_id = db.Column(db.Integer)
@@ -28,11 +29,6 @@ class Artifact(db.Model):
                     foreign_keys=[id, df_world_id], uselist=True, 
                     viewonly=True)
 
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, holder_hfid],
-                                 ['historical_figures.df_world_id',
-                                  'historical_figures.id']), {})
-
-    # add lookup to written_contents
 
     def __repr__(self):
         return "<Artifact %s>" % (self.name)
@@ -45,41 +41,40 @@ class Written_Content(db.Model):
              'essay', 'manual', 'cultural history', 'star chart', 
              'letter', 'short story', 'cultural comparison', 'novel', 
              'autobiography', 'comparative biography', 'biography',
-             'chronicle','dictionary','play']
+             'chronicle','dictionary','play','encyclopedia', 'dialog', 
+             'genealogy', 'treatise on technological evolution', 'atlas',
+             'alternate history', 'star catalogue', 'biographical dictionary']
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50))
-    form = db.Column(db.Enum(*forms))
+    title = db.Column(db.String(100))
+    form = db.Column(db.Enum(*forms, name='wc_form_types'))
     form_id = db.Column(db.Integer) # use primaryjoin with form_id == TYPE 
     author_hfid = db.Column(db.Integer)
     author_roll = db.Column(db.Integer)
 
-
-
-    styles = db.relationship('Style')
+    styles = db.relationship('Style', 
+                             foreign_keys="Style.df_world_id,"
+                                          "Style.content_id",
+                             primaryjoin=jb("Written_Content", 
+                                            "Style",
+                                            ("id", "content_id")))
     
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, author_hfid],
-                                 ['historical_figures.df_world_id',
-                                  'historical_figures.id']), {})
 
 class Style(db.Model):
     __tablename__ = 'styles'
 
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
     content_id = db.Column(db.Integer)
     style = db.Column(db.String(20)) #should be enum
     magnitude = db.Column(db.Integer)
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, content_id],
-                                 [Written_Content.df_world_id,
-                                  Written_Content.id]), {})
 
 class Musical_Form(db.Model):
     __tablename__ = 'musical_forms'
     
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
@@ -87,14 +82,14 @@ class Musical_Form(db.Model):
 class Poetic_Form(db.Model):
     __tablename__ = 'poetic_forms'
     
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
 
 class Dance_Form(db.Model):
     __tablename__ = 'dance_forms'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
@@ -102,7 +97,7 @@ class Dance_Form(db.Model):
 class Historical_Era(db.Model):
     __tablename__ = 'historical_eras'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     name = db.Column(db.String(50), primary_key=True)
     start_year = db.Column(db.Integer)

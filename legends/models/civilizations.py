@@ -1,10 +1,11 @@
 from . import db
+from .join_builder import join_builder as jb, table_join_builder as tjb
 
 # Civs and Local Govts
 
 class Entity(db.Model):
     __tablename__ = 'entities'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
@@ -12,31 +13,49 @@ class Entity(db.Model):
     type = db.Column(db.String(20))
     claims = db.Column(db.String)
 
+    #site_links = db.relationship('Site_Link', backref='entity', 
+    #                             viewonly=True)
     site_links = db.relationship('Site_Link', backref='entity', 
-                                 viewonly=True)
+                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Entity', 'Site_Link', 
+                                               ('id', 'entity_id')))
     structures = db.relationship('Structure', backref='entity',
-                                 viewonly=True)
+                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Entity', 'Structure',
+                                                ('id', 'entity_id')))
+
     entity_position_links = db.relationship('Entity_Position_Link',
                                 backref='entity',
-                                viewonly=True)
+                                viewonly=True, foreign_keys=[id, df_world_id],
+                                primaryjoin=jb('Entity', 'Entity_Position_Link',
+                                    ('id', 'entity_id')))
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='entity',
-                             viewonly=True)
+                             viewonly=True, foreign_keys=[id, df_world_id],
+                             primaryjoin=jb('Entity', 'Entity_Reputation',
+                                    ('id', 'entity_id')))
     entity_links =  db.relationship('Entity_Link',
                              backref='entity',
-                             viewonly=True)
-    eventcols1 = db.relationship('Event_Collection', 
-                                backref='entity1', 
-                                foreign_keys='Event_Collection.entity_id,'
-                                            'Event_Collection.df_world_id')
-    eventcols2 = db.relationship('Event_Collection', 
-                                backref='entity2', 
-                                foreign_keys='Event_Collection.entity_id2,'
-                                       'Event_Collection.df_world_id')
+                             viewonly=True, foreign_keys=[id, df_world_id],
+                             primaryjoin=jb('Entity', 'Entity_Link',
+                                    ('id', 'entity_id')))
+
+    eventcols1 = db.relationship('Event_Collection', backref='entity1', 
+                                foreign_keys=[id, df_world_id],
+                                primaryjoin=jb('Entity', 'Event_Collection',
+                                    ('id', 'entity_id')))
+    eventcols2 = db.relationship('Event_Collection', backref='entity2', 
+                                foreign_keys=[id, df_world_id],
+                                primaryjoin=jb('Entity', 'Event_Collection',
+                                    ('id', 'entity_id2')))
     members = db.relationship('Historical_Figure',
                                      backref='member_of',
                                      secondary='members',
-                                     viewonly=True)
+                                     viewonly=True,
+                              primaryjoin=tjb('Entity', 'members', 
+                                            ('id', 'entity_id')),
+                              secondaryjoin=tjb('Historical_Figure', 'members', 
+                                             ('id', 'hfid')))
     
     prim_events = db.relationship('Historical_Event', backref='entity', 
                     primaryjoin='and_(Historical_Event.entity_id == ' +
@@ -90,7 +109,7 @@ class Entity(db.Model):
 class Entity_Population(db.Model):
     __tablename__ = 'entity_populations'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     race = db.Column(db.String(20))
@@ -101,7 +120,7 @@ class Entity_Population(db.Model):
 
 class Occasion(db.Model):
     __tablename__ = 'occasions'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     entity_id = db.Column(db.Integer)
@@ -111,7 +130,7 @@ class Occasion(db.Model):
 
 class Schedules(db.Model):
     __tablename__ = 'schedules'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
 
@@ -126,7 +145,7 @@ class Schedules(db.Model):
 
 class Features(db.Model):
     __tablename__ = 'features'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     occasion_id = db.Column(db.Integer)
@@ -138,7 +157,7 @@ class Features(db.Model):
 
 class Entity_Position(db.Model):
     __tablename__ = 'entity_positions'
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'),
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     entity_id = db.Column(db.Integer)
@@ -155,31 +174,40 @@ class Site(db.Model):
 
     types = ['cave', 'fortress', 'dark fortress', 'forest retreat',
              'town', 'vault', 'hillocks', 'dark pits', 'hamlet',
-            'tomb', 'mountain halls', 'camp', 'lair', 'shrine']
+            'tomb', 'mountain halls', 'camp', 'lair', 'shrine', 'tower']
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     coords = db.Column(db.String(10))
     rectangle = db.Column(db.String(20))
-    type = db.Column(db.Enum(*types))
+    type = db.Column(db.Enum(*types, name='site_types'))
 
     civ_id = db.Column(db.Integer)
     current_owner_id = db.Column(db.Integer)
 
-    site_links = db.relationship('Site_Link', backref='site', viewonly=True)
-    structures = db.relationship('Structure', backref='site', viewonly=True)
+    site_links = db.relationship('Site_Link', backref='site', 
+                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Site', 
+                                                'Site_Link', 
+                                               ('id', 'site_id')))
+
+    structures = db.relationship('Structure', backref='site', viewonly=True,
+                                 foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Site', 'Structure', 
+                                                ('id', 'site_id')))
     event_collections = db.relationship('Event_Collection', backref='site',
-                                        viewonly=True)
+                                        viewonly=True, 
+                                        foreign_keys=[id, df_world_id],
+                                 primaryjoin=jb('Site', 'Event_Collection', 
+                                                ('id', 'site_id')))
     
     stored_artifacts = db.relationship('Artifact', backref='storage_site', 
-                                       primaryjoin='and_(Artifact.site_id == '+
-                                                         'Site.id,' +
-                                                         'Artifact.df_world_id ==' +
-                                                         'Site.df_world_id)',
-                                     foreign_keys=[id, df_world_id],
-                                      viewonly=True)
+                                       primaryjoin=jb('Site', 'Artifact',
+                                                      ('id', 'site_id')),
+                                       foreign_keys=[id, df_world_id],
+                                       viewonly=True)
     
     prim_events = db.relationship('Historical_Event', backref='site', 
                     primaryjoin='and_(Historical_Event.site_id == ' +
@@ -215,54 +243,41 @@ class Structure(db.Model):
              'dungeon', 'keep', 'tomb', 'mead hall', 'library']
     subtypes = ['catacombs', 'standard', 'sewers']
     
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id'), 
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     site_id = db.Column(db.Integer, primary_key=True)
-    entity_id = db.Column(db.Integer, primary_key=True)
+    entity_id = db.Column(db.Integer)
     local_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     name2 = db.Column(db.String(50))
-    type = db.Column(db.Enum(*types))
-    subtype = db.Column(db.Enum(*subtypes))
+    type = db.Column(db.Enum(*types, name='structure_types'))
+    subtype = db.Column(db.Enum(*subtypes, name='structure_subtypes'))
     worship_hfid = db.Column(db.Integer)
 
-    #inhabitants redundant?
-
-    __table_args__ = (db.ForeignKeyConstraint([df_world_id, site_id],
-                                 [Site.df_world_id, Site.id]),
-                      db.ForeignKeyConstraint([df_world_id, entity_id],
-                                 [Entity.df_world_id, Entity.id]),
-                      db.ForeignKeyConstraint([df_world_id, worship_hfid],
-                                 ['historical_figures.df_world_id',
-                                  'historical_figures.id']), {})
+    inhabitants = db.relationship('Historical_Figure',
+                                     backref='home_structure',
+                                     secondary='inhabitants',
+                                     viewonly=True,
+                              primaryjoin=tjb('Structure', 'inhabitants', 
+                                            ('local_id', 'structure_id'), 
+                                            ('site_id', 'site_id')),
+                              secondaryjoin=tjb('Historical_Figure', 'inhabitants', 
+                                             ('id', 'hfid')))
 
 # Intermediate tables
 
 members = db.Table('members', db.metadata,
-        db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('id', db.Integer,  primary_key=True),
+        db.Column('df_world_id', db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('entity_id', db.Integer),
         db.Column('hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'entity_id'],
-                                ['entities.df_world_id', 
-                                 'entities.id'])
         )
 
 inhabitants = db.Table('inhabitants', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
-        db.Column('df_world_id', db.Integer),
+        db.Column('df_world_id', db.Integer,  db.ForeignKey('df_world.id', ondelete='CASCADE')),
         db.Column('site_id', db.Integer),
         db.Column('structure_id', db.Integer),
         db.Column('hfid', db.Integer),
-        db.ForeignKeyConstraint(['df_world_id', 'hfid'],
-                                ['historical_figures.df_world_id',
-                                 'historical_figures.id']),
-        db.ForeignKeyConstraint(['df_world_id', 'site_id', 'structure_id'],
-                                ['structures.df_world_id', 
-                                 'structures.site_id',
-                                 'structures.local_id'])
         )
 

@@ -81,6 +81,10 @@ class Connector():
                          ('interaction_knowledge',
                          self.make_add_hf_detail('interaction_knowledge'))}
 
+        self.db.session.add(DF_World(id=world_id))
+        self.db.session.commit()
+
+
     def add(self, name, mapping):
         # takes a dict mapping keys to fields 
         # from an xml parser, by calling appropriate helper
@@ -93,7 +97,7 @@ class Connector():
 
         self.update_dict(name, self.update_fns[name](mapping))
         self.counter = self.counter + 1
-        if self.counter > 10000:
+        if self.counter > 100000:
             self.counter = 0
             self.bulk_insert_all()
 
