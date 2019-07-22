@@ -16,36 +16,48 @@ class Entity(db.Model):
     #site_links = db.relationship('Site_Link', backref='entity', 
     #                             viewonly=True)
     site_links = db.relationship('Site_Link', backref='entity', 
-                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 viewonly=True, 
+                                 foreign_keys="Site_Link.df_world_id,"
+                                              "Site_Link.entity_id",
                                  primaryjoin=jb('Entity', 'Site_Link', 
                                                ('id', 'entity_id')))
     structures = db.relationship('Structure', backref='entity',
-                                 viewonly=True, foreign_keys=[id, df_world_id],
+                                 viewonly=True, 
+                                 foreign_keys="Structure.df_world_id,"
+                                              "Structure.entity_id",
                                  primaryjoin=jb('Entity', 'Structure',
                                                 ('id', 'entity_id')))
 
     entity_position_links = db.relationship('Entity_Position_Link',
                                 backref='entity',
-                                viewonly=True, foreign_keys=[id, df_world_id],
+                                viewonly=True, 
+                                foreign_keys="Entity_Position_Link.df_world_id,"
+                                             "Entity_Position_Link.entity_id",
                                 primaryjoin=jb('Entity', 'Entity_Position_Link',
                                     ('id', 'entity_id')))
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='entity',
-                             viewonly=True, foreign_keys=[id, df_world_id],
+                             viewonly=True, 
+                             foreign_keys="Entity_Reputation.df_world_id,"
+                                          "Entity_Reputation.entity_id",
                              primaryjoin=jb('Entity', 'Entity_Reputation',
                                     ('id', 'entity_id')))
     entity_links =  db.relationship('Entity_Link',
                              backref='entity',
-                             viewonly=True, foreign_keys=[id, df_world_id],
+                             viewonly=True, 
+                             foreign_keys="Entity_Link.df_world_id,"
+                                          "Entity_Link.entity_id",
                              primaryjoin=jb('Entity', 'Entity_Link',
                                     ('id', 'entity_id')))
 
     eventcols1 = db.relationship('Event_Collection', backref='entity1', 
-                                foreign_keys=[id, df_world_id],
+                                foreign_keys="Event_Collection.entity_id,"
+                                             "Event_Collection.df_world_id",
                                 primaryjoin=jb('Entity', 'Event_Collection',
                                     ('id', 'entity_id')))
     eventcols2 = db.relationship('Event_Collection', backref='entity2', 
-                                foreign_keys=[id, df_world_id],
+                                foreign_keys="Event_Collection.entity_id,"
+                                             "Event_Collection.df_world_id",
                                 primaryjoin=jb('Entity', 'Event_Collection',
                                     ('id', 'entity_id2')))
     members = db.relationship('Historical_Figure',
@@ -62,7 +74,9 @@ class Entity(db.Model):
                                         'Entity.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Entity.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True, 
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.entity_id", 
+                    uselist=True, 
                     viewonly=True)
 
     sec_events = db.relationship('Historical_Event', backref='entity_2', 
@@ -70,7 +84,9 @@ class Entity(db.Model):
                                         'Entity.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Entity.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True,
+                    uselist=True,
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.entity_id2", 
                     viewonly=True)
 
     site_civ_events = db.relationship('Historical_Event', 
@@ -79,7 +95,9 @@ class Entity(db.Model):
                                         'Entity.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Entity.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True, 
+                    uselist=True, 
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.site_civ_id", 
                     viewonly=True)
     
     new_site_civ_events = db.relationship('Historical_Event', 
@@ -88,7 +106,9 @@ class Entity(db.Model):
                                         'Entity.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Entity.df_world_id)',
-        foreign_keys=[id, df_world_id], uselist=True, 
+        foreign_keys="Historical_Event.df_world_id,"
+                     "Historical_Event.new_site_civ_id", 
+        uselist=True, 
         viewonly=True)
     
     all_events = db.relationship('Historical_Event', 
@@ -103,7 +123,12 @@ class Entity(db.Model):
                                         'Entity.id),' +
                                       'Historical_Event.df_world_id == ' +
                                          'Entity.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True,
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.new_site_civ_id,"
+                                 "Historical_Event.site_civ_id,"
+                                 "Historical_Event.entity_id,"
+                                 "Historical_Event.entity_id2", 
+                    uselist=True,
                     viewonly=True)
 
 class Entity_Population(db.Model):
