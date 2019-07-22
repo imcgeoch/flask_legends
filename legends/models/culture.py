@@ -41,7 +41,9 @@ class Written_Content(db.Model):
              'essay', 'manual', 'cultural history', 'star chart', 
              'letter', 'short story', 'cultural comparison', 'novel', 
              'autobiography', 'comparative biography', 'biography',
-             'chronicle','dictionary','play','encyclopedia']
+             'chronicle','dictionary','play','encyclopedia', 'dialog', 
+             'genealogy', 'treatise on technological evolution', 'atlas',
+             'alternate history', 'star catalogue', 'biographical dictionary']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
