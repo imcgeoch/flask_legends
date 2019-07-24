@@ -2,10 +2,10 @@
 {%- if not event.hf -%}
 UNKNOWN HF
 {%- else -%}
-{%- if not hf or event.hf[0] != hf -%}
- <a href={{ url_for('explorer.hf_detail', world_id=event.hf[0].df_world_id, hfid=event.hfid) }}>{{ event.hf[0].name | title }}</a>
+{%- if not hf or event.hf != hf -%}
+ <a href={{ url_for('explorer.hf_detail', world_id=event.hf.df_world_id, hfid=event.hfid) }}>{{ event.hf.name | title }}</a>
 {%- else -%}
-{{ event.hf[0].first_name() | title }}
+{{ event.hf.first_name() | title }}
 {%- endif -%}
 {%- endif -%}
 {%- endmacro -%}
@@ -14,10 +14,10 @@ UNKNOWN HF
 {%- if not event.hf -%}
 UNKNOWN HF
 {%- else -%}
-{%- if not hf or event.hf2[0] != hf -%}
- <a href={{ url_for('explorer.hf_detail', world_id=event.hf2[0].df_world_id, hfid=event.hfid) }}>{{ event.hf2[0].name | title }}</a>
+{%- if not hf or event.hf2 != hf -%}
+ <a href={{ url_for('explorer.hf_detail', world_id=event.hf2.df_world_id, hfid=event.hfid) }}>{{ event.hf2.name | title }}</a>
 {%- else -%}
-{{ event.hf2[0].first_name() | title }}
+{{ event.hf2.first_name() | title }}
 {%- endif -%}
 {%- endif -%}
 {%- endmacro -%}

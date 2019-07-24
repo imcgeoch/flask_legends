@@ -12,7 +12,7 @@ attacked {{ hf_name2(event, hf) }}{{ region_name(event, region) }}. The latter w
 {% elif event.subtype == 'corner' %}
   cornered {{ hf_name2(event, hf) }}{{ region_name(event, region) }}.
 {% elif event.subtype == '2 lost after giving wounds' %}
-  attacked {{ event.hf2[0].name }}{{ region_name(event, region) }}. The atatcker won despite being wounded.
+  attacked {{ event.hf2.name }}{{ region_name(event, region) }}. The atatcker won despite being wounded.
 {% elif event.subtype == 'confront' %}
 confronted {{ hf_name2(event, hf) }}{{ region_name(event, region) }}.
 {% elif event.subtype == 'ambushed' %}
