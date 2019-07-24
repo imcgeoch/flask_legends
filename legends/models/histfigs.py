@@ -130,14 +130,16 @@ class Historical_Figure(db.Model):
                                         'Historical_Figure.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Historical_Figure.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True)
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.hfid")
 
     sec_events = db.relationship('Historical_Event', backref='hf2', 
                     primaryjoin='and_(Historical_Event.hfid2 == ' +
                                         'Historical_Figure.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Historical_Figure.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True)
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.hfid2")
     
     all_events = db.relationship('Historical_Event', 
                     primaryjoin='and_(' +
@@ -147,7 +149,9 @@ class Historical_Figure(db.Model):
                                         'Historical_Figure.id),' +
                                       'Historical_Event.df_world_id == ' +
                                          'Historical_Figure.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True)
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.hfid,"
+                                 "Historical_Event.hfid2")
 
 
     def __repr__(self):

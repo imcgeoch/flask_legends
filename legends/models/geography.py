@@ -36,7 +36,8 @@ class Region(db.Model):
                                         'Region.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Region.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True)
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.subregion_id")
 
 class Underground_Region(db.Model):
     __tablename__ = 'underground_regions'
