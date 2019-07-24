@@ -16,9 +16,9 @@ It was held by
 {% if context['artifact'].storage_site %}
 It was stored at 
 <a href={{ url_for('explorer.site_detail', 
-	                 world_id=context['artifact'].storage_site[0].df_world_id, 
-	                 site_id=context['artifact'].storage_site[0].df_world_id) }}>
-{{ context['artifact'].storage_site[0].name | title }}</a>.
+	                 world_id=context['artifact'].storage_site.df_world_id, 
+	                 site_id=context['artifact'].storage_site.df_world_id) }}>
+{{ context['artifact'].storage_site.name | title }}</a>.
 {% endif %}
 {% if context['artifact'].page_number %}
 It was {{ context['artifact'].page_number }} pages long.

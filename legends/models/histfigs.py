@@ -45,19 +45,25 @@ class Historical_Figure(db.Model):
                           viewonly=True)
     entity_position_links = db.relationship('Entity_Position_Link',
                                 backref='historical_figure',
-                                viewonly=True, foreign_keys=[id, df_world_id],
+                                viewonly=True, #foreign_keys=[id, df_world_id],
+                                foreign_keys="Entity_Position_Link.df_world_id,"
+                                             "Entity_Position_Link.hfid",
                                 primaryjoin=jb('Historical_Figure', 
                                                'Entity_Position_Link',
                                                ('id', 'hfid')))
     entity_reputations = db.relationship('Entity_Reputation',
                              backref='historical_figure',
-                             viewonly=True, foreign_keys=[id, df_world_id],
+                             viewonly=True, #foreign_keys=[id, df_world_id],
+                             foreign_keys="Entity_Reputation.df_world_id,"
+                                          "Entity_Reputation.hfid",
                              primaryjoin=jb('Historical_Figure', 
                                             'Entity_Reputation',
                                                ('id', 'hfid')))
     entity_links =  db.relationship('Entity_Link',
                              backref='historical_figure',
-                             viewonly=True, foreign_keys=[id, df_world_id],
+                             viewonly=True, #foreign_keys=[id, df_world_id],
+                             foreign_keys="Entity_Link.df_world_id,"
+                                          "Entity_Link.hfid",
                              primaryjoin=jb('Historical_Figure', 
                                             'Entity_Link',
                                                ('id', 'hfid')))
@@ -80,7 +86,9 @@ class Historical_Figure(db.Model):
             foreign_keys='Relationship.hfid1,Relationship.df_world_id')
     
     site_links = db.relationship('Site_Link', backref='historical_figure', 
-                                 viewonly=True, foreign_keys = [id, df_world_id],
+                                 viewonly=True, #foreign_keys = [id, df_world_id],
+                                 foreign_keys="Site_Link.df_world_id,"
+                                              "Site_Link.hfid",
                                  primaryjoin=jb('Historical_Figure', 'Site_Link', 
                                                 ('id', 'hfid')))
     skills = db.relationship('Skill', viewonly=True, 
@@ -107,8 +115,10 @@ class Historical_Figure(db.Model):
                             foreign_keys="Goal.hfid,Goal.df_world_id",
                             primaryjoin=jb("Historical_Figure", 
                                            "Goal", ("id", "hfid")))
-    structures = db.relationship('Structure', backref='historical_figures',
-                                 viewonly=True, foreign_keys=[id, df_world_id],
+    temples = db.relationship('Structure', backref='historical_figures',
+                                 viewonly=True, #foreign_keys=[id, df_world_id],
+                                 foreign_keys="Structure.df_world_id,"
+                                              "Structure.df_world_id",
                                  primaryjoin=jb('Historical_Figure', 'Structure',
                                                 ('id', 'worship_hfid')))
 
@@ -120,14 +130,16 @@ class Historical_Figure(db.Model):
                                         'Historical_Figure.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Historical_Figure.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True)
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.hfid")
 
     sec_events = db.relationship('Historical_Event', backref='hf2', 
                     primaryjoin='and_(Historical_Event.hfid2 == ' +
                                         'Historical_Figure.id,' +
                                       'Historical_Event.df_world_id == ' +
                                          'Historical_Figure.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True)
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.hfid2")
     
     all_events = db.relationship('Historical_Event', 
                     primaryjoin='and_(' +
@@ -137,7 +149,9 @@ class Historical_Figure(db.Model):
                                         'Historical_Figure.id),' +
                                       'Historical_Event.df_world_id == ' +
                                          'Historical_Figure.df_world_id)',
-                    foreign_keys=[id, df_world_id], uselist=True)
+                    foreign_keys="Historical_Event.df_world_id,"
+                                 "Historical_Event.hfid,"
+                                 "Historical_Event.hfid2")
 
 
     def __repr__(self):
