@@ -1,5 +1,7 @@
 db_names = {}
 
+extract_values = lambda xml_dict: {k:v[0] for k, v in xml_dict.items()}
+
 
 class Mapping(object):
     
@@ -18,9 +20,29 @@ class Mapping(object):
         return self.db_dicts
 
     def convert(self):
-        xml_dict = {k:v[0] for k, v in self.xml_dict.items()}
-        xml_dict['df_world_id'] = self.world_id
-        self.db_dicts[self.obj_name] = [xml_dict]
+        db_dict = extract_values(self.xml_dict) 
+        db_dict['df_world_id'] = self.world_id
+        self.db_dicts[self.obj_name] = [db_dict]
+
+class Artifact_Mapping(Mapping):
+    
+    def convert(self):
+        super().convert()
+
+        self.db_dicts['artifact'][0]['written_content_id'] = \
+            self.db_dicts['artifact'][0].get('page_written_content_id') or \
+            self.db_dicts['artifact'][0].get('writing_written_content_id')
+
+class Site_Mapping(Mapping):
+
+    def convert(self):
+        site_id = self.xml_dict['id'][0]
+        structures = self.xml_dict.get('structure') or []
+        self.db_dicts['structure'] = [{**extract_values(d), 
+                'df_world_id' : self.world_id, 'site_id' : site_id} 
+                for d in structures]
+        
+        super().convert()
 
 class Written_Content_Mapping(Mapping):
 
@@ -36,8 +58,11 @@ class Written_Content_Mapping(Mapping):
 
         super().convert()
 
+
 class Mapping_Factory(object):
-    mapping_by_name = { "written_content" : Written_Content_Mapping }
+    mapping_by_name = { "written_content" : Written_Content_Mapping,
+                        "artifact" : Artifact_Mapping ,
+                        "site" : Site_Mapping }
 
     def __init__(self, world_id):
         self.world_id = world_id

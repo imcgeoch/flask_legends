@@ -4,7 +4,10 @@ import pprint
 
 orm_objects = {
         "written_content" : m.Written_Content,
-        "style" : m.Style
+        "style" : m.Style,
+        "artifact" : m.Artifact,
+        "site" : m.Site,
+        "structure" : m.Structure
         }
 
 aux_tables = {
