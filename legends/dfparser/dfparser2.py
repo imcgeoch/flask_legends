@@ -35,8 +35,11 @@ class DF_Handler(ContentHandler):
                        "site_link","entity_reputation", 
                        "entity_position_link", "relationship_profile_hf_visual"}
     '''
-    parentFieldNames = {"artifact", "written_content", "site"}
-    childFieldNames = {"structure"}
+    parentFieldNames = {"artifact", "written_content", "site", 
+            "historical_figure"}
+    childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
+                       "site_link","entity_reputation", "entity_position_link",
+                       "relationship_profile_hf_visual"}
 
     allFieldNames = parentFieldNames.union(childFieldNames)
 

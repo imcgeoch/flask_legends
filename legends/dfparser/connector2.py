@@ -7,7 +7,19 @@ orm_objects = {
         "style" : m.Style,
         "artifact" : m.Artifact,
         "site" : m.Site,
-        "structure" : m.Structure
+        "structure" : m.Structure,
+        "historical_figure" : m.Historical_Figure,
+        "hf_skill" : m.Skill,
+        "entity_link" : m.Entity_Link,
+        "site_link" : m.Site_Link,
+        "entity_position_link" : m.Entity_Position_Link,
+        "entity_reputation" : m.Entity_Reputation,
+        "hf_link" : m.HF_Link,
+        "relationship_profile_hf_visual": m.Relationship,
+        "sphere" : m.Sphere,
+        "goal" : m.Goal,
+        "journey_pet" : m.Journey_Pet,
+        "interaction_knowledge" : m.Interaction_Knowledge
         }
 
 aux_tables = {
