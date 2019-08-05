@@ -132,5 +132,43 @@ class Event_Collection(db.Model):
                                 secondaryjoin=tjb("Historical_Figure", 
                                                   "eventcol_noncoms",
                                                   ("id", "hfid")))
+    attacking_squads = db.relationship('Attacking_Squad',
+                                       viewonly=True,
+                                       foreign_keys="Attacking_Squad.df_world_id,"
+                                                    "Attacking_Squad.eventcol_id",
+                                       backref='event_collection',
+                                       primaryjoin=jb("Event_Collection",
+                                                      "Attacking_Squad",
+                                                      ("id", "eventcol_id")))
+    defending_squads = db.relationship('Defending_Squad',
+                                       viewonly=True,
+                                       foreign_keys="Defending_Squad.df_world_id,"
+                                                    "Defending_Squad.eventcol_id",
+                                       backref='event_collection',
+                                       primaryjoin=jb("Event_Collection",
+                                                      "Defending_Squad",
+                                                      ("id", "eventcol_id")))
 
 
+
+class Attacking_Squad(db.Model):
+    __tablename__ = "attacking_squads"
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
+    eventcol_id = db.Column(db.Integer)
+    attacking_squad_race = db.Column(db.String(20))
+    attacking_squad_entity_pop = db.Column(db.Integer)
+    attacking_squad_number = db.Column(db.Integer)
+    attacking_squad_deaths = db.Column(db.Integer)
+    attacking_squad_site = db.Column(db.Integer)
+
+class Defending_Squad(db.Model):
+    __tablename__ = "defending_squads"
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
+    eventcol_id = db.Column(db.Integer)
+    defending_squad_race = db.Column(db.String(20))
+    defending_squad_entity_pop = db.Column(db.Integer)
+    defending_squad_number = db.Column(db.Integer)
+    defending_squad_deaths = db.Column(db.Integer)
+    defending_squad_site = db.Column(db.Integer)
