@@ -1,34 +1,24 @@
 import codecs
-from xml.etree.ElementTree import iterparse, XMLParser
 from xml.sax.handler import ContentHandler
 from xml.sax import parse as sax_parse
 
-from .connector import Connector
-
-from ..models import db, DF_World, Artifact
+from .connector2 import Connector
+from .mapping import Mapping_Factory
+from ..models import db
 
 from .. import create_app
 
-def do_parse(fname1, fname2, worldname):
-    world = DF_World(name=worldname)
-    db.session.add(world)
-    db.session.commit()
-    world_id = world.id
-    parse(fname1, "base", world_id)
 
 def parse(filename, mode, world_id):
 
     app = create_app()
     app.app_context().push()
 
-    # parser = XMLParser(encoding='CP437', target=DF_XMLParser())
-    #itr = iterparse(filename, parser=parser)
     connector = Connector(db, 'insert', world_id)
-    print(connector)
+    factory = Mapping_Factory(world_id) 
+    
     with codecs.open(filename, 'r', encoding='CP437') as infile:
-        #for line in infile:
-        #    parser.feed(line)
-        sax_parse(infile, DF_Handler(connector))
+        sax_parse(infile, DF_Handler(connector, factory))
 
 
 class DF_Handler(ContentHandler):
@@ -44,15 +34,23 @@ class DF_Handler(ContentHandler):
     childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
                        "site_link","entity_reputation", 
                        "entity_position_link", "relationship_profile_hf_visual"}
+    '''
+    parentFieldNames = {"artifact", "written_content", "site", 
+            "historical_figure", "historical_event_collection", 
+            "historical_event"}
+    childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
+                       "site_link","entity_reputation", "entity_position_link",
+                       "relationship_profile_hf_visual"}
+    '''
+
     allFieldNames = parentFieldNames.union(childFieldNames)
 
-    def __init__(self, connector):
+    def __init__(self, connector, factory):
         super().__init__()
         self.connector = connector
-
+        self.factory = factory
 
     def startElement(self, name, attr):
-        # print("start " + name)
         if name in self.allFieldNames:
             self.stack.append({})
         self.name = name 
@@ -61,23 +59,18 @@ class DF_Handler(ContentHandler):
     def endElement(self, tag):
         if len(self.stack) > 0:
             if tag in self.parentFieldNames:
-                self.connector.add(tag, self.stack.pop())
+                mapping = self.factory.from_dict(tag, self.stack.pop())
+                self.connector.add_mapping(mapping)
             else:
                 val = self.stack.pop() if (tag in self.childFieldNames) \
                                     else self.text or True 
                 top = self.stack[-1]
                 top[tag] = (top.get(tag) or []) + [val]
 
-            #elif tag in self.childFieldNames:
-            #    child = self.stack.pop()
-            #    self.stack[-1][tag] = self.stack[-1][tag] + [child] \
-            #            or [child] 
-            #else:
-            #    self.stack[-1][tag] = self.text or True
         self.text = ''
     
     def characters(self, content):
         self.text += content
 
     def endDocument(self):
-        self.connector.bulk_insert_all()
+        self.connector.convert_and_insert_mappings()
