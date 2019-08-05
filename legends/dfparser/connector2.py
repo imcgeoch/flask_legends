@@ -19,15 +19,29 @@ orm_objects = {
         "sphere" : m.Sphere,
         "goal" : m.Goal,
         "journey_pet" : m.Journey_Pet,
-        "interaction_knowledge" : m.Interaction_Knowledge
+        "interaction_knowledge" : m.Interaction_Knowledge,
+        "historical_event_collection" : m.Event_Collection,
+        "attacking_squad" : m.Attacking_Squad,
+        "defending_squad" : m.Defending_Squad,
+        "historical_event" : m.Historical_Event,
+        ### What's missing?
+        "region" : m.Region,
+        "undeground_region" : m.Underground_Region,
+        "entity_population" : m.Entity_Population,
+        "entity" : m.Entity,
+        "historical_era" : m.Historical_Era,
+        "poetic_form" : m.Poetic_Form,
+        "dance_form" : m.Dance_Form,
+        "musical_form" : m.Musical_Form
         }
 
 aux_tables = {
-        "eventcol_event_link" : m.collections.eventcol_eventcol_link,
+        "eventcol_eventcol_link" : m.collections.eventcol_eventcol_link,
         "eventcol_event_link" : m.collections.eventcol_event_link,
-        "eventcol_attackers" : m.collections.eventcol_attackers,
-        "eventcol_defenders" : m.collections.eventcol_defenders,
-        "eventcol_noncoms": m.collections.eventcol_noncoms
+        "attacking_hfid" : m.collections.eventcol_attackers,
+        "defending_hfid" : m.collections.eventcol_defenders,
+        "noncom_hfid": m.collections.eventcol_noncoms,
+        "competitor_hfid" : m.events.competitors
         }
 
 class Connector():

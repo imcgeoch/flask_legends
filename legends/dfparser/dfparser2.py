@@ -25,7 +25,7 @@ class DF_Handler(ContentHandler):
     stack = []
     name = ''
     text = ''
-    ''' 
+    
     parentFieldNames = {"artifact", "region", "underground_region",
             "site", "historical_figure", "entity_population", "entity",
             "historical_event", "historical_event_collection", 
@@ -36,10 +36,12 @@ class DF_Handler(ContentHandler):
                        "entity_position_link", "relationship_profile_hf_visual"}
     '''
     parentFieldNames = {"artifact", "written_content", "site", 
-            "historical_figure"}
+            "historical_figure", "historical_event_collection", 
+            "historical_event"}
     childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
                        "site_link","entity_reputation", "entity_position_link",
                        "relationship_profile_hf_visual"}
+    '''
 
     allFieldNames = parentFieldNames.union(childFieldNames)
 
