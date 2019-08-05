@@ -54,7 +54,7 @@ class Connector():
 
         self.db_mappings = {}
         self.xml_mappings = []
-
+        
     def add_world(self):
         self.db.session.add(DF_World(id=world_id))
         self.db.session.commit()
@@ -90,5 +90,3 @@ class Connector():
     def convert_and_insert_mappings(self):
         self.convert_mappings()
         self.insert_mappings()
-
-

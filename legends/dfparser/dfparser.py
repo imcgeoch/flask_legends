@@ -16,6 +16,8 @@ def parse(filename, mode, world_id):
 
     connector = Connector(db, 'insert', world_id)
     factory = Mapping_Factory(world_id) 
+
+    connector.add_world()
     
     with codecs.open(filename, 'r', encoding='CP437') as infile:
         sax_parse(infile, DF_Handler(connector, factory))
@@ -34,14 +36,6 @@ class DF_Handler(ContentHandler):
     childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
                        "site_link","entity_reputation", 
                        "entity_position_link", "relationship_profile_hf_visual"}
-    '''
-    parentFieldNames = {"artifact", "written_content", "site", 
-            "historical_figure", "historical_event_collection", 
-            "historical_event"}
-    childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
-                       "site_link","entity_reputation", "entity_position_link",
-                       "relationship_profile_hf_visual"}
-    '''
 
     allFieldNames = parentFieldNames.union(childFieldNames)
 
