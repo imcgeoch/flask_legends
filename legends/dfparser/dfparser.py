@@ -2,7 +2,7 @@ import codecs
 from xml.sax.handler import ContentHandler
 from xml.sax import parse as sax_parse
 
-from .connector2 import Connector
+from .connector import Connector
 from .mapping import Mapping_Factory
 from ..models import db
 
