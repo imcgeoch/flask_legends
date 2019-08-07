@@ -39,6 +39,7 @@ from .histfigs import Historical_Figure, Goal, Sphere, Journey_Pet,\
         Entity_Position_Link, Entity_Reputation, Relationship
 from .culture import Artifact, Written_Content, Style, Musical_Form,\
         Dance_Form, Historical_Era, Poetic_Form
-from .civilizations import Entity, Occasion, Schedules, Features, \
-        Entity_Position, Site, Structure, Entity_Population
+from .civilizations import Entity, Occasion, Schedule, Feature, \
+        Entity_Position, Site, Structure, Entity_Population,\
+        Entity_Entity_Link, Entity_Position_Assignment
 from .collections import Event_Collection, Attacking_Squad, Defending_Squad 

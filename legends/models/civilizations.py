@@ -153,7 +153,7 @@ class Occasion(db.Model):
     name = db.Column(db.String(50))
     event = db.Column(db.Integer)
 
-class Schedules(db.Model):
+class Schedule(db.Model):
     __tablename__ = 'schedules'
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
@@ -168,7 +168,7 @@ class Schedules(db.Model):
     item_type = db.Column(db.String(20))
     item_subtype = db.Column(db.String(20))
 
-class Features(db.Model):
+class Feature(db.Model):
     __tablename__ = 'features'
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
                             primary_key=True)
@@ -191,6 +191,26 @@ class Entity_Position(db.Model):
     name_female = db.Column(db.String(20))
     spouse_male = db.Column(db.String(20))
     spouse_female = db.Column(db.String(20))
+
+class Entity_Position_Assignment(db.Model):
+    __tablename__ = 'entity_position_assignments'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    entity_id = db.Column(db.Integer)
+    histfig = db.Column(db.Integer)
+    position_id = db.Column(db.Integer)
+    squad_id = db.Column(db.Integer)
+
+
+class Entity_Entity_Link(db.Model):
+    __tablename__ = 'entity_entity_links'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
+                            primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50))
+    target = db.Column(db.Integer)
+    strength = db.Column(db.Integer)
 
 ## Sites and Structures
 
