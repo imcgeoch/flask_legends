@@ -14,11 +14,14 @@ def parse(filename, mode, world_id):
     app = create_app()
     app.app_context().push()
 
-    connector = Connector(db, 'insert', world_id)
-    factory = Mapping_Factory(world_id) 
+    if mode == 'insert':
+        connector = Connector(db, 'insert', world_id)
+        connector.add_world()
+    elif mode == 'update':
+        connector = Connector(db, 'update', world_id)
+        
+    factory = Mapping_Factory(world_id)
 
-    connector.add_world()
-    
     with codecs.open(filename, 'r', encoding='CP437') as infile:
         sax_parse(infile, DF_Handler(connector, factory))
 
