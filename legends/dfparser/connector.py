@@ -26,13 +26,24 @@ orm_objects = {
         "historical_event" : m.Historical_Event,
         ### What's missing?
         "region" : m.Region,
-        "undeground_region" : m.Underground_Region,
+        "underground_region" : m.Underground_Region,
         "entity_population" : m.Entity_Population,
         "entity" : m.Entity,
         "historical_era" : m.Historical_Era,
         "poetic_form" : m.Poetic_Form,
         "dance_form" : m.Dance_Form,
-        "musical_form" : m.Musical_Form
+        "musical_form" : m.Musical_Form,
+        # And new ones in plus
+        "landmass" : m.Landmass,
+        "mountain_peak" : m.Mountain_Peak,
+        "world_construction" : m.World_Construction,
+        "occasion" : m.Occasion,
+        "schedule" : m.Schedule,
+        "feature" : m.Feature,
+        "entity_position" : m.Entity_Position,
+        "entity_position_assignment" : m.Entity_Position_Assignment,
+        "entity_entity_link" : m.Entity_Entity_Link
+
         }
 
 aux_tables = {
