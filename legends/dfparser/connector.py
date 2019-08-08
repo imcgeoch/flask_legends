@@ -87,7 +87,7 @@ class Connector():
             xml_mapping.convert()
             for name, db_mapping in xml_mapping.get_db_mappings().items():
                 if name in self.db_mappings:
-                    self.db_mappings[name] = self.db_mappings[name] + db_mapping
+                    self.db_mappings[name].extend(db_mapping)
                 else:
                     self.db_mappings[name] = db_mapping
     
