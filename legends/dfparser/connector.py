@@ -43,7 +43,6 @@ orm_objects = {
         "entity_position" : m.Entity_Position,
         "entity_position_assignment" : m.Entity_Position_Assignment,
         "entity_entity_link" : m.Entity_Entity_Link
-
         }
 
 aux_tables = {
@@ -55,7 +54,14 @@ aux_tables = {
         "competitor_hfid" : m.events.competitors
         }
 
+# for these we insert, even thought we're in plus mode.
+plus_only_objects = ["landmass", "world_construction", 
+        "entity_entity_link", "enity_position", 
+        "entity_position_assignment", "occasion", "schedule", "feature",
+        "reference"]
+
 class Connector():
+
     def __init__(self, db, mode, world_id, capacity=10000):
         self.db = db
         self.mode = mode
