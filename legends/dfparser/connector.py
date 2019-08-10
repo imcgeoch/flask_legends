@@ -62,6 +62,8 @@ plus_only_objects = ["landmass", "world_construction", "mountain_peak",
         "entity_position_assignment", "occasion", "schedule", "feature",
         "reference", "inhabitant", "member"]
 
+base_only_objets = ['style']
+
 class Connector():
 
     def __init__(self, db, mode, world_id, capacity=10000):
@@ -114,6 +116,8 @@ class Connector():
 
         while self.db_mappings:
             name, db_mapping = self.db_mappings.popitem()
+            if name in base_only_objets:
+                continue
             if name in plus_only_objects:
                 mappings_to_insert[name] = db_mapping
             elif name in orm_objects:

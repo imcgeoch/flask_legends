@@ -6,6 +6,7 @@ extract_values = lambda xml_dict: {k:v[0] for k, v in xml_dict.items()}
 class Mapping(object):
 
     masked_fields = []
+    unmasked_fields = []
     mask_all = False
     
     def __init__(self, xml_dict, obj_name, world_id):
@@ -199,10 +200,12 @@ class Written_Content_Mapping(Mapping):
 
         self.db_dicts['style'] = []
         for long_style in self.xml_dict.get('style') or []:
-            style, magnitude = long_style.split(':') 
-            style_dict = {'df_world_id':self.world_id, 'content_id':wc_id,
-                'style':style, 'magnitude':magnitude}
-            self.db_dicts['style'].append(style_dict)
+            if ':' in long_style:
+                style, magnitude = long_style.split(':')
+                style_dict = {'df_world_id':self.world_id, 
+                              'content_id':wc_id, 'style':style, 
+                              'magnitude':magnitude}
+                self.db_dicts['style'].append(style_dict)
 
         super().convert()
 

@@ -58,6 +58,7 @@ class DF_Handler(ContentHandler):
     def startElement(self, name, attr):
         if name in self.allFieldNames:
             self.stack.append({})
+
         self.name = name 
         self.text = ''
 
@@ -67,8 +68,12 @@ class DF_Handler(ContentHandler):
                 mapping = self.factory.from_dict(tag, self.stack.pop())
                 self.connector.add_mapping(mapping)
             else:
-                val = self.stack.pop() if (tag in self.childFieldNames) \
-                                    else self.text.replace("_", " ") or True
+                if tag in self.childFieldNames:
+                    val = self.stack.pop()
+                else:
+                    val = self.text.replace("_", " ") or True
+                if tag in self.parentFieldNames:
+                    self.stack.pop()
                 top = self.stack[-1]
                 top[tag] = (top.get(tag) or []) + [val]
 
@@ -76,6 +81,5 @@ class DF_Handler(ContentHandler):
     
     def characters(self, content):
         self.text += content
-
     def endDocument(self):
         self.connector.mappings_to_db()
