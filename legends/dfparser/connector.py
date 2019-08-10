@@ -51,14 +51,16 @@ aux_tables = {
         "attacking_hfid" : m.collections.eventcol_attackers,
         "defending_hfid" : m.collections.eventcol_defenders,
         "noncom_hfid": m.collections.eventcol_noncoms,
-        "competitor_hfid" : m.events.competitors
+        "competitor_hfid" : m.events.competitors,
+        "inhabitant" : m.civilizations.inhabitants,
+        "member" : m.civilizations.members
         }
 
 # for these we insert, even thought we're in plus mode.
-plus_only_objects = ["landmass", "world_construction", 
-        "entity_entity_link", "enity_position", 
+plus_only_objects = ["landmass", "world_construction", "mountain_peak", 
+        "entity_entity_link", "entity_position", 
         "entity_position_assignment", "occasion", "schedule", "feature",
-        "reference"]
+        "reference", "inhabitant", "member"]
 
 class Connector():
 
@@ -79,12 +81,14 @@ class Connector():
     def add_mapping(self, xml_mapping):
         self.xml_mappings.append(xml_mapping)
         if len(self.xml_mappings) >= self.capacity:
-            self.convert_and_insert_mappings()
+            self.mappings_to_db()
 
     def convert_mappings(self):
         while self.xml_mappings:
             xml_mapping = self.xml_mappings.pop()
             xml_mapping.convert()
+            if self.mode == 'update':
+                xml_mapping.mask_fields()
             for name, db_mapping in xml_mapping.get_db_mappings().items():
                 if name in self.db_mappings:
                     self.db_mappings[name].extend(db_mapping)
@@ -103,7 +107,30 @@ class Connector():
                 s.execute(tab.insert(db_mapping))
         
         s.commit()
+    
+    def update_mappings(self):
+        s = self.db.session
+        mappings_to_insert = {}
 
-    def convert_and_insert_mappings(self):
-        self.convert_mappings()
+        while self.db_mappings:
+            name, db_mapping = self.db_mappings.popitem()
+            if name in plus_only_objects:
+                mappings_to_insert[name] = db_mapping
+            elif name in orm_objects:
+                s.bulk_update_mappings(orm_objects[name], db_mapping)
+            elif name in aux_tables:
+                # None right now that we would update.
+                pass
+        
+        self.db_mappings = mappings_to_insert
         self.insert_mappings()
+
+    def mappings_to_db(self):
+        if self.mode == 'insert':
+            self.convert_mappings()
+            self.insert_mappings()
+        elif self.mode == 'update':
+            self.convert_mappings()
+            self.update_mappings()
+            self.insert_mappings()
+

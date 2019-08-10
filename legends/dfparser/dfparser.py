@@ -35,10 +35,18 @@ class DF_Handler(ContentHandler):
             "site", "historical_figure", "entity_population", "entity",
             "historical_event", "historical_event_collection", 
             "historical_era", "written_content", "poetic_form", 
-            "musical_form", "dance_form"}
+            "musical_form", "dance_form",
+            # begin plus 
+            "landmass", "mountain_peak", "world_construction",
+            "entity_population"}
     childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
                        "site_link","entity_reputation", 
-                       "entity_position_link", "relationship_profile_hf_visual"}
+                       "entity_position_link", 
+                       "relationship_profile_hf_visual",
+                       # begin plus
+                       "entity_position", "entity_position_assignment",
+                       "occasion", "schedule", "feature"
+                       }
 
     allFieldNames = parentFieldNames.union(childFieldNames)
 
@@ -55,12 +63,12 @@ class DF_Handler(ContentHandler):
 
     def endElement(self, tag):
         if len(self.stack) > 0:
-            if tag in self.parentFieldNames:
+            if tag in self.parentFieldNames and len(self.stack) == 1:
                 mapping = self.factory.from_dict(tag, self.stack.pop())
                 self.connector.add_mapping(mapping)
             else:
                 val = self.stack.pop() if (tag in self.childFieldNames) \
-                                    else self.text or True 
+                                    else self.text.replace("_", " ") or True
                 top = self.stack[-1]
                 top[tag] = (top.get(tag) or []) + [val]
 
@@ -70,4 +78,4 @@ class DF_Handler(ContentHandler):
         self.text += content
 
     def endDocument(self):
-        self.connector.convert_and_insert_mappings()
+        self.connector.mappings_to_db()
