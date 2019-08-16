@@ -42,7 +42,8 @@ orm_objects = {
         "feature" : m.Feature,
         "entity_position" : m.Entity_Position,
         "entity_position_assignment" : m.Entity_Position_Assignment,
-        "entity_entity_link" : m.Entity_Entity_Link
+        "entity_entity_link" : m.Entity_Entity_Link,
+        "reference" : m.Reference
         }
 
 aux_tables = {
@@ -62,7 +63,7 @@ plus_only_objects = ["landmass", "world_construction", "mountain_peak",
         "entity_position_assignment", "occasion", "schedule", "feature",
         "reference", "inhabitant", "member"]
 
-base_only_objets = ['style']
+base_only_objets = ['historical_figure', 'style']
 
 class Connector():
 

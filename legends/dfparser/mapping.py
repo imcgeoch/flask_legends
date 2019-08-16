@@ -7,7 +7,6 @@ class Mapping(object):
 
     masked_fields = []
     unmasked_fields = []
-    mask_all = False
     
     def __init__(self, xml_dict, obj_name, world_id):
         self.xml_dict = xml_dict
@@ -33,7 +32,7 @@ class Mapping(object):
                        *rewrite_list, **parent_keys):
         for old, new in rewrite_list:
             for detail_dict in detail_dict_list:
-                detail_dict[new] = detail_dict.pop(old, None)
+                detail_dict[new] = detail_dict.pop(old, [None])
         self.db_dicts[name] = [{**extract_values(detail_dict),
             'df_world_id' : self.world_id, **parent_keys}
             for detail_dict in detail_dict_list]
@@ -59,14 +58,13 @@ class Mapping(object):
 
     def mask_fields(self):
         for table, field in self.masked_fields:
-            db_dict = self.db_dicts.get(table)
-            if db_dict:
-                db_dict.pop(field, None)
-        if self.mask_all:
-            self.db_dicts[self.obj_name] = {}
+            db_dict_list = self.db_dicts.get(table, [])
+            for db_dict in db_dict_list:
+                db_dict.pop(field, 'a')
 
 class Artifact_Mapping(Mapping):
-    
+   
+
     def convert(self):
         super().convert()
 
@@ -97,6 +95,7 @@ class Site_Mapping(Mapping):
         self.alias_key("structure", "local_id", "local_id", "id")
 
 class Histfig_Mapping(Mapping):
+
 
     def convert(self):
         hfid = self.xml_dict['id'][0]
@@ -167,6 +166,14 @@ class Eventcol_Mapping(Mapping):
                 'entity_id2', 'defending_enid')
 
 class Historical_Event_Mapping(Mapping):
+    
+    def __init__(self, xml_dict, obj_name, world_id):
+        super().__init__(xml_dict, obj_name, world_id)
+        self.masked_fields = [(self.obj_name, 'type'), (self.obj_name, 'state'),
+                (self.obj_name, 'old_race'), (self.obj_name, 'new_race'), 
+                (self.obj_name, 'old_caste'), (self.obj_name, 'new_caste'),
+                (self.obj_name, 'circumstance'), (self.obj_name, 'reason'),
+                (self.obj_name, 'slayer_race'), (self.obj_name, 'slayer_caste')]
 
     def convert(self):
 
@@ -181,7 +188,7 @@ class Historical_Event_Mapping(Mapping):
                        'group_1_hfid', 'spotter_hfid')
         self.alias_key(self.obj_name, 'hfid2', 'hfid2', 'hfid_target', 
                        'receiver_hist_figure_id', 'defender_general_hfid',
-                       'group_2_hfid')
+                       'group_2_hfid', 'slayer_hf')
         self.alias_key(self.obj_name, 'entity_id', 'entity_id', 
                        'giver_entity_id', 'attacker_civ_id', 'civ_id', 
                        'attacker', 'entity_id_1')
@@ -206,6 +213,10 @@ class Written_Content_Mapping(Mapping):
                               'content_id':wc_id, 'style':style, 
                               'magnitude':magnitude}
                 self.db_dicts['style'].append(style_dict)
+
+        references = self.xml_dict.get('reference', [])
+        self.convert_detail('reference', references, ('id', 'ref_id'), 
+                wc_id=wc_id)
 
         super().convert()
 

@@ -28,6 +28,7 @@ def parse(filename, mode, world_id):
 
 class DF_Handler(ContentHandler):
     stack = []
+    namestack = []
     name = ''
     text = ''
     
@@ -45,8 +46,10 @@ class DF_Handler(ContentHandler):
                        "relationship_profile_hf_visual",
                        # begin plus
                        "entity_position", "entity_position_assignment",
-                       "occasion", "schedule", "feature"
+                       "occasion", "schedule", "feature", "reference"
                        }
+
+    exclusiveChildren = {"reference" : "written_content"}
 
     allFieldNames = parentFieldNames.union(childFieldNames)
 
@@ -58,18 +61,23 @@ class DF_Handler(ContentHandler):
     def startElement(self, name, attr):
         if name in self.allFieldNames:
             self.stack.append({})
+            self.namestack.append(name)
 
         self.name = name 
         self.text = ''
 
     def endElement(self, tag):
         if len(self.stack) > 0:
+            if tag in self.allFieldNames:
+                self.namestack.pop()
             if tag in self.parentFieldNames and len(self.stack) == 1:
                 mapping = self.factory.from_dict(tag, self.stack.pop())
                 self.connector.add_mapping(mapping)
             else:
                 if tag in self.childFieldNames:
                     val = self.stack.pop()
+                    if tag in self.exclusiveChildren and self.namestack[-1] != self.exclusiveChildren[tag]:
+                        val = self.text.replace("_", " ") or True
                 else:
                     val = self.text.replace("_", " ") or True
                 if tag in self.parentFieldNames:
