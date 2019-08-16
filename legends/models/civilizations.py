@@ -161,11 +161,11 @@ class Schedule(db.Model):
     occasion_id = db.Column(db.Integer, primary_key=True)
     entity_id = db.Column(db.Integer, primary_key=True)
 
-    type = db.Column(db.String(20))
+    type = db.Column(db.String(30))
     reference = db.Column(db.Integer)
     reference2 = db.Column(db.Integer)
-    item_type = db.Column(db.String(20))
-    item_subtype = db.Column(db.String(20))
+    item_type = db.Column(db.String(30))
+    item_subtype = db.Column(db.String(30))
 
 class Feature(db.Model):
     __tablename__ = 'features'
@@ -176,7 +176,7 @@ class Feature(db.Model):
     schedule_id = db.Column(db.Integer)
     entity_id = db.Column(db.Integer)
     
-    type = db.Column(db.String(20))
+    type = db.Column(db.String(30))
     reference = db.Column(db.Integer)
 
 class Entity_Position(db.Model):

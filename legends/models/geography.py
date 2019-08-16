@@ -55,4 +55,4 @@ class World_Construction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     type = db.Column(db.String(50)) #should be enum
-    coords = db.Column(db.String(50))
+    coords = db.Column(db.String)

@@ -1,8 +1,8 @@
-"""new initial
+"""initial iwth plus
 
-Revision ID: bc34d9a9533f
+Revision ID: 34e8738ea9ab
 Revises: 
-Create Date: 2019-08-09 23:41:16.361804
+Create Date: 2019-08-13 19:01:18.885985
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'bc34d9a9533f'
+revision = '34e8738ea9ab'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,7 +37,7 @@ def upgrade():
     sa.Column('item_type', sa.String(length=20), nullable=True),
     sa.Column('item_subtype', sa.String(length=20), nullable=True),
     sa.Column('item_description', sa.String(length=200), nullable=True),
-    sa.Column('mat', sa.String(length=20), nullable=True),
+    sa.Column('mat', sa.String(length=40), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('df_world_id', 'id')
     )
@@ -45,7 +45,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('df_world_id', sa.Integer(), nullable=True),
     sa.Column('eventcol_id', sa.Integer(), nullable=True),
-    sa.Column('attacking_squad_race', sa.String(length=20), nullable=True),
+    sa.Column('attacking_squad_race', sa.String(length=30), nullable=True),
     sa.Column('attacking_squad_entity_pop', sa.Integer(), nullable=True),
     sa.Column('attacking_squad_number', sa.Integer(), nullable=True),
     sa.Column('attacking_squad_deaths', sa.Integer(), nullable=True),
@@ -65,6 +65,7 @@ def upgrade():
     sa.Column('df_world_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('name', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('df_world_id', 'id')
     )
@@ -72,7 +73,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('df_world_id', sa.Integer(), nullable=True),
     sa.Column('eventcol_id', sa.Integer(), nullable=True),
-    sa.Column('defending_squad_race', sa.String(length=20), nullable=True),
+    sa.Column('defending_squad_race', sa.String(length=30), nullable=True),
     sa.Column('defending_squad_entity_pop', sa.Integer(), nullable=True),
     sa.Column('defending_squad_number', sa.Integer(), nullable=True),
     sa.Column('defending_squad_deaths', sa.Integer(), nullable=True),
@@ -230,7 +231,7 @@ def upgrade():
     sa.Column('occasion_id', sa.Integer(), nullable=True),
     sa.Column('schedule_id', sa.Integer(), nullable=True),
     sa.Column('entity_id', sa.Integer(), nullable=True),
-    sa.Column('type', sa.String(length=20), nullable=True),
+    sa.Column('type', sa.String(length=30), nullable=True),
     sa.Column('reference', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
@@ -302,7 +303,7 @@ def upgrade():
     sa.Column('old_caste', sa.String(length=20), nullable=True),
     sa.Column('new_caste', sa.String(length=20), nullable=True),
     sa.Column('master_wcid', sa.Integer(), nullable=True),
-    sa.Column('race', sa.String(length=20), nullable=True),
+    sa.Column('race', sa.String(length=40), nullable=True),
     sa.Column('caste', sa.String(length=20), nullable=True),
     sa.Column('law_type', sa.Enum('add', 'remove', name='law_types'), nullable=True),
     sa.Column('law', sa.String(length=50), nullable=True),
@@ -313,8 +314,8 @@ def upgrade():
     sa.Column('slayer_item_id', sa.Integer(), nullable=True),
     sa.Column('slayer_shooter_item_id', sa.Integer(), nullable=True),
     sa.Column('cause', sa.String(length=30), nullable=True),
-    sa.Column('interaction_action', sa.String(length=20), nullable=True),
-    sa.Column('interaction_string', sa.String(length=20), nullable=True),
+    sa.Column('interaction_action', sa.String(length=75), nullable=True),
+    sa.Column('interaction_string', sa.String(length=150), nullable=True),
     sa.Column('source', sa.Integer(), nullable=True),
     sa.Column('secret_goal', sa.String(length=20), nullable=True),
     sa.Column('secret_text', sa.String(length=50), nullable=True),
@@ -352,13 +353,13 @@ def upgrade():
     sa.Column('abandoned', sa.Boolean(), nullable=True),
     sa.Column('dispute', sa.String(length=20), nullable=True),
     sa.Column('item', sa.Integer(), nullable=True),
-    sa.Column('mat', sa.String(length=20), nullable=True),
+    sa.Column('mat', sa.String(length=50), nullable=True),
     sa.Column('item_type', sa.String(length=20), nullable=True),
     sa.Column('item_subtype', sa.String(length=20), nullable=True),
     sa.Column('mat_type', sa.Integer(), nullable=True),
     sa.Column('mat_index', sa.Integer(), nullable=True),
     sa.Column('dye_mat_type', sa.Integer(), nullable=True),
-    sa.Column('link_type', sa.String(length=20), nullable=True),
+    sa.Column('link_type', sa.String(length=30), nullable=True),
     sa.Column('reason', sa.String(length=50), nullable=True),
     sa.Column('position', sa.String(length=20), nullable=True),
     sa.Column('interaction', sa.String(length=50), nullable=True),
@@ -446,6 +447,7 @@ def upgrade():
     sa.Column('df_world_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('name', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('df_world_id', 'id')
     )
@@ -462,8 +464,18 @@ def upgrade():
     sa.Column('df_world_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('name', sa.String(length=50), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('df_world_id', 'id')
+    )
+    op.create_table('references',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('df_world_id', sa.Integer(), nullable=True),
+    sa.Column('type', sa.String(length=30), nullable=True),
+    sa.Column('ref_id', sa.Integer(), nullable=True),
+    sa.Column('wc_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('regions',
     sa.Column('df_world_id', sa.Integer(), nullable=False),
@@ -492,11 +504,11 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('occasion_id', sa.Integer(), nullable=False),
     sa.Column('entity_id', sa.Integer(), nullable=False),
-    sa.Column('type', sa.String(length=20), nullable=True),
+    sa.Column('type', sa.String(length=30), nullable=True),
     sa.Column('reference', sa.Integer(), nullable=True),
     sa.Column('reference2', sa.Integer(), nullable=True),
-    sa.Column('item_type', sa.String(length=20), nullable=True),
-    sa.Column('item_subtype', sa.String(length=20), nullable=True),
+    sa.Column('item_type', sa.String(length=30), nullable=True),
+    sa.Column('item_subtype', sa.String(length=30), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('df_world_id', 'id', 'occasion_id', 'entity_id')
     )
@@ -575,7 +587,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=True),
     sa.Column('type', sa.String(length=50), nullable=True),
-    sa.Column('coords', sa.String(length=50), nullable=True),
+    sa.Column('coords', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('df_world_id', 'id')
     )
@@ -607,6 +619,7 @@ def downgrade():
     op.drop_table('schedules')
     op.drop_table('relationship')
     op.drop_table('regions')
+    op.drop_table('references')
     op.drop_table('poetic_forms')
     op.drop_table('occasions')
     op.drop_table('musical_forms')
