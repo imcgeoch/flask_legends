@@ -68,6 +68,8 @@ base_only_objets = ['historical_figure', 'style']
 class Connector():
 
     def __init__(self, db, mode, world_id, capacity=10000):
+        # rewrite to accept world instead of id?
+
         self.db = db
         self.mode = mode
         self.world_id = world_id

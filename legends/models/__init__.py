@@ -4,7 +4,8 @@ db = SQLAlchemy()
  
 from .world import DF_World
 from .geography import Landmass, Mountain_Peak, Region, \
-                       Underground_Region, World_Construction
+                       Underground_Region, World_Construction,\
+                       World_Map
 from .events import Historical_Event, Add_HF_Entity_Link, Add_HF_HF_Link, \
         Add_HF_Site_Link, Agreement_Formed, Artifact_Claim_Formed, \
         Artifact_Copied, Artifact_Copied, Artifact_Destroyed, \
@@ -41,5 +42,5 @@ from .culture import Artifact, Written_Content, Style, Musical_Form,\
         Dance_Form, Historical_Era, Poetic_Form, Reference
 from .civilizations import Entity, Occasion, Schedule, Feature, \
         Entity_Position, Site, Structure, Entity_Population,\
-        Entity_Entity_Link, Entity_Position_Assignment
+        Entity_Entity_Link, Entity_Position_Assignment, Site_Map
 from .collections import Event_Collection, Attacking_Squad, Defending_Squad 

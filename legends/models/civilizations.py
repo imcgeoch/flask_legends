@@ -338,3 +338,10 @@ inhabitants = db.Table('inhabitants', db.metadata,
         db.Column('hfid', db.Integer),
         )
 
+class Site_Map(db.Model):
+    __tablename__ = 'site_maps'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', 
+                                                      ondelete='CASCADE'))
+    site_id = db.Column(db.Integer)
+    path = db.Column(db.String(30))
