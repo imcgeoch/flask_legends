@@ -344,4 +344,4 @@ class Site_Map(db.Model):
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', 
                                                       ondelete='CASCADE'))
     site_id = db.Column(db.Integer)
-    path = db.Column(db.String(30))
+    path = db.Column(db.String(80))

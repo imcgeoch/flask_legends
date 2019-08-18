@@ -66,5 +66,5 @@ class World_Map(db.Model):
     map_types = ['bm', 'detailed', 'dip', 'drn', 'el', 'elw', 'evil', 'hyd',
                  'nob', 'rain', 'sal', 'sav', 'str', 'tmp', 'trd', 'veg',
                  'vol', 'world_map']
-    type = db.Column(db.Enum(*map_types))
-    path = db.Column(db.String(30)) 
+    type = db.Column(db.Enum(*map_types, name="map_types"))
+    path = db.Column(db.String(80)) 
