@@ -1,10 +1,15 @@
 import os
 
+import click
+
 from flask import Flask
 from flask_migrate import Migrate
+from flask.cli import FlaskGroup, with_appcontext
 
 from config import Config
 from legends.explorer import views
+
+from .dfparser.folder import process_directory 
 
 
 def create_app(test_config=None):
@@ -33,5 +38,10 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
+
+    @app.cli.command('import_legends')
+    @click.argument('directory_path')
+    def import_legends(directory_path):
+        process_directory(directory_path)
 
     return app

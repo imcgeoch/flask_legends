@@ -6,7 +6,7 @@ from .connector import Connector
 from .mapping import Mapping_Factory
 from ..models import db
 
-from .. import create_app
+#from .. import create_app
 
 
 def parse(filename, mode, world_id):
