@@ -9,52 +9,43 @@ from .dfparser import DF_Handler
 from .mapping import Mapping_Factory
 from .connector import Connector
 from ..models import DF_World, db, Site_Map, World_Map
-#from .. import create_app
 
-IMAGE_PATH = "./images"
-
-def process_directory(path):
-    parser = DF_Parser(path)
+def process_directory(path, image_path):
+    parser = DF_Parser(path, image_path)
     parser.process()
 
 class DF_Parser(object):
     
-    def __init__(self, folder_path):
-        self.folder_path = folder_path
-        self.site_maps = glob(folder_path + '*site_map*')
-        self.world_maps = glob(folder_path + '*[a-z].bmp')
-        self.base_xml = glob(folder_path + '*legends.xml')
-        self.plus_xml = glob(folder_path + '*legends_plus.xml')
+    def __init__(self, dump_path, image_path):
+        self.dump_path = dump_path
+        self.image_path = image_path
+        self.site_maps = glob(dump_path + '*site_map*')
+        self.world_maps = glob(dump_path + '*[a-z].bmp')
+        self.base_xml = glob(dump_path + '*legends.xml')
+        self.plus_xml = glob(dump_path + '*legends_plus.xml')
         self.plus_mode = self.plus_xml is not []
 
     def process(self):
         print("Creating world...")
         self.create_world()
-        # Parse main
         print("Parsing base...")
         self.parse_base()
         if self.plus_mode:
             print("Parsing plus...")
             self.parse_plus()
-        # Make a location in images
-        print("Makign image directory...")
-        self.img_dir = IMAGE_PATH + '/' + str(self.world_id) + '/'
+        print("Making image directory...")
+        self.img_dir = self.image_path + '/' + str(self.world_id) + '/'
         os.mkdir(self.img_dir)
-        # convert and copy all site maps
-        # and upload to db
         print("Converting site maps...")
         self.convert_site_maps()
-        # convert and copy all world maps
-        # and upload to db
         print("Converting world maps...")
         self.convert_world_maps()
 
     def create_world(self):
         world = DF_World()
-        print(world)
         db.session.add(world)
         db.session.commit()
-        print(world.id)
+        print("Created world id" , world.id)
         self.world_id = world.id
 
     def parse_base(self):

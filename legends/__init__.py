@@ -1,10 +1,7 @@
 import os
-
 import click
-
 from flask import Flask
 from flask_migrate import Migrate
-from flask.cli import FlaskGroup, with_appcontext
 
 from config import Config
 from legends.explorer import views
@@ -13,6 +10,8 @@ from .dfparser.folder import process_directory
 
 
 def create_app(test_config=None):
+    IMAGE_PATH = './images'
+    
     app=Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
             SECRET_KEY='dev',
@@ -40,8 +39,8 @@ def create_app(test_config=None):
         return 'Hello, World!'
 
     @app.cli.command('import_legends')
-    @click.argument('directory_path')
-    def import_legends(directory_path):
-        process_directory(directory_path)
+    @click.argument('legends_dump_path')
+    def import_legends(legends_dump_path):
+        process_directory(legends_dump_path, IMAGE_PATH)
 
     return app
