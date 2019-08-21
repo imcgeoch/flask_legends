@@ -55,4 +55,16 @@ class World_Construction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     type = db.Column(db.String(50)) #should be enum
-    coords = db.Column(db.String(50))
+    coords = db.Column(db.String)
+
+class World_Map(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'world_maps'
+    df_world_id = db.Column(db.Integer, 
+                            db.ForeignKey('df_world.id', ondelete='CASCADE'))
+
+    map_types = ['bm', 'detailed', 'dip', 'drn', 'el', 'elw', 'evil', 'hyd',
+                 'nob', 'rain', 'sal', 'sav', 'str', 'tmp', 'trd', 'veg',
+                 'vol', 'world_map']
+    type = db.Column(db.Enum(*map_types, name="map_types"))
+    path = db.Column(db.String(80)) 

@@ -19,7 +19,7 @@ class Artifact(db.Model):
     item_type = db.Column(db.String(20))
     item_subtype = db.Column(db.String(20))
     item_description = db.Column(db.String(200))
-    mat = db.Column(db.String(20))
+    mat = db.Column(db.String(40))
     
     events = db.relationship('Historical_Event', backref='artifact', 
                     primaryjoin='and_(Historical_Event.artifact_id == ' +
@@ -62,6 +62,15 @@ class Written_Content(db.Model):
                                             ("id", "content_id")))
     
 
+class Reference(db.Model):
+    __tablename__ = 'references'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', 
+        ondelete='CASCADE'))
+    type = db.Column(db.String(30))
+    ref_id = db.Column(db.Integer)
+    wc_id = db.Column(db.Integer)
+
 class Style(db.Model):
     __tablename__ = 'styles'
 
@@ -78,6 +87,7 @@ class Musical_Form(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
+    name = db.Column(db.String(50))
 
 class Poetic_Form(db.Model):
     __tablename__ = 'poetic_forms'
@@ -86,6 +96,7 @@ class Poetic_Form(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
+    name = db.Column(db.String(50))
 
 class Dance_Form(db.Model):
     __tablename__ = 'dance_forms'
@@ -93,6 +104,7 @@ class Dance_Form(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text())
+    name = db.Column(db.String(50))
 
 class Historical_Era(db.Model):
     __tablename__ = 'historical_eras'

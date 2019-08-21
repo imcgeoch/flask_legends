@@ -53,7 +53,7 @@ class Historical_Event(db.Model):
     old_caste = db.Column(db.String(20))
     new_caste = db.Column(db.String(20))
     master_wcid = db.Column(db.Integer)
-    race = db.Column(db.String(20))
+    race = db.Column(db.String(40))
     caste = db.Column(db.String(20))
     law_type = db.Column(db.Enum('add', 'remove', name='law_types')) #add or remove
     law = db.Column(db.String(50))
@@ -64,8 +64,8 @@ class Historical_Event(db.Model):
     slayer_item_id = db.Column(db.Integer)
     slayer_shooter_item_id = db.Column(db.Integer)
     cause = db.Column(db.String(30))
-    interaction_action = db.Column(db.String(20))
-    interaction_string = db.Column(db.String(20))
+    interaction_action = db.Column(db.String(75))
+    interaction_string = db.Column(db.String(150))
     source = db.Column(db.Integer)
     secret_goal = db.Column(db.String(20))
     secret_text = db.Column(db.String(50))
@@ -106,7 +106,7 @@ class Historical_Event(db.Model):
     
     ## item fields
     item = db.Column(db.Integer)
-    mat = db.Column(db.String(20))
+    mat = db.Column(db.String(50))
     item_type = db.Column(db.String(20))
     item_subtype = db.Column(db.String(20))
     mat_type = db.Column(db.Integer)
@@ -115,7 +115,7 @@ class Historical_Event(db.Model):
     ####
   
     # strings
-    link_type = db.Column(db.String(20))
+    link_type = db.Column(db.String(30))
     reason = db.Column(db.String(50))
     position = db.Column(db.String(20))
     interaction = db.Column(db.String(50))
