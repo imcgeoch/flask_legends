@@ -10,7 +10,7 @@ from .dfparser import process_directory
 
 
 def create_app(test_config=None):
-    IMAGE_PATH = './images'
+    IMAGE_PATH = os.environ.get("LEGENDS_IMG_DIR") or './images'
     
     app=Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
