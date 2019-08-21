@@ -4,9 +4,9 @@ from flask import Flask
 from flask_migrate import Migrate
 
 from config import Config
-from legends.explorer import views
+from .explorer import views
 
-from .dfparser.folder import process_directory 
+from .dfparser import process_directory 
 
 
 def create_app(test_config=None):

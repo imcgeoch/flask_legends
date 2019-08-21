@@ -5,7 +5,7 @@ from glob import glob
 from wand.image import Image
 from xml.sax import parse as sax_parse
 
-from .dfparser import DF_Handler
+from .handler import DF_Handler
 from .mapping import Mapping_Factory
 from .connector import Connector
 from ..models import DF_World, db, Site_Map, World_Map
