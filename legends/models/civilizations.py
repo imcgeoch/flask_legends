@@ -21,6 +21,10 @@ class Entity(db.Model):
                                               "Site_Link.entity_id",
                                  primaryjoin=jb('Entity', 'Site_Link', 
                                                ('id', 'entity_id')))
+    
+    sites = db.relationship('Site', backref='entity',
+                    viewonly=True, foreign_keys="Site.df_world_id, Site.civ_id",
+                    primaryjoin=jb('Entity', 'Site', ('id', 'civ_id')))
     structures = db.relationship('Structure', backref='entity',
                                  viewonly=True, 
                                  foreign_keys="Structure.df_world_id,"
@@ -49,6 +53,13 @@ class Entity(db.Model):
                                           "Entity_Link.entity_id",
                              primaryjoin=jb('Entity', 'Entity_Link',
                                     ('id', 'entity_id')))
+
+    positions = db.relationship("Entity_Position",
+            backref='entity', viewonly=True,
+            foreign_keys="Entity_Position.df_world_id,"
+                         "Entity_Position.entity_id",
+            primaryjoin=jb("Entity", "Entity_Position",
+                           ('id', 'entity_id')))
 
     eventcols1 = db.relationship('Event_Collection', backref='entity1', 
                                 foreign_keys="Event_Collection.entity_id,"
@@ -131,6 +142,29 @@ class Entity(db.Model):
                     uselist=True,
                     viewonly=True)
 
+    populations = db.relationship('Entity_Population',
+            backref='entity', viewonly=True, 
+            foreign_keys="Entity_Population.df_world_id,"
+                         "Entity_Population.civ_id",
+            primaryjoin=jb("Entity", "Entity_Population", ("id", "civ_id")))
+
+    entity_links_out = db.relationship('Entity_Entity_Link',
+            backref='back_entity', viewonly=True,
+            foreign_keys="Entity_Entity_Link.df_world_id,"
+                         "Entity_Entity_Link.entity_id",
+            primaryjoin=jb("Entity", "Entity_Entity_Link", ("id", "entity_id")))
+    entity_links_in = db.relationship('Entity_Entity_Link',
+            backref='forward_entity', viewonly=True,
+            foreign_keys="Entity_Entity_Link.df_world_id,"
+                         "Entity_Entity_Link.target",
+            primaryjoin=jb("Entity", "Entity_Entity_Link", ("id", "target")))
+    occasions = db.relationship('Occasion',
+            backref='entity', viewonly=True,
+            foreign_keys="Occasion.df_world_id, Occasion.entity_id",
+            primaryjoin=jb("Entity", "Occasion", ("id", "entity_id")))
+
+
+
 class Entity_Population(db.Model):
     __tablename__ = 'entity_populations'
 
@@ -190,6 +224,14 @@ class Entity_Position(db.Model):
     name_female = db.Column(db.String(20))
     spouse_male = db.Column(db.String(20))
     spouse_female = db.Column(db.String(20))
+
+    holder = db.relationship("Entity_Position_Assignment",
+            viewonly=True, backref="position", uselist=False,
+            foreign_keys="Entity_Position_Assignment.df_world_id,"
+                         "Entity_Position_Assignment.entity_id,"
+                         "Entity_Position_Assignment.position_id",
+            primaryjoin=jb("Entity_Position", "Entity_Position_Assignment",
+                ("entity_id", "entity_id"), ("id", "position_id")))
 
 class Entity_Position_Assignment(db.Model):
     __tablename__ = 'entity_position_assignments'

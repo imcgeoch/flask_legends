@@ -6,9 +6,66 @@
 
 {% block content %}
 <h2>Details:</h2>
-{{ context['entity'].name | title }} was an entity.
+{{ context['entity'].name | title }} was a {{ context['entity'].race }} 
+{{ context['entity'].type}}.
 
-	<h2> Events </h2>
+<h2> Populations </h2>
+<ul> 
+	{% for pop in context['entity'].populations %}
+	<li>{{ pop.race }}: {{ pop.num }}</li>
+	{% endfor %}
+</ul>
+<h2> Linked Entities </h2>
+<ul>
+	{% for link in context['entity'].entity_links_out %}
+	<li> <a href={{ url_for('explorer.entity_detail', 
+					                world_id=link.df_world_id,
+					                entity_id=link.target)}}>
+			{{ link.forward_entity.name | title}}</a>, 
+		its {{link.type | lower}}, a {{ link.forward_entity.type }}. </li>
+	{% endfor %}
+</ul>
+
+<h2> Positions </h2>
+
+<ul>
+	{% for position in context['entity'].positions %}
+	<li> 
+		{% if position.holder and position.holder.histfig != -1 %}
+			{% if position.holder.hf.caste == 'FEMALE' and position.name_female %}
+				{{ position.name_female | title }}:
+			{% else %}
+				{{ position.name | title }}:
+			{% endif %}
+			<a href={{url_for('explorer.hf_detail', world_id=position.df_world_id,
+				 hfid=position.holder.histfig)}}>{{ position.holder.hf.name | title }}</a>
+		{% else %}
+			{{ position.name | title }}: Vacant
+		{% endif %}
+	</li>
+	{% endfor %}
+</ul>
+
+<h2> Occasions </h2>
+<ul>
+	{% for occasion in context['entity'].occasions %}
+	<li><a href={{ url_for('explorer.occasion_detail', 
+				         world_id=occasion.df_world_id,
+				         entity_id=occasion.entity_id,
+				         occasion_id=occasion.id)}}>{{ occasion.name }}</a> 
+		</li>
+	{% endfor %}
+</ul>
+
+
+<h2> Associated Sites </h2>
+<ul>
+{% for site in context['entity'].sites %}
+<li><a href={{ url_for('explorer.site_detail', world_id=site.df_world_id, 
+			 site_id=site.id) }}>{{site.name | title}}</a>, a {{ site.type }}.</li>
+{% endfor %}
+</ul>
+<h2> Events </h2>
 	<ul>
 	{% for event in context['entity'].all_events %}
 	<li>{% include 'events/default.html' %} </li>

@@ -104,8 +104,8 @@ class Historical_Figure(db.Model):
                                                 "Interaction_Knowledge", 
                                                 ("id", "hfid")))
     journey_pets = db.relationship('Journey_Pet', viewonly=True, 
-                            foreign_keys="Journey_Pet.hfid,Journey_Pet.df_world_id",
-                            primaryjoin=jb("Historical_Figure", 
+                        foreign_keys="Journey_Pet.hfid,Journey_Pet.df_world_id",
+                        primaryjoin=jb("Historical_Figure", 
                                            "Journey_Pet", ("id", "hfid")))
     spheres = db.relationship('Sphere', viewonly=True, 
                             foreign_keys="Sphere.hfid,Sphere.df_world_id",
@@ -121,6 +121,13 @@ class Historical_Figure(db.Model):
                                               "Structure.df_world_id",
                                  primaryjoin=jb('Historical_Figure', 'Structure',
                                                 ('id', 'worship_hfid')))
+    
+    positions = db.relationship("Entity_Position_Assignment",
+            backref='hf', viewonly=True,
+            foreign_keys="Entity_Position_Assignment.df_world_id,"
+                         "Entity_Position_Assignment.histfig",
+            primaryjoin=jb("Historical_Figure", "Entity_Position_Assignment",
+                           ('id', 'histfig')))
 
     def first_name(self):
         return self.name.split(" ")[0] 

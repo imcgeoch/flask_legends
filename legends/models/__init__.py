@@ -10,7 +10,7 @@ from .events import Historical_Event, Add_HF_Entity_Link, Add_HF_HF_Link, \
         Add_HF_Site_Link, Agreement_Formed, Artifact_Claim_Formed, \
         Artifact_Copied, Artifact_Copied, Artifact_Destroyed, \
         Artifact_Found, Artifact_Given, Artifact_Lost, Artifact_Recovered, \
-        Artifact_Posessed, Artifact_Recovered, Artifact_Stored, \
+        Artifact_Possessed, Artifact_Recovered, Artifact_Stored, \
         Artifact_Transformed, Assume_Identity, Attacked_Site, Body_Abused, \
         Change_HF_Body_State, Change_HF_Job, Change_Creature_Type, \
         Create_Entity_Position, Created_Site, Created_Strucure, \

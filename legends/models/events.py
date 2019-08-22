@@ -229,8 +229,8 @@ class Artifact_Lost(Historical_Event):
     #artifact_id
     #site_id
 
-class Artifact_Posessed(Historical_Event):
-    __mapper_args__ = { 'polymorphic_identity':'artifact posessed'}
+class Artifact_Possessed(Historical_Event):
+    __mapper_args__ = { 'polymorphic_identity':'artifact possessed'}
     # hfid
     # artifact_id
     # unit_id
@@ -391,6 +391,9 @@ class Entity_Law(Historical_Event):
     #entity id
     #    law_type = db.Column(db.Enum('add', 'remove')) #add or remove
     #    law = db.Column(db.String(50))
+
+class Entity_Relocate(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'entity relocate'}
 
 class Entity_Primary_Criminals(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'entity primary criminals'}
@@ -762,7 +765,7 @@ class Remove_HF_Site_Link(Historical_Event):
     # position
 
 class Replace_Structure(Historical_Event):
-    __mapper_args__ = {'polymorphic_identity':'repalce structure'}
+    __mapper_args__ = {'polymorphic_identity':'replaced structure'}
     # entity_id civ
     # site_civ
     # site

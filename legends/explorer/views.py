@@ -78,7 +78,9 @@ def artifact_list(world_id):
 
     return render_template('artifact_list.html', items=artifacts)
 
-
+@bp.route('/<world_id>/occasion/<entity_id>/<occasion_id>')
+def occasion_detail(world_id, entity_id, occasion_id):
+    return "placeholder for occasion %s of entity %s" % (occasion_id, entity_id)
 
 @bp.route('/<world_id>/site/<site_id>')
 def site_detail(world_id, site_id):

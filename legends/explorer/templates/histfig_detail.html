@@ -36,6 +36,17 @@
 	{% elif hf.spheres | length == 1 %}
 	{{ pronoun | title }} is associated with {{ hf.spheres[0].sphere }}.
 	{% endif %}
+	{% for position in hf.positions %}
+	{{ pronoun | title }} held the position of 
+	{% if hf.caste == 'FEMALE' and position.position.name_female %}
+	{{ position.position.name_female | title }}
+	{% else %}
+	{{ position.position.name | title }}
+	{% endif %}
+	of <a href={{ url_for('explorer.entity_detail', world_id=position.df_world_id,
+				entity_id=position.entity_id) }}>{{ position.position.entity.name | title}}</a>.
+	{% endfor %}
+
   </div>
 
 	{% if hf.goals %}
