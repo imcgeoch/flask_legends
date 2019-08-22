@@ -185,7 +185,7 @@ class Historical_Event_Mapping(Mapping):
 
         self.alias_key(self.obj_name, 'hfid', 'hfid', 'hist_figure_id', 
                        'giver_hist_figure_id', 'attacker_general_hfid', 
-                       'group_1_hfid', 'spotter_hfid')
+                       'group_1_hfid', 'spotter_hfid', 'histfig')
         self.alias_key(self.obj_name, 'hfid2', 'hfid2', 'hfid_target', 
                        'receiver_hist_figure_id', 'defender_general_hfid',
                        'group_2_hfid', 'slayer_hf')
