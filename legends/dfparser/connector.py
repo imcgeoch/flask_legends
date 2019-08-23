@@ -78,27 +78,46 @@ class Connector():
 
         self.db_mappings = {}
         self.xml_mappings = []
+        self.db_mapping_size = 0
+
+        print('Initialized connector...')
         
     def add_world(self):
         self.db.session.add(m.DF_World(id=self.world_id))
         self.db.session.commit()
 
     def add_mapping(self, xml_mapping):
-        self.xml_mappings.append(xml_mapping)
-        if len(self.xml_mappings) >= self.capacity:
+        self.db_mapping_size += self.convert_mapping(xml_mapping)
+        if self.db_mapping_size >= self.capacity:
+            print('\033[A', 'Added %s, current id %s' % (xml_mapping, 
+                   xml_mapping.xml_dict.get('id')))
             self.mappings_to_db()
+            self.db_mapping_size = 0
 
-    def convert_mappings(self):
-        while self.xml_mappings:
-            xml_mapping = self.xml_mappings.pop()
-            xml_mapping.convert()
-            if self.mode == 'update':
-                xml_mapping.mask_fields()
-            for name, db_mapping in xml_mapping.get_db_mappings().items():
-                if name in self.db_mappings:
-                    self.db_mappings[name].extend(db_mapping)
-                else:
-                    self.db_mappings[name] = db_mapping
+    def convert_mapping(self, xml_mapping):
+        xml_mapping.convert()
+        if self.mode == 'update':
+            xml_mapping.mask_fields()
+        size = 0
+        for name, db_mapping in xml_mapping.get_db_mappings().items():
+            size += len(db_mapping)
+            if name in self.db_mappings:
+                self.db_mappings[name].extend(db_mapping)
+            else:
+                self.db_mappings[name] = db_mapping
+        return size
+
+    #def convert_mappings(self):
+    #    while self.xml_mappings:
+    #        xml_mapping = self.xml_mappings.pop()
+    #        xml_mapping.convert()
+    #        if self.mode == 'update':
+    #            xml_mapping.mask_fields()
+    #        for name, db_mapping in xml_mapping.get_db_mappings().items():
+    #            if name in self.db_mappings:
+    #                self.db_mappings[name].extend(db_mapping)
+    #            else:
+    #                self.db_mappings[name] = db_mapping
     
     def insert_mappings(self):
         s = self.db.session
@@ -134,10 +153,10 @@ class Connector():
 
     def mappings_to_db(self):
         if self.mode == 'insert':
-            self.convert_mappings()
+            #self.convert_mappings()
             self.insert_mappings()
         elif self.mode == 'update':
-            self.convert_mappings()
+            #self.convert_mappings()
             self.update_mappings()
             self.insert_mappings()
 
