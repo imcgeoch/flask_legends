@@ -1,9 +1,0 @@
-{%- macro region_name(event, region) %}
-{%- if event.region %}
-{%- if region == event.region -%}
-{{ region.name | title }} 
-{%- else %}
-in {{ event.region.name | title }}
-{%- endif %}
-{%- endif %}
-{%- endmacro %}
