@@ -1,0 +1,45 @@
+{%- macro hf_link(hf) -%}
+<a href={{url_for('explorer.hf_detail', world_id=hf.df_world_id, hfid=hf.id)}}>{{hf.name|title}}</a>
+{%- endmacro -%}
+
+{%- macro entity_link(entity) -%}
+<a href={{url_for('explorer.entity_detail', world_id=entity.df_world_id, entity_id=entity.id)}}>{{entity.name|title}}</a>
+{%- endmacro -%}
+
+{%- macro artifact_link(artifact) -%}
+<a href={{url_for('explorer.artifact_detail', world_id=artifact.df_world_id, artifact_id=artifact.id)}}>{{artifact.name|title}}</a>
+{%- endmacro -%}
+
+{%- macro occasion_link(occasion) -%}
+<a href={{url_for('explorer.occasion_detail', world_id=occasion.df_world_id, entity_id=occasion.entity_id, occasion_id=occasion.id)}}>{{occasion.name|title}}</a>
+{%- endmacro -%}
+
+{%- macro site_link(site) -%}
+<a href={{url_for('explorer.site_detail', world_id=site.df_world_id, site_id=site.id)}}>{{site.name|title}}</a>
+{%- endmacro -%}
+
+{%- macro region_link(region) -%}
+<a href ={{url_for('explorer.region_detail', world_id=region.df_world_id, region_id=region.id)}}>{{ region.name | title }}</a>
+{%- endmacro -%}
+
+{%- macro hf_name(hf, this_hf) -%}
+{%- if not hf -%}
+UNKNOWN HF
+{%- else -%}
+{%- if hf != this_hf -%}
+{{hf_link(hf)}}
+{%- else -%}
+{{ this_hf.first_name() | title }}
+{%- endif -%}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro region_name(region, this_region) %}
+{%- if region %}
+	{%- if region != this_region %}
+	  in {{ region_link(region) }} 
+	{%- else %}
+	  in {{ region.name | title }}
+	{%- endif %}
+{%- endif %}
+{%- endmacro %}
