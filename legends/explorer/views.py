@@ -15,7 +15,7 @@ def index():
 @bp.route('/worlds')
 def world_index():
     worlds = DF_World.query.all()
-    return str(worlds)
+    return str([(world.id, world.name, world.altname) for world in worlds])
 
 @bp.route('/<world_id>/histfigs')
 def hf_index(world_id):
@@ -86,5 +86,6 @@ def occasion_detail(world_id, entity_id, occasion_id):
 def site_detail(world_id, site_id):
     return "placeholder for site %s" % (site_id)
 
-
-
+@bp.route('/<world_id>/region/<region_id>')
+def region_detail(world_id, region_id):
+    return "placeholder for region %s" % (region_id)
