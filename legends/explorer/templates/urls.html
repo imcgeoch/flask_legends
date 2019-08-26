@@ -43,3 +43,23 @@ UNKNOWN HF
 	{%- endif %}
 {%- endif %}
 {%- endmacro %}
+
+{%- macro site_name(site, this_site) %}
+{% if site %}
+  {%- if site != this_site %}
+	  {{ site_link(site) }}
+	{%- else %}
+	  {{ site.name|title }}
+	{% endif %}
+{% endif %}
+{%- endmacro %}
+
+{%- macro entity_name(entity, this_entity) %}
+{% if entity %}
+  {%- if entity != this_entity %}
+	  {{ entity_link(entity) }}
+	{%- else %}
+	  {{ entity.name|title }}
+	{% endif %}
+{% endif %}
+{%- endmacro %}
