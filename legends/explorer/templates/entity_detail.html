@@ -1,4 +1,5 @@
 {% extends "detail_base.html" %}
+{% from 'urls.html' import hf_link, entity_link %} 
 
 {% block page_title%}
 <h1>Entity: {{ context['entity'].name }} </h1> 
@@ -18,11 +19,13 @@
 <h2> Linked Entities </h2>
 <ul>
 	{% for link in context['entity'].entity_links_out %}
-	<li> <a href={{ url_for('explorer.entity_detail', 
+	{#	<li> <a href={{ url_for('explorer.entity_detail', 
 					                world_id=link.df_world_id,
 					                entity_id=link.target)}}>
-			{{ link.forward_entity.name | title}}</a>, 
-		its {{link.type | lower}}, a {{ link.forward_entity.type }}. </li>
+			{{ link.forward_entity.name | title}}</a>, #}
+		<li>
+		{{entity_link(link.forward_entity) }}
+		its {{link.type | lower}}, a {{ link.forward_entity.type }}. </li> 
 	{% endfor %}
 </ul>
 
@@ -36,10 +39,9 @@
 				{{ position.name_female | title }}:
 			{% else %}
 				{{ position.name | title }}:
-			{% endif %}
-			<a href={{url_for('explorer.hf_detail', world_id=position.df_world_id,
-				 hfid=position.holder.histfig)}}>{{ position.holder.hf.name | title }}</a>
-		{% else %}
+				{% endif %} 
+			{{hf_link(position.holder.hf)}}
+			{% else %}
 			{{ position.name | title }}: Vacant
 		{% endif %}
 	</li>
