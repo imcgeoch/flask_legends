@@ -1,28 +1,42 @@
-{% from 'events/hf_name.html' import hf_name1, hf_name2 %} 
-{% from 'events/region_name.html' import region_name %}
+{% from 'urls.html' import hf_name, region_name%}
 
-{{ hf_name1(event, hf) }}
+{{ hf_name(event.hf, hf) }}
 
 {% if event.subtype == 'attacked' -%}
-attacked {{ hf_name2(event, hf) }}{{ region_name(event, region) }}. 
+	attacked {{ hf_name(event.hf2, hf) }}{{ region_name(event.region, region) }}. 
+
 {% elif event.subtype == 'scuffle' %}
-  got into a scuffle with {{ hf_name2(event, hf) }}.
+  got into a scuffle with {{ hf_name(event.hf2, hf) }}
+	{{ region_name(event.region, region) }}.
+
 {% elif event.subtype == '2 lost after receiving wounds' %}
-attacked {{ hf_name2(event, hf) }}{{ region_name(event, region) }}. The latter was wounded.
+	attacked {{ hf_name(event.hf2, hf) }}{{ region_name(event.region, region) }}. 
+	The latter was wounded.
+
 {% elif event.subtype == 'corner' %}
-  cornered {{ hf_name2(event, hf) }}{{ region_name(event, region) }}.
+  cornered {{ hf_name(event.hf2, hf) }}{{ region_name(event.region, region) }}.
+
 {% elif event.subtype == '2 lost after giving wounds' %}
-  attacked {{ event.hf2.name }}{{ region_name(event, region) }}. The atatcker won despite being wounded.
+  attacked {{ hf_name(event.hf2) }}{{ region_name(event.region, region) }}. 
+	The atatcker won despite being wounded.
+
 {% elif event.subtype == 'confront' %}
-confronted {{ hf_name2(event, hf) }}{{ region_name(event, region) }}.
+confronted {{ hf_name(event.hf2, hf) }}{{ region_name(event.region, region) }}.
+
 {% elif event.subtype == 'ambushed' %}
-  ambushed {{ hf_name2(event, hf) }}{{ region_name(event, region) }}.
+  ambushed {{ hf_name(event.hf2, hf) }}{{ region_name(event.region, region) }}.
+
 {% elif event.subtype == 'happen upon' %}
-  happened upon and battled {{ hf_name2(event, hf) }}{{ region_name(event, region) }}.
+  happened upon and battled {{ hf_name(event.hf2, hf) }}
+	{{ region_name(event.region, region) }}.
+
 {% elif event.subtype == 'surprised' %}
-  surprised {{ hf_name2(event, hf) }}{{ region_name(event, region) }}.
+  surprised {{ hf_name(event.hf2, hf) }}{{ region_name(event.region, region) }}.
+
 {% elif event.subtype == '2 lost after mutual wounds' %}
-  attacked {{ hf_name2(event, hf) }}{{ region_name(event, region) }}, and won after both combatants were wounded. 
-	{% else %}
+  attacked {{ hf_name(event.hf2, hf) }}{{ region_name(event.region, region) }}, 
+	and won after both combatants were wounded. 
+
+{% else %}
 	SIMPLE BATTLE EVENT
-	{% endif %}
+{% endif %}
