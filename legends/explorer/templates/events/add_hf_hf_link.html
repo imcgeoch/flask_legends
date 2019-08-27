@@ -1,2 +1,3 @@
-In {{ event.year }}
-{{ event.hf.name }} became linked to {{ event.hf2.name }}.
+{% from 'urls.html' import hf_name, region_name%}
+
+{{hf_name(event.hf2, hf)}} became {{hf_name(event.hf, hf)}}'s {{event.link_type}}.

@@ -24,7 +24,7 @@ def hf_index(world_id):
                            .filter_by(df_world_id=world_id)\
                            .limit(250).offset(after)
 
-    return render_template('histfig_list.html', items=hfs)
+    return render_template('histfig_list.html', items=hfs, context={})
 
 @bp.route('/<world_id>/histfig/<hfid>')
 def hf_detail(world_id, hfid):
@@ -38,7 +38,7 @@ def hf_detail(world_id, hfid):
 
     return render_template('histfig_detail.html', hf=hf, 
                            pronoun=pronoun, posessive=posessive,
-                           events=events, rendered_events=[])
+                           events=events, rendered_events=[], context={})
 
 @bp.route('/<world_id>/entities')
 def entity_list(world_id):
