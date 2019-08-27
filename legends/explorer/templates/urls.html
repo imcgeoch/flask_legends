@@ -34,25 +34,28 @@ UNKNOWN HF
 {%- endif -%}
 {%- endmacro -%}
 
-{%- macro region_name(region, this_region) %}
-{%- if region %}
+{%- macro region_name(region, this_region) -%}
+{%- if region -%}
 	{%- if region != this_region %}
 	  in {{ region_link(region) }} 
 	{%- else %}
 	  in {{ region.name | title }}
 	{%- endif %}
-{%- endif %}
-{%- endmacro %}
+{%- endif -%}
+{%- endmacro -%}
 
-{%- macro site_name(site, this_site) %}
-{% if site %}
-  {%- if site != this_site %}
-	  {{ site_link(site) }}
-	{%- else %}
-	  {{ site.name|title }}
+{% macro site_name(site, this_site, preposition) -%}
+{%- if site -%}
+  {% if preposition %}
+	{{preposition}}
 	{% endif %}
-{% endif %}
-{%- endmacro %}
+  {%- if site != this_site -%}
+	  {{ site_link(site) }}
+	{%- else -%}
+	  {{ site.name|title }}
+	{%- endif -%}
+{%- endif -%}
+{%- endmacro -%}
 
 {%- macro entity_name(entity, this_entity) %}
 {% if entity %}

@@ -1,12 +1,14 @@
-In {{ event.year }},
+{% from 'urls.html' import hf_name, region_name, site_name%}
 
-{% if event.state == 'settled' %}
-{{ event.hf.name }} ceased to wander and settled down.
-{% elif event.state == 'wandering' %}
-{{ event.hf.name }} began wondering the world. 
-{% elif event.state == 'visiting' %}
-{{ event.hf.name }} stopped to visit somewhere. 
-{% elif event.state == 'visiting' %}
-{{ event.hf.name }} begame a refugee.
-{% endif %}
-
+{%- if event.state == 'settled' -%}
+{{ hf_name(event.hf, hf) }} settled 
+{{ site_name(event.site, site, 'at')}}{{region_name(event.region, region)}}.
+{%- elif event.state == 'wandering' -%}
+{{ hf_name(event.hf, hf) }} began wandering the world {{region_name(event.region, region)}}. 
+{%- elif event.state == 'visiting' -%}
+{{ hf_name(event.hf, hf) }} visited {{site_name(event.site, site) }}. 
+{%- elif event.state == 'refugee' -%}
+{{ hf_name(event.hf, hf) }} begame a refugee {{region_name(event.region, region)}}.
+{%- else -%}
+{{ hf_name(event.hf, hf) }} CHANGE_STATE {{ site_name(event.site, site, 'at')}}.
+{%- endif -%}
