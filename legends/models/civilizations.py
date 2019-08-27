@@ -12,6 +12,7 @@ class Entity(db.Model):
     race = db.Column(db.String(20))
     type = db.Column(db.String(20))
     claims = db.Column(db.String)
+    worship_id = db.Column(db.Integer)
 
     #site_links = db.relationship('Site_Link', backref='entity', 
     #                             viewonly=True)
