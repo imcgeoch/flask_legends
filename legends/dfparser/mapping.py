@@ -198,6 +198,7 @@ class Historical_Event_Mapping(Mapping):
         self.alias_key(self.obj_name, 'building', 'building', 'building_id')
         self.alias_key(self.obj_name, 'site_id', 'site_id', 'site_id1')
         self.alias_key(self.obj_name, 'site_id2', 'site_id2', 'site_id_2')
+        self.alias_key(self.obj_name, 'state', 'state', 'mood')
 
 
 class Written_Content_Mapping(Mapping):
