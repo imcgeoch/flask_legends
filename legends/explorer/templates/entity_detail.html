@@ -6,71 +6,31 @@
 {% endblock %}
 
 {% block content %}
-<h2>Details:</h2>
-{{ context['entity'].name | title }} was a {{ context['entity'].race }} 
-{{ context['entity'].type}}.
+<div id="details">
+{% include 'entity/entity_details.html' %}
+</div>
 
-<h2> Populations </h2>
-<ul> 
-	{% for pop in context['entity'].populations %}
-	<li>{{ pop.race }}: {{ pop.num }}</li>
-	{% endfor %}
-</ul>
-<h2> Linked Entities </h2>
-<ul>
-	{% for link in context['entity'].entity_links_out %}
-	{#	<li> <a href={{ url_for('explorer.entity_detail', 
-					                world_id=link.df_world_id,
-					                entity_id=link.target)}}>
-			{{ link.forward_entity.name | title}}</a>, #}
-		<li>
-		{{entity_link(link.forward_entity) }}
-		its {{link.type | lower}}, a {{ link.forward_entity.type }}. </li> 
-	{% endfor %}
-</ul>
+<div id="populations">
+{% include 'entity/entity_populations.html' %}
+</div>
 
-<h2> Positions </h2>
+<div id="linked_entities">
+{% include 'entity/entity_linked_entities.html' %}
+</div>
 
-<ul>
-	{% for position in context['entity'].positions %}
-	<li> 
-		{% if position.holder and position.holder.histfig != -1 %}
-			{% if position.holder.hf.caste == 'FEMALE' and position.name_female %}
-				{{ position.name_female | title }}:
-			{% else %}
-				{{ position.name | title }}:
-				{% endif %} 
-			{{hf_link(position.holder.hf)}}
-			{% else %}
-			{{ position.name | title }}: Vacant
-		{% endif %}
-	</li>
-	{% endfor %}
-</ul>
+<div id="positions">
+{% include 'entity/entity_positions.html' %}
+</div>
 
-<h2> Occasions </h2>
-<ul>
-	{% for occasion in context['entity'].occasions %}
-	<li><a href={{ url_for('explorer.occasion_detail', 
-				         world_id=occasion.df_world_id,
-				         entity_id=occasion.entity_id,
-				         occasion_id=occasion.id)}}>{{ occasion.name }}</a> 
-		</li>
-	{% endfor %}
-</ul>
+<div id="occasions">
+{% include 'entity/entity_occasions.html' %}
+</div>
 
+<div id="sites">
+{% include 'entity/entity_sites.html' %}
+</div>
 
-<h2> Associated Sites </h2>
-<ul>
-{% for site in context['entity'].sites %}
-<li><a href={{ url_for('explorer.site_detail', world_id=site.df_world_id, 
-			 site_id=site.id) }}>{{site.name | title}}</a>, a {{ site.type }}.</li>
-{% endfor %}
-</ul>
-<h2> Events </h2>
-	<ul>
-	{% for event in context['entity'].all_events %}
-	<li>{% include 'events/default.html' %} </li>
-	{% endfor %}
-	</ul>
+<div id="events">
+{% include 'entity/entity_events.html' %}
+</div>
 {% endblock %}

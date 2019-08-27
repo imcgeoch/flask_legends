@@ -1,0 +1,6 @@
+<h2> Populations </h2>
+<ul> 
+	{% for pop in context['entity'].populations %}
+	<li>{{ pop.race }}: {{ pop.num }}</li>
+	{% endfor %}
+</ul>

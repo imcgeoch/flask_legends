@@ -1,0 +1,12 @@
+<h2> Linked Entities </h2>
+<ul>
+	{% for link in context['entity'].entity_links_out %}
+	{#	<li> <a href={{ url_for('explorer.entity_detail', 
+					                world_id=link.df_world_id,
+					                entity_id=link.target)}}>
+			{{ link.forward_entity.name | title}}</a>, #}
+		<li>
+		{{entity_link(link.forward_entity) }}
+		its {{link.type | lower}}, a {{ link.forward_entity.type }}. </li> 
+	{% endfor %}
+</ul>
