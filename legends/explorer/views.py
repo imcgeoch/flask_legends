@@ -32,13 +32,14 @@ def hf_detail(world_id, hfid):
     hf = Historical_Figure.query\
                           .filter_by(df_world_id=world_id, id=hfid)\
                           .first()
-    pronoun = 'he' if hf.caste == 'MALE' else 'she'
-    posessive = 'his' if hf.caste == 'MALE' else 'her'
+    pronoun, posessive = hf.pronouns()
     events = hf.all_events
+    context = { 'hf':hf, 'pronoun':pronoun, 'posessive':posessive, 
+                'all_events':hf.all_events}
 
     return render_template('histfig_detail.html', hf=hf, 
                            pronoun=pronoun, posessive=posessive,
-                           events=events, rendered_events=[], context={})
+                           events=events, rendered_events=[], context=context)
 
 @bp.route('/<world_id>/entities')
 def entity_list(world_id):

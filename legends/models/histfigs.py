@@ -5,8 +5,8 @@ from .join_builder import join_builder as jb, table_join_builder as tjb
 class Historical_Figure(db.Model):
     __tablename__ = 'historical_figures'
 
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
-                            primary_key=True)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', 
+                            ondelete='CASCADE'), primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     race = db.Column(db.String(40))
@@ -24,6 +24,9 @@ class Historical_Figure(db.Model):
     death_year = db.Column(db.Integer)
     current_identity_id = db.Column(db.Integer)
     ent_pop_id = db.Column(db.Integer)
+    
+    first_name = lambda self: self.name.split(" ")[0]
+    pronouns = lambda self: ('he', 'his') if self.caste == 'MALE' else ('she', 'her') 
 
     held_artifacts = db.relationship('Artifact', backref='holder_hf', 
                                      foreign_keys='Artifact.holder_hfid,'
@@ -129,8 +132,6 @@ class Historical_Figure(db.Model):
             primaryjoin=jb("Historical_Figure", "Entity_Position_Assignment",
                            ('id', 'histfig')))
 
-    def first_name(self):
-        return self.name.split(" ")[0] 
 
     prim_events = db.relationship('Historical_Event', backref='hf', 
                     primaryjoin='and_(Historical_Event.hfid == ' +
@@ -158,7 +159,8 @@ class Historical_Figure(db.Model):
                                          'Historical_Figure.df_world_id)',
                     foreign_keys="Historical_Event.df_world_id,"
                                  "Historical_Event.hfid,"
-                                 "Historical_Event.hfid2")
+                                 "Historical_Event.hfid2",
+                    order_by="Historical_Event.year,Historical_Event.seconds72")
 
 
     def __repr__(self):

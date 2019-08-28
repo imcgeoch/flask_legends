@@ -6,48 +6,8 @@
 {% endblock %}
 
 {% block content %}
-  <h2> Details: </h2>
-	<div>
-  {{ hf.name | title }} was a {{ hf.race }}. 
-	{% if not hf.deity and not hf.force%}
-	{{ pronoun | title }} was born in 
-	{% if hf.birth_year > 0 %}
-	  {{ hf.birth_year}} 
-	{% else %} 
-	  a time before time 
-	{% endif %}
-  and 
-  {% if hf.death_year == -1 %}
-	  still lives.
-	{% else %}
-		died in {{ hf.death_year }}.
-	{% endif %}
-  {% elif hf.deity %}
-	{{ pronoun | title }} was a deity. 
-  {% elif hf.force %}
-	{{ pronoun | title }} was a force of nature. 
-	{% endif %}
-	{% if hf.spheres | length > 1 %}
-	{{ pronoun | title }} is associated with 
-	{% for sphere in hf.spheres[0:-1] %}
-	{{ sphere.sphere }}, 
-	{% endfor %}
-	and {{ hf.spheres[-1].sphere }}
-	{% elif hf.spheres | length == 1 %}
-	{{ pronoun | title }} is associated with {{ hf.spheres[0].sphere }}.
-	{% endif %}
-	{% for position in hf.positions %}
-	{{ pronoun | title }} held the position of 
-	{% if hf.caste == 'FEMALE' and position.position.name_female %}
-	{{ position.position.name_female | title }}
-	{% else %}
-	{{ position.position.name | title }}
-	{% endif %}
-	of <a href={{ url_for('explorer.entity_detail', world_id=position.df_world_id,
-				entity_id=position.entity_id) }}>{{ position.position.entity.name | title}}</a>.
-	{% endfor %}
 
-  </div>
+  {% include 'histfig/histfig_details.html' %}
 
 	{% if hf.goals %}
   <h2> Goals </h2>
