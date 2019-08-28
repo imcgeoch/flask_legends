@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, url_for
+from flask import Blueprint, render_template, request, url_for, jsonify
 
 from sqlalchemy import or_
 
@@ -16,6 +16,10 @@ def index():
 def world_index():
     worlds = DF_World.query.all()
     return str([(world.id, world.name, world.altname) for world in worlds])
+
+@bp.route('/api/hello')
+def api_hello():
+    return jsonify({'greeting':'hello, api'})
 
 @bp.route('/<world_id>/histfigs')
 def hf_index(world_id):
