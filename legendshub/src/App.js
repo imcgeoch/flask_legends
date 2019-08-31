@@ -1,6 +1,7 @@
 import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
+const axios = require('axios');
 
 
 class MyComponent extends React.Component {
@@ -15,25 +16,14 @@ class MyComponent extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch("/api/hello")
-			.then(res => res.json())
-		  .then(
-				 (result) => {
-					 this.setState({
-						 items : result.greeting
-					 });
-				 },
-				(error) => {
-					this.setState({
-						items : error.message
-					});
-				}
-			)
+		axios.get("/api/hello")
+		  .then(response => {console.log(response); 
+				this.setState({ items : response.data.greeting });
+		});
 	}
 
 	render () {
 		const {items} = this.state;
-
     return <div> {items} </div>
 	}
 }
