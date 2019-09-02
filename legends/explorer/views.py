@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, url_for, jsonify
 
 from sqlalchemy import or_
 
+from titlecase import titlecase
+
 from ..models import *
 from . import bp
 
@@ -44,6 +46,24 @@ def hf_detail(world_id, hfid):
     return render_template('histfig_detail.html', hf=hf, 
                            pronoun=pronoun, posessive=posessive,
                            events=events, rendered_events=[], context=context)
+@bp.route('/api/<world_id>/histfig/<hfid>')
+def hf_detail_json(world_id, hfid):
+    hf = Historical_Figure.query\
+                          .filter_by(df_world_id=world_id, id=hfid)\
+                          .first()
+    pronoun, posessive = hf.pronouns()
+    entity_links = [{'entity_name':titlecase(el.entity.name), 
+                     'entity_id':el.entity_id, 
+                     'type':el.link_type} 
+                     for el in hf.entity_links]
+    context = { 
+                'name':titlecase(hf.name),
+                'goals':[goal.goal for goal in hf.goals],
+                'entity_links':entity_links,
+                'pronoun':pronoun, 
+                'posessive':posessive, 
+              } 
+    return jsonify(context)
 
 @bp.route('/<world_id>/entities')
 def entity_list(world_id):
