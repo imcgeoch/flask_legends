@@ -56,12 +56,21 @@ def hf_detail_json(world_id, hfid):
                      'entity_id':el.entity_id, 
                      'type':el.link_type} 
                      for el in hf.entity_links]
+    events = [{
+        'type':event.type,
+        'id':event.id,
+        'hf_name':event.hf.name if event.hf else None,
+        'hf_name2':event.hf2.name if event.hf2 else None,
+        'hfid':event.hfid,
+        'hfid2':event.hfid2
+        } for event in hf.all_events]
     context = { 
                 'name':titlecase(hf.name),
                 'goals':[goal.goal for goal in hf.goals],
                 'entity_links':entity_links,
                 'pronoun':pronoun, 
                 'posessive':posessive, 
+                'events':events
               } 
     return jsonify(context)
 

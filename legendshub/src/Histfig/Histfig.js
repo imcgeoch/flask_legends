@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Entity_Link from "../Entity/Entity_Link";
 
+import Event from "../Events/Event"
+import Event_List from "../Events/Event_List"
+
 
 const axios = require('axios');
 
@@ -17,7 +20,7 @@ function Entity_Link_List({entity_links=[], world_id='', ...props}){
 		<ul>
 			{
 				entity_links.map(({type, ...props}) => 
-				(<li> <Entity_Link {...props} world_id={world_id} />: {type} </li>))
+				(<li key={props.entity_id}> <Entity_Link {...props} world_id={world_id} />: {type} </li>))
 			}
 		</ul>
 	);
@@ -42,13 +45,16 @@ class Histfig extends React.Component {
 
 	render() {
 		return( <div> <h1>Histfig Page</h1>
-				<p> World : {this.props.match.params.worldid} </p>
+			<p> World : {this.props.match.params.worldid} </p>
 				<p> Histfig : {this.props.match.params.id} </p>
-			  <p> Pronoun : {this.state.items.pronoun} </p>
-			  <p> Name: {this.state.items.name} </p>
-			  Goals: <StringList items={this.state.items.goals} />
-			  Entity_Links: <Entity_Link_List entity_links={this.state.items.entity_links} 
-			                                  world_id={this.props.match.params.worldid} />
+			<p> Pronoun : {this.state.items.pronoun} </p>
+			<p> Name: {this.state.items.name} </p>
+			Goals: <StringList items={this.state.items.goals} />
+			Entity_Links: <Entity_Link_List entity_links={this.state.items.entity_links} 
+				world_id={this.props.match.params.worldid} />
+			Events: <Event_List events={this.state.items.events} 
+			         linking_hf_id={this.props.match.params.id} 
+			         world_id={this.props.match.params.worldid}/>
 			</div>
 		);
 	}
