@@ -26,38 +26,58 @@ function Entity_Link_List({entity_links=[], world_id='', ...props}){
 	);
 }
 
-class Histfig extends React.Component {
-
+class Histfig_Inner extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {items : {}};
 	}
-	
-	componentWillMount() {
-		let worldid = this.props.match.params.worldid;
-		let id = this.props.match.params.id;
+
+
+  getFromAPI() {
+		let worldid = this.props.worldid;
+		let id = this.props.id;
 		axios.get(`/api/${worldid}/histfig/${id}`)
 		  .then(response => {
 				console.log(response); 
 				this.setState( {items : response.data} );
-		});
+			});
+		axios.get(`/api/${worldid}/events?hf=${id}`)
+		  .then(response => {
+				console.log(response); 
+				this.setState( {events : response.data} );
+			});
+	}
+
+	componentDidMount() {
+	  this.getFromAPI();
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.id !== prevProps.id ){
+			this.getFromAPI();
+		}
 	}
 
 	render() {
 		return( <div> <h1>Histfig Page</h1>
-			<p> World : {this.props.match.params.worldid} </p>
-				<p> Histfig : {this.props.match.params.id} </p>
+			<p> World : {this.props.worldid} </p>
+				<p> Histfig : {this.props.id} </p>
 			<p> Pronoun : {this.state.items.pronoun} </p>
 			<p> Name: {this.state.items.name} </p>
 			Goals: <StringList items={this.state.items.goals} />
 			Entity_Links: <Entity_Link_List entity_links={this.state.items.entity_links} 
-				world_id={this.props.match.params.worldid} />
-			Events: <Event_List events={this.state.items.events} 
-			         linking_hf_id={this.props.match.params.id} 
-			         world_id={this.props.match.params.worldid}/>
+				world_id={this.worldid} />
+			Events: <Event_List events={this.state.events} 
+			         linking_hf_id={this.props.id} 
+			         world_id={this.props.worldid}/>
 			</div>
 		);
 	}
+
+}
+
+function Histfig(props) {
+	return <Histfig_Inner worldid={props.match.params.worldid} id={props.match.params.id} />
 }
 
 export default Histfig;
