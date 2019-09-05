@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, url_for, jsonify
 
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
+from sqlalchemy.orm import joinedload, load_only
 
 from titlecase import titlecase
 
@@ -46,6 +47,28 @@ def hf_detail(world_id, hfid):
     return render_template('histfig_detail.html', hf=hf, 
                            pronoun=pronoun, posessive=posessive,
                            events=events, rendered_events=[], context=context)
+
+@bp.route('/api/<world_id>/events')
+def events_json(world_id):
+    q = Historical_Event.query.options(joinedload(Historical_Event.hf).load_only('name'), 
+                                       joinedload(Historical_Event.hf2).load_only('name'))
+
+    hf = request.args.get('hf')
+    if hf:
+        q = q.filter(or_(Historical_Event.hfid == hf, Historical_Event.hfid2 == hf))
+    
+    events = [{
+            'year':e.year,
+            'seconds72':e.seconds72,
+            'type':e.type,
+            'hfid':e.hfid,
+            'hfid2':e.hfid2,
+            'hf_name':e.hf.name if e.hf else None,
+            'hf_name2':e.hf2.name if e.hf2 else None
+            } for e in q.all()]
+
+    return jsonify(events)
+
 @bp.route('/api/<world_id>/histfig/<hfid>')
 def hf_detail_json(world_id, hfid):
     hf = Historical_Figure.query\
@@ -56,21 +79,13 @@ def hf_detail_json(world_id, hfid):
                      'entity_id':el.entity_id, 
                      'type':el.link_type} 
                      for el in hf.entity_links]
-    events = [{
-        'type':event.type,
-        'id':event.id,
-        'hf_name':event.hf.name if event.hf else None,
-        'hf_name2':event.hf2.name if event.hf2 else None,
-        'hfid':event.hfid,
-        'hfid2':event.hfid2
-        } for event in hf.all_events]
+
     context = { 
                 'name':titlecase(hf.name),
                 'goals':[goal.goal for goal in hf.goals],
                 'entity_links':entity_links,
                 'pronoun':pronoun, 
-                'posessive':posessive, 
-                'events':events
+                'posessive':posessive,
               } 
     return jsonify(context)
 
