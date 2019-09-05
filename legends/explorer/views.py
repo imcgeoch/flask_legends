@@ -51,11 +51,13 @@ def hf_detail(world_id, hfid):
 @bp.route('/api/<world_id>/events')
 def events_json(world_id):
     q = Historical_Event.query.options(joinedload(Historical_Event.hf).load_only('name'), 
-                                       joinedload(Historical_Event.hf2).load_only('name'))
+                                       joinedload(Historical_Event.hf2).load_only('name'))\
+                              .order_by(Historical_Event.id)
 
     hf = request.args.get('hf')
     if hf:
         q = q.filter(or_(Historical_Event.hfid == hf, Historical_Event.hfid2 == hf))
+    q=q.limit(1000)
     
     events = [{
             'year':e.year,
@@ -63,23 +65,28 @@ def events_json(world_id):
             'type':e.type,
             'hfid':e.hfid,
             'hfid2':e.hfid2,
-            'hf_name':e.hf.name if e.hf else None,
-            'hf_name2':e.hf2.name if e.hf2 else None
+            'hf_name':titlecase(e.hf.name) if e.hf else None,
+            'hf_name2':titlecase(e.hf2.name) if e.hf2 else None
             } for e in q.all()]
 
     return jsonify(events)
 
 @bp.route('/api/<world_id>/histfig/<hfid>')
 def hf_detail_json(world_id, hfid):
-    hf = Historical_Figure.query\
-                          .filter_by(df_world_id=world_id, id=hfid)\
-                          .first()
+    hf = (Historical_Figure.query
+                           .filter_by(df_world_id=world_id, id=hfid)
+                           .options(joinedload(Historical_Figure.entity_links)
+                                              .joinedload(Entity_Link.entity)
+                                              .load_only('name'),
+                                   joinedload(Historical_Figure.goals))
+                           .first())
+
     pronoun, posessive = hf.pronouns()
+    
     entity_links = [{'entity_name':titlecase(el.entity.name), 
                      'entity_id':el.entity_id, 
                      'type':el.link_type} 
                      for el in hf.entity_links]
-
     context = { 
                 'name':titlecase(hf.name),
                 'goals':[goal.goal for goal in hf.goals],
