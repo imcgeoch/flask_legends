@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Event from "../Events/Event"
 
 function Event_List({events=[], ...props}){
@@ -7,7 +7,7 @@ function Event_List({events=[], ...props}){
 		<ul>
 			{
 				events.map((event) => (
-					<li id={event.id}> <Event {...event} {...props} /> </li>
+					<li key={event.id}> <Event {...event} {...props} /> </li>
 				))
 			}
 		</ul>

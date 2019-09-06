@@ -50,9 +50,10 @@ def hf_detail(world_id, hfid):
 
 @bp.route('/api/<world_id>/events')
 def events_json(world_id):
-    q = Historical_Event.query.options(joinedload(Historical_Event.hf).load_only('name'), 
-                                       joinedload(Historical_Event.hf2).load_only('name'))\
-                              .order_by(Historical_Event.id)
+    q = (Historical_Event.query.filter(Historical_Event.df_world_id == world_id)
+                               .options(joinedload(Historical_Event.hf).load_only('name'), 
+                                       joinedload(Historical_Event.hf2).load_only('name'))
+                               .order_by(Historical_Event.id))
 
     hf = request.args.get('hf')
     if hf:
@@ -60,6 +61,7 @@ def events_json(world_id):
     q=q.limit(1000)
     
     events = [{
+            'id':e.id,
             'year':e.year,
             'seconds72':e.seconds72,
             'type':e.type,
@@ -89,6 +91,12 @@ def hf_detail_json(world_id, hfid):
                      for el in hf.entity_links]
     context = { 
                 'name':titlecase(hf.name),
+                'race':hf.race,
+                'deity':hf.deity,
+                'force':hf.force,
+                'caste':hf.caste,
+                'birth_year':hf.birth_year,
+                'death_year':hf.death_year,
                 'goals':[goal.goal for goal in hf.goals],
                 'entity_links':entity_links,
                 'pronoun':pronoun, 

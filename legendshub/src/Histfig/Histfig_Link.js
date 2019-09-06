@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Route, Link } from 'react-router-dom';
 
-function Histfig_Link({hfid, world_id, hf_name, linking_hf_id}){
-	if (hfid == linking_hf_id ){
+function HistfigLink({hfid, world_id, hf_name, linking_hf_id}){
+	if (hfid === Number(linking_hf_id)){
 		return hf_name.split(' ')[0]
 	}
 	else{ 
@@ -10,4 +10,4 @@ function Histfig_Link({hfid, world_id, hf_name, linking_hf_id}){
 	}
 }
 
-export default Histfig_Link;
+export default HistfigLink;

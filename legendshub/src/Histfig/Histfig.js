@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import Entity_Link from "../Entity/Entity_Link";
+//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import EntityLink from "../Entity/Entity_Link";
 
-import Event from "../Events/Event"
+//import Event from "../Events/Event"
 import Event_List from "../Events/Event_List"
 
 
@@ -15,23 +15,57 @@ function StringList({items=[], ...props}){
 	return <ul>{listItems}</ul>;
 }
 
-function Entity_Link_List({entity_links=[], world_id='', ...props}){
+function Entity_Link_List({entity_links=[], worldid='', ...props}){
 	return(
 		<ul>
 			{
 				entity_links.map(({type, ...props}) => 
-				(<li key={props.entity_id}> <Entity_Link {...props} world_id={world_id} />: {type} </li>))
+				(<li key={props.entity_id}> <EntityLink {...props} worldid={worldid} />: {type} </li>))
 			}
 		</ul>
 	);
 }
 
+function HF_Vitals({caste, race, birth_year, death_year, deity, force}){
+	return(
+			<div id="vitalstatistics">
+					{caste === 'MALE' ? '\u2642' : '\u2640'}
+				{race}, *{birth_year} {death_year !== -1 && '\u2020' + death_year }
+			</div>);
+}
+
+function HF_Goals({goals}){
+	return(
+		<div><h2>Goals</h2> <StringList items={goals}/></div>
+	);
+}
+
+function HF_Entity_Links(props){
+	return(
+		<div id="entitylinkblock">
+					<h2>Entity_Links</h2> 
+					<Entity_Link_List {... props} />
+		</div>
+	);
+}
+
+function HF_Events({events, id, worldid}){
+	return(
+		<div id="eventblock">
+			<h2>Events</h2> 
+			<Event_List events={events} 
+									linking_hf_id={id} 
+									world_id={worldid}/>
+		</div>
+	);
+}
+
 class Histfig_Inner extends React.Component {
+	
 	constructor(props) {
 		super(props);
 		this.state = {items : {}};
 	}
-
 
   getFromAPI() {
 		let worldid = this.props.worldid;
@@ -59,25 +93,23 @@ class Histfig_Inner extends React.Component {
 	}
 
 	render() {
-		return( <div> <h1>Histfig Page</h1>
-			<p> World : {this.props.worldid} </p>
-				<p> Histfig : {this.props.id} </p>
-			<p> Pronoun : {this.state.items.pronoun} </p>
-			<p> Name: {this.state.items.name} </p>
-			Goals: <StringList items={this.state.items.goals} />
-			Entity_Links: <Entity_Link_List entity_links={this.state.items.entity_links} 
-				world_id={this.worldid} />
-			Events: <Event_List events={this.state.events} 
-			         linking_hf_id={this.props.id} 
-			         world_id={this.props.worldid}/>
+		const {name, entity_links} = this.state.items;
+		const events = this.state.events;
+		const {id, worldid} = this.props;
+		return( 
+			<div id="histfig"> 
+				<h1>{name}</h1>
+				<HF_Vitals {... this.state.items} />
+				<HF_Goals {... this.state.items} />
+				<HF_Entity_Links entity_links={entity_links} worldid={worldid} />
+			  <HF_Events events={events} id={id} worldid={worldid} />
 			</div>
 		);
 	}
-
 }
 
 function Histfig(props) {
-	return <Histfig_Inner worldid={props.match.params.worldid} id={props.match.params.id} />
+	return <Histfig_Inner {... props.match.params} />
 }
 
 export default Histfig;

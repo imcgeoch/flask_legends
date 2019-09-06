@@ -4,9 +4,9 @@ import Histfig from './Histfig/Histfig';
 import Entity from './Entity/Entity';
 import Artifact from './Artifact/Artifact';
 import LegendsIndex from './LegendsIndex';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-const axios = require('axios');
+//const axios = require('axios');
 
 /*
 class MyComponent extends React.Component {
