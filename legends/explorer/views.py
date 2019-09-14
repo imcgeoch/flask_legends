@@ -83,12 +83,29 @@ def hf_detail_json(world_id, hfid):
                                    joinedload(Historical_Figure.goals))
                            .first())
 
+    hf_links_q = (HF_Link.query
+                       .filter_by(df_world_id=world_id, hfid1=hfid)
+                       .options(joinedload(HF_Link.other)
+                                          .load_only('name', 'birth_year',
+                                                     'death_year', 'caste'))
+                       )
+                                 
+
     pronoun, posessive = hf.pronouns()
     
     entity_links = [{'entity_name':titlecase(el.entity.name), 
                      'entity_id':el.entity_id, 
                      'type':el.link_type} 
                      for el in hf.entity_links]
+    
+    hf_links = [{'hf_name':titlecase(link.other.name),
+                 'birth_year':link.other.birth_year,
+                 'death_year':link.other.death_year,
+                 'caste':link.other.caste,
+                 'hfid':link.hfid2,
+                 'type':link.link_type
+                } for link in hf_links_q]
+
     context = { 
                 'name':titlecase(hf.name),
                 'race':hf.race,
@@ -99,6 +116,7 @@ def hf_detail_json(world_id, hfid):
                 'death_year':hf.death_year,
                 'goals':[goal.goal for goal in hf.goals],
                 'entity_links':entity_links,
+                'hf_links':hf_links,
                 'pronoun':pronoun, 
                 'posessive':posessive,
               } 
