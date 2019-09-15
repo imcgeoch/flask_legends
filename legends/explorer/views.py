@@ -80,7 +80,8 @@ def hf_detail_json(world_id, hfid):
                            .options(joinedload(Historical_Figure.entity_links)
                                               .joinedload(Entity_Link.entity)
                                               .load_only('name'),
-                                   joinedload(Historical_Figure.goals))
+                                   joinedload(Historical_Figure.goals),
+                                   joinedload(Historical_Figure.spheres))
                            .first())
 
     hf_links_q = (HF_Link.query
@@ -115,6 +116,7 @@ def hf_detail_json(world_id, hfid):
                 'birth_year':hf.birth_year,
                 'death_year':hf.death_year,
                 'goals':[goal.goal for goal in hf.goals],
+                'spheres':[sphere.sphere for sphere in hf.spheres],
                 'entity_links':entity_links,
                 'hf_links':hf_links,
                 'pronoun':pronoun, 
@@ -139,6 +141,26 @@ def entity_detail(world_id, entity_id):
                               .filter_by(df_world_id=world_id, id=entity_id)\
                               .first()
     return render_template('entity_detail.html', context=context)
+
+@bp.route('/api/<world_id>/entity/<entity_id>')
+def entity_detail_json(world_id, entity_id):
+    entity = (Entity.query
+                     .filter_by(df_world_id=world_id, id=entity_id)
+                     .first())
+    entity_links = [{
+        'link_type' : link.type,
+        'entity_type' : link.forward_entity.type,
+        'entity_name' : link.forward_entity.name,
+        'entity_id' : link.target
+        } for link in entity.entity_links_out]
+
+    context = {
+            'name' : titlecase(entity.name or 'Untitled'),
+            'type' : entity.type,
+            'race' : entity.race,
+            'entity_links' : entity_links
+            }
+    return jsonify(context)
 
 
 @bp.route('/<world_id>/artifact/<artifact_id>')

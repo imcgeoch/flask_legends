@@ -42,8 +42,24 @@ function HF_Vitals({caste, race, birth_year, death_year, deity, force}){
 	return(
 			<div id="vitalstatistics">
 				{caste} {race}, born {birth_year} {death_year !== -1 && 'died ' + death_year }
-			</div>);
+				</div>
+	);
 }
+
+function HF_Supernatural({deity=false, force=false, spheres=[]}){
+	if (deity || force || spheres.length > 0){
+		return(
+			<div id="supernatural">
+				{deity && "A deity "}{force && "A force of nature " } 
+				{spheres.length > 0 &&  "associated with " + spheres.join()}.
+
+			</div>
+		);
+	}
+	else 
+		return (<div id="supernatural"> </div>);
+}
+
 
 function HF_Goals({goals}){
 	return(
@@ -119,7 +135,8 @@ class Histfig_Inner extends React.Component {
 		return( 
 			<div id="histfig"> 
 				<h1>{name}</h1>
-				<HF_Vitals {... this.state.items} />
+					<HF_Vitals {... this.state.items} />
+			<HF_Supernatural {... this.state.items} />
 			  <HF_Goals {... this.state.items} />
 			  <HF_HF_Links hf_links={hf_links} worldid={worldid}/>
 				<HF_Entity_Links entity_links={entity_links} worldid={worldid} />
