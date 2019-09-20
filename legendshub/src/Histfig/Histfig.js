@@ -91,12 +91,12 @@ function HF_Events({events, id, worldid}){
 			<h2>Events</h2> 
 			<Event_List events={events} 
 									linking_hf_id={id} 
-									world_id={worldid}/>
+									worldid={worldid}/>
 		</div>
 	);
 }
 
-class Histfig_Inner extends React.Component {
+class Histfig extends React.Component {
 	
 	constructor(props) {
 		super(props);
@@ -104,8 +104,8 @@ class Histfig_Inner extends React.Component {
 	}
 
   getFromAPI() {
-		let worldid = this.props.worldid;
-		let id = this.props.id;
+		let worldid = this.props.match.params.worldid;
+		let id = this.props.match.params.id;
 		axios.get(`/api/${worldid}/histfig/${id}`)
 		  .then(response => {
 				console.log(response); 
@@ -123,7 +123,10 @@ class Histfig_Inner extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (this.props.id !== prevProps.id ){
+		console.log("update");
+		console.log(this.props.match.params);
+		console.log(prevProps.match.params);
+		if (this.props.match.params.id !== prevProps.match.params.id ){
 			this.getFromAPI();
 		}
 	}
@@ -131,7 +134,7 @@ class Histfig_Inner extends React.Component {
 	render() {
 		const {name, entity_links, hf_links} = this.state.items;
 		const events = this.state.events;
-		const {id, worldid} = this.props;
+		const {id, worldid} = this.props.match.params;
 		return( 
 			<div id="histfig"> 
 				<h1>{name}</h1>
@@ -145,9 +148,4 @@ class Histfig_Inner extends React.Component {
 		);
 	}
 }
-
-function Histfig(props) {
-	return <Histfig_Inner {... props.match.params} />
-}
-
 export default Histfig;

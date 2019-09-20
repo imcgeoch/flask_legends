@@ -3,6 +3,7 @@ import React from 'react';
 import Histfig from './Histfig/Histfig';
 import Entity from './Entity/Entity';
 import Artifact from './Artifact/Artifact';
+import Site from './Site/Site';
 import LegendsIndex from './LegendsIndex';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
@@ -42,6 +43,7 @@ function AppRouter() {
 				<Route path="/:worldid/histfig/:id" component={Histfig} />
 				<Route path="/:worldid/entity/:id" component={Entity} />
 				<Route path="/:worldid/artifact/:id" component={Artifact} />
+				<Route path="/:worldid/site/:id" component={Site} />
 			</div>
 		</Router>
 	);

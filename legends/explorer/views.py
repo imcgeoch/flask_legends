@@ -150,15 +150,31 @@ def entity_detail_json(world_id, entity_id):
     entity_links = [{
         'link_type' : link.type,
         'entity_type' : link.forward_entity.type,
-        'entity_name' : link.forward_entity.name,
+        'entity_name' : titlecase(link.forward_entity.name or "untitled"),
         'entity_id' : link.target
         } for link in entity.entity_links_out]
+
+
+    entity_positions = [{
+        'name' : position.calculated_name(),
+        'vacant' : position.holder.histfig == -1 if position.holder else True,
+        'hf_name' : titlecase(position.holder.hf.name) if position.holder.hf else None,
+        'hfid' : position.holder.histfig if position.holder else None
+        } for position in entity.positions]
+
+    sites = [{
+        'name' : titlecase(site.name),
+        'id' : site.id,
+        'type' : site.type
+        } for site in entity.sites] 
 
     context = {
             'name' : titlecase(entity.name or 'Untitled'),
             'type' : entity.type,
             'race' : entity.race,
-            'entity_links' : entity_links
+            'entity_links' : entity_links,
+            'entity_positions' : entity_positions,
+            'sites' : sites
             }
     return jsonify(context)
 

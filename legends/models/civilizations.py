@@ -234,6 +234,14 @@ class Entity_Position(db.Model):
             primaryjoin=jb("Entity_Position", "Entity_Position_Assignment",
                 ("entity_id", "entity_id"), ("id", "position_id")))
 
+    def calculated_name(self):
+        if (self.holder and self.name_female 
+                        and not self.holder.histfig == -1 
+                        and self.holder.hf.caste == 'FEMALE'):
+            return self.name_female
+        return self.name
+
+
 class Entity_Position_Assignment(db.Model):
     __tablename__ = 'entity_position_assignments'
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),

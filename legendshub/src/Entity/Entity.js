@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import EntityLink from "./Entity_Link";
+import HistfigLink from "../Histfig/Histfig_Link";
+import SiteLink from "../Site/SiteLink";
+import RelatedList from "../RelatedList";
 const axios = require('axios');
 
 
@@ -11,16 +14,35 @@ function Entity_Details({name, race, type}) {
 	)
 }
 
-function EntityLinkList({entity_links = [], worldid='', ...props}) {
-	console.log(entity_links);
-	return(
-		<ul>
-			{
-				entity_links.map(({link_type, entity_type,  ...props}) => 
-					(<li key={props.entity_id}> <EntityLink {... props} worldid={worldid} />, its {link_type}, a {entity_type} </li>))
-			}
-		</ul>
-	);
+function EntityLinkListItem({link_type="", entity_type, worldid="", ... props}){
+	return (<li key={props.entity_id}>
+					 <EntityLink {... props} worldid={worldid} />, its {link_type.toLowerCase()}, a {entity_type} 
+		     </li>);
+}
+
+function EntityLinkList({entity_links=[], worldid='', ... props}){
+	const fn = (prps) => (<EntityLinkListItem {... prps} worldid={worldid}/> );
+	return <RelatedList fn={fn} list={entity_links} divId="entity links" title="Entity Links" />
+}
+
+function EntityPositionListItem({name, vacant, ... props}){
+	return <li key={name}> {name}: {vacant ? "Vacant" : <HistfigLink {... props} />} </li>
+}
+
+function EntityPositionList({entity_positions=[], worldid='', ...props}){
+	const fn = (prps) => (<EntityPositionListItem {... prps} worldid={worldid} /> );
+	return <RelatedList fn={fn} list={entity_positions} divId="entity positions" title="Positions" />
+}
+
+function EntitySiteListItem(props){
+	  const {id, type} = props;
+		return <li key={id}><SiteLink {... props} />: {type}  </li>
+}
+
+function EntitySiteList({sites=[], worldid='', ...props}){
+	const fn = (prps) => (<EntitySiteListItem {... prps} worldid={worldid} />);
+	return <RelatedList fn={fn} list={sites} divId="entity sites" title="Sites" />
+
 }
 
 class Entity extends React.Component {
@@ -62,6 +84,8 @@ class Entity extends React.Component {
 		return( <div> <h1>{items.name}</h1>
 			<Entity_Details {... items} />
 			<EntityLinkList entity_links={items.entity_links} worldid={worldid} />
+			<EntityPositionList entity_positions={items.entity_positions} worldid={worldid}/>
+			<EntitySiteList sites={items.sites} worldid={worldid} />
 			</div>
 		)
 
