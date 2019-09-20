@@ -58,7 +58,10 @@ def events_json(world_id):
     hf = request.args.get('hf')
     if hf:
         q = q.filter(or_(Historical_Event.hfid == hf, Historical_Event.hfid2 == hf))
-    q=q.limit(1000)
+    entity = request.args.get('entity')
+    if entity:
+        q = q.filter(or_(Historical_Event.entity_id == entity, Historical_Event.entity_id2 == entity))
+    q=q.limit(250)
     
     events = [{
             'id':e.id,
@@ -168,13 +171,19 @@ def entity_detail_json(world_id, entity_id):
         'type' : site.type
         } for site in entity.sites] 
 
+    occasions = [{
+        'name' : titlecase(occasion.name),
+        'id' : occasion.id,
+        } for occasion in entity.occasions] 
+
     context = {
             'name' : titlecase(entity.name or 'Untitled'),
             'type' : entity.type,
             'race' : entity.race,
             'entity_links' : entity_links,
             'entity_positions' : entity_positions,
-            'sites' : sites
+            'sites' : sites,
+            'occasions' : occasions
             }
     return jsonify(context)
 

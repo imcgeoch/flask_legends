@@ -4,6 +4,8 @@ import EntityLink from "./Entity_Link";
 import HistfigLink from "../Histfig/Histfig_Link";
 import SiteLink from "../Site/SiteLink";
 import RelatedList from "../RelatedList";
+import OccasionLink from "../Occasion/OccasionLink";
+import Event_List from "../Events/Event_List"
 const axios = require('axios');
 
 
@@ -42,7 +44,27 @@ function EntitySiteListItem(props){
 function EntitySiteList({sites=[], worldid='', ...props}){
 	const fn = (prps) => (<EntitySiteListItem {... prps} worldid={worldid} />);
 	return <RelatedList fn={fn} list={sites} divId="entity sites" title="Sites" />
+}
 
+function EntityOccasionListItem(props){
+	const {id} = props;
+	return <li key={id}><OccasionLink {... props} /> </li>
+}
+
+function EntityOccasionList({occasions=[], worldid='', entityid='', ... props}){
+	const fn = (prps) => (<EntityOccasionListItem {... prps} worldid={worldid} entityid={entityid}/> );
+	return <RelatedList fn={fn} list={occasions} divId="entity occasions" title="Occasions" />; 
+}
+
+function EntityEvents({events, id, worldid}){
+	return(
+		<div id="eventblock">
+			<h2>Events</h2> 
+			<Event_List events={events} 
+									linking_entity_id={id} 
+									worldid={worldid}/>
+		</div>
+	);
 }
 
 class Entity extends React.Component {
@@ -86,6 +108,8 @@ class Entity extends React.Component {
 			<EntityLinkList entity_links={items.entity_links} worldid={worldid} />
 			<EntityPositionList entity_positions={items.entity_positions} worldid={worldid}/>
 			<EntitySiteList sites={items.sites} worldid={worldid} />
+			<EntityOccasionList occasions={items.occasions} entityid={id} worldid={worldid} />
+			<EntityEvents events={this.state.events} id={id} worldid={worldid} />
 			</div>
 		)
 
