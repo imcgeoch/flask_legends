@@ -188,6 +188,30 @@ def entity_detail_json(world_id, entity_id):
     return jsonify(context)
 
 
+@bp.route('/api/<world_id>/artifact/<artifact_id>')
+def artifact_detail_json(world_id, artifact_id):
+    artifact = (Artifact.query
+                     .filter_by(df_world_id=world_id, id=artifact_id)
+                     .first())
+
+    written_content = {
+            'title' : artifact.written_content.title,
+            'form' : artifact.written_content.form,
+            'author_name' : titlecase(artifact.written_content.author.name),
+            'author_hfid' : artifact.written_content.author_hfid, 
+            'styles' : artifact.written_content.style_string(),
+            'subj_hf' : [(hf.name, hf.id) for hf in  artifact.written_content.referenced_hfs]
+            } if artifact.written_content else None
+
+    context = {
+            'name' : titlecase(artifact.name),
+            'item_type' : artifact.item_type,
+            'mat' : artifact.mat,
+            'written_content' : written_content
+            }
+    return jsonify(context)
+
+
 @bp.route('/<world_id>/artifact/<artifact_id>')
 def artifact_detail(world_id, artifact_id):
     context = {}
