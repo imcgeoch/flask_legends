@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import HistfigLink from "../Histfig/Histfig_Link";
+import WrittenContentLink from "../WrittenContent/WrittenContent_Link";
 
 const axios = require('axios');
 
@@ -13,14 +14,12 @@ function ArtifactDetails({name, item_type, mat}) {
 	)
 }
 
-function WrittenContent({written_content, worldid}) {
+function Content({written_content, worldid}) {
 	if(written_content){
-		const { title, form, author_name, author_hfid, styles} = written_content;
-		const authorProps = { hf_name:author_name, hfid:author_hfid, worldid:worldid };
+		console.log(written_content)
 		return ( 
 			<div id="written content">
-				It contains a {form} called {title} by <HistfigLink {... authorProps} />. 
-					The writing is {styles}. 
+				It contains the work <WrittenContentLink {... written_content} worldid={worldid} />
 			</div>
 		);
 	}
@@ -63,7 +62,7 @@ class Artifact extends React.Component {
 		
 		return( <div> <h1>{items.name}</h1>
 			<ArtifactDetails {... items} />
-			<WrittenContent written_content={items.written_content} worldid={worldid}/>
+			<Content written_content={items.written_content} worldid={worldid}/>
 			</div>
 		)
 
