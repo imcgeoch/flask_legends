@@ -200,7 +200,27 @@ def artifact_detail_json(world_id, artifact_id):
             'author_name' : titlecase(artifact.written_content.author.name),
             'author_hfid' : artifact.written_content.author_hfid, 
             'styles' : artifact.written_content.style_string(),
-            'subj_hf' : [(hf.name, hf.id) for hf in  artifact.written_content.referenced_hfs]
+            'subj_hf' : [(hf.name, hf.id) 
+                         for hf in  artifact.written_content.referenced_hfs],
+            'subj_evt' : [evt.id 
+                         for evt in  artifact.written_content.referenced_events],
+            'subj_site' : [(site.name, site.id) 
+                         for site in  artifact.written_content.referenced_sites],
+            'subj_artifact' : [(afct.name, afct.id) 
+                         for afct in  artifact.written_content.referenced_artifacts],
+            'subj_entity' : [(entity.name, entity.id) 
+                         for entity in  artifact.written_content.referenced_entities],
+            'subj_region' : [(region.name, region.id) 
+                         for region in  artifact.written_content.referenced_regions],
+            'subj_wc' : [(wc.name, wc.id) 
+                         for wc in  artifact.written_content.referenced_wcs],
+            'subj_poetic' : [(poetic.name, poetic.id) 
+                         for poetic in  artifact.written_content.referenced_poetic_forms],
+            'subj_dance' : [(dance.name, dance.id) 
+                         for dance in  artifact.written_content.referenced_dance_forms],
+            'subj_musical' : [(musical.name, musical.id) 
+                         for musical in  artifact.written_content.referenced_musical_forms]
+
             } if artifact.written_content else None
 
     context = {

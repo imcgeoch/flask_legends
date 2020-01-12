@@ -71,6 +71,79 @@ class Written_Content(db.Model):
                         + "), Reference.type=='HISTORICAL FIGURE')"  ,
             secondaryjoin=jb("Historical_Figure", "Reference", ("id", "ref_id")),
             foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_events = db.relationship('Historical_Event',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='HISTORICAL EVENT')"  ,
+            secondaryjoin=jb("Historical_Event", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_sites = db.relationship('Site',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='SITE')"  ,
+            secondaryjoin=jb("Site", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_sites = db.relationship('Artifact',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='ARTIFACT')"  ,
+            secondaryjoin=jb("Artifact", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_regions = db.relationship('Entity',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='ENTITY')"  ,
+            secondaryjoin=jb("Entity", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_sites = db.relationship('Region',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='SUBREGION')"  ,
+            secondaryjoin=jb("Region", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_wcs = db.relationship('Written_Content',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='WRITTEN CONTENT')"  ,
+            secondaryjoin=jb("Written_Content", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_poetic_forms = db.relationship('Poetic_Form',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='POETIC FORM')"  ,
+            secondaryjoin=jb("Poetic_Form", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_dance_forms = db.relationship('Dance_Form',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='DANCE FORM')"  ,
+            secondaryjoin=jb("Dance_Form", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_musical_forms = db.relationship('Musical_Form',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='MUSICAL FORM')"  ,
+            secondaryjoin=jb("Musical_Form", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
             viewonly=True)
 
     def style_string(self):
