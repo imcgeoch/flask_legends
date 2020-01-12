@@ -188,6 +188,41 @@ def entity_detail_json(world_id, entity_id):
     return jsonify(context)
 
 
+@bp.route('/api/<world_id>/written_content/<wc_id>')
+def wc_detail_json(world_id, wc_id):
+    wc = (Written_Content.query
+            .filter_by(df_world_id=world_id, id=wc_id)
+            .first())
+    
+    written_content = {
+            'title' : wc.title,
+            'form' : wc.form,
+            'author_name' : titlecase(wc.author.name),
+            'author_hfid' : wc.author_hfid, 
+            'styles' : wc.style_string(),
+            'subj_hf' : [(hf.name, hf.id) 
+                         for hf in  wc.referenced_hfs],
+            'subj_evt' : [evt.id 
+                         for evt in  wc.referenced_events],
+            'subj_site' : [(site.name, site.id) 
+                         for site in  wc.referenced_sites],
+            'subj_artifact' : [(afct.name, afct.id) 
+                         for afct in  wc.referenced_artifacts],
+            'subj_entity' : [(entity.name, entity.id) 
+                         for entity in  wc.referenced_entities],
+            'subj_region' : [(region.name, region.id) 
+                         for region in  wc.referenced_regions],
+            'subj_wc' : [(wc.name, wc.id) 
+                         for wc in  wc.referenced_wcs],
+            'subj_poetic' : [(poetic.name, poetic.id) 
+                         for poetic in  wc.referenced_poetic_forms],
+            'subj_dance' : [(dance.name, dance.id) 
+                         for dance in  wc.referenced_dance_forms],
+            'subj_musical' : [(musical.name, musical.id) 
+                         for musical in  wc.referenced_musical_forms]
+            } 
+    return jsonify(written_content)
+
 @bp.route('/api/<world_id>/artifact/<artifact_id>')
 def artifact_detail_json(world_id, artifact_id):
     artifact = (Artifact.query
@@ -220,7 +255,6 @@ def artifact_detail_json(world_id, artifact_id):
                          for dance in  artifact.written_content.referenced_dance_forms],
             'subj_musical' : [(musical.name, musical.id) 
                          for musical in  artifact.written_content.referenced_musical_forms]
-
             } if artifact.written_content else None
 
     context = {

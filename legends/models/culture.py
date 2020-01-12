@@ -89,7 +89,7 @@ class Written_Content(db.Model):
             foreign_keys="Reference.wc_id, Reference.ref_id",
             backref="referencing_works",
             viewonly=True)
-    referenced_sites = db.relationship('Artifact',
+    referenced_artifacts = db.relationship('Artifact',
             secondary="references",
             primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
                         + "), Reference.type=='ARTIFACT')"  ,
@@ -97,7 +97,7 @@ class Written_Content(db.Model):
             foreign_keys="Reference.wc_id, Reference.ref_id",
             backref="referencing_works",
             viewonly=True)
-    referenced_regions = db.relationship('Entity',
+    referenced_entities = db.relationship('Entity',
             secondary="references",
             primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
                         + "), Reference.type=='ENTITY')"  ,
@@ -105,7 +105,7 @@ class Written_Content(db.Model):
             foreign_keys="Reference.wc_id, Reference.ref_id",
             backref="referencing_works",
             viewonly=True)
-    referenced_sites = db.relationship('Region',
+    referenced_regions = db.relationship('Region',
             secondary="references",
             primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
                         + "), Reference.type=='SUBREGION')"  ,
