@@ -40,9 +40,13 @@ class WrittenContent extends React.Component {
 	render() {
 		const {id, worldid} = this.props.match.params;
 		const items = this.state.items;
+		const authorProps = { hf_name:items.author_name, 
+			                    hfid:items.author_hfid, 
+			                    worldid:items.worldid };
 		
-		return( <div> <h1>{items.name}</h1>
-			WRITTEN CONTENT
+		return( <div> <h1>{items.title}</h1>
+			{items.title} is a {items.form}. It was written by <HistfigLink {... authorProps} />.
+			The writing is {items.styles}. 
 			</div>
 		)
 
