@@ -1,11 +1,57 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import HistfigLink from "../Histfig/Histfig_Link";
+import SiteLink from "../Site/SiteLink";
+import Event from "../Events/Event.js"
+import WrittenContentLink from "./WrittenContent_Link";
 
 const axios = require('axios');
 
+function WrittenContentDetails(items){
+		const authorProps = { hf_name:items.author_name, 
+			                    hfid:items.author_hfid, 
+			                    worldid:items.worldid };
+	return(
+	<div>
+	  {items.title} is a {items.form}. It was written by <HistfigLink {... authorProps} />.
+	  The writing is {items.styles}.
+  </div>
+	)
+}
 
+function WrittenContentReferences({worldid = '', subj_hf=[], subj_evt=[], subj_site=[],
+	                                 subj_artifact=[], subj_entity=[], subj_region=[], 
+	                                 subj_wc=[], subj_poetic=[], subj_dance=[], 
+	                                 subj_musical=[]}){
+	return (
+		<div>
+			<ul>
+				{subj_hf.map((hfprops) => 
+					 <li> It concerns <HistfigLink {... hfprops} worldid={worldid} />.</li>)}
+				{subj_evt.map((eventprops) => 
+					 <li> It concerns the event where <Event {... eventprops} worldid={worldid}/></li>)}
+				{subj_site.map((siteprops) => 
+					 <li> It concerns <SiteLink {... siteprops} worldid={worldid}/></li>)}
+				{subj_artifact.map((artifactprops) => 
+					 <li> It concerns artifact {artifactprops.id} </li>)}
+				{subj_entity.map((entityprops) => 
+					 <li> It concerns entity {entityprops.id} </li>)}
+				{subj_region.map((regionprops) => 
+					 <li> It concerns region {regionprops.id} </li>)}
+				{subj_wc.map((wcprops) => 
+					<li> It concerns the work <WrittenContentLink {... wcprops} /> </li>)}
+				{subj_poetic.map((poeticprops) => 
+					 <li> It concerns poetic form {poeticprops.id} </li>)}
+				{subj_dance.map((danceprops) => 
+					 <li> It concerns dance form {danceprops.id} </li>)}
+				{subj_musical.map((musicalprops) => 
+					 <li> It concerns musical form {musicalprops.id} </li>)}
+			</ul>
+		</div>
+	)
+}
 
+// region, wc, poetic, dance, musical 
 
 class WrittenContent extends React.Component {
 	constructor(props) {
@@ -40,13 +86,10 @@ class WrittenContent extends React.Component {
 	render() {
 		const {id, worldid} = this.props.match.params;
 		const items = this.state.items;
-		const authorProps = { hf_name:items.author_name, 
-			                    hfid:items.author_hfid, 
-			                    worldid:items.worldid };
 		
 		return( <div> <h1>{items.title}</h1>
-			{items.title} is a {items.form}. It was written by <HistfigLink {... authorProps} />.
-			The writing is {items.styles}. 
+			<WrittenContentDetails {... items} worldid={worldid} />
+			<WrittenContentReferences {... items} worldid={worldid} />
 			</div>
 		)
 

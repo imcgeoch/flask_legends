@@ -201,25 +201,35 @@ def wc_detail_json(world_id, wc_id):
             'author_name' : titlecase(wc.author.name),
             'author_hfid' : wc.author_hfid, 
             'styles' : wc.style_string(),
-            'subj_hf' : [(hf.name, hf.id) 
+            'subj_hf' : [{'hf_name' : titlecase(hf.name), 'hfid' : hf.id} 
                          for hf in  wc.referenced_hfs],
-            'subj_evt' : [evt.id 
-                         for evt in  wc.referenced_events],
-            'subj_site' : [(site.name, site.id) 
+            'subj_evt' : [{
+                            'id':e.id,
+                            'year':e.year,
+                            'seconds72':e.seconds72,
+                            'type':e.type,
+                            'hfid':e.hfid,
+                            'hfid2':e.hfid2,
+                            'hf_name':titlecase(e.hf.name) if e.hf else None,
+                            'hf_name2':titlecase(e.hf2.name) if e.hf2 else None
+                           } for e in wc.referenced_events],
+            'subj_site' : [{'name' : titlecase(site.name),
+                            'id' : site.id}
                          for site in  wc.referenced_sites],
-            'subj_artifact' : [(afct.name, afct.id) 
+            'subj_artifact' : [{'name' : afct.name, 'id' : afct.id} 
                          for afct in  wc.referenced_artifacts],
-            'subj_entity' : [(entity.name, entity.id) 
+            'subj_entity' : [{'name' : entity.name, 'id' : entity.id} 
                          for entity in  wc.referenced_entities],
-            'subj_region' : [(region.name, region.id) 
+            'subj_region' : [{'name' : region.name, 'id' : region.id} 
                          for region in  wc.referenced_regions],
-            'subj_wc' : [(wc.name, wc.id) 
-                         for wc in  wc.referenced_wcs],
-            'subj_poetic' : [(poetic.name, poetic.id) 
+            'subj_wc' : [{'wc_id' : swc.id, 'wc_name' : swc.title,
+                          'linking_wc_id' : wc.id, 'worldid' : world_id} 
+                         for swc in  wc.referenced_wcs],
+            'subj_poetic' : [{'name' : poetic.name, 'id':poetic.id} 
                          for poetic in  wc.referenced_poetic_forms],
-            'subj_dance' : [(dance.name, dance.id) 
+            'subj_dance' : [{'name' : dance.name, 'id' : dance.id} 
                          for dance in  wc.referenced_dance_forms],
-            'subj_musical' : [(musical.name, musical.id) 
+            'subj_musical' : [{ 'name' : musical.name, 'id' : musical.id} 
                          for musical in  wc.referenced_musical_forms]
             } 
     return jsonify(written_content)

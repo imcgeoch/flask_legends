@@ -6,7 +6,7 @@ function Event(props) {
 	if (props.type === 'hf simple battle event')
 		return <HfSimpleBattleEvent {...props} />
 	else
-		return <div> {props.type} </div>
+		return <span> {props.type} </span>
 }
 
 export default Event;
