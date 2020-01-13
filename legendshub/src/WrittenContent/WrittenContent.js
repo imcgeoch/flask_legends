@@ -51,8 +51,6 @@ function WrittenContentReferences({worldid = '', subj_hf=[], subj_evt=[], subj_s
 	)
 }
 
-// region, wc, poetic, dance, musical 
-
 class WrittenContent extends React.Component {
 	constructor(props) {
 		super(props);
