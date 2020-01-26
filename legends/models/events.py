@@ -310,7 +310,7 @@ class Change_HF_State(Historical_Event):
     #state = db.Column(db.String(20))
 
 class Change_Creature_Type(Historical_Event):
-    __mapper_args__ = {'polymorphic_identity':'change creature type'}
+    __mapper_args__ = {'polymorphic_identity':'changed creature type'}
     #hfid1 changer
     #hfid2 changee
     #old_race = db.Column(db.String(20))
