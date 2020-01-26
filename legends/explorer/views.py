@@ -245,13 +245,26 @@ def artifact_detail_json(world_id, artifact_id):
             'wc_name' : artifact.written_content.title
             } if artifact.written_content else None
 
+    holder = {
+            'hf_name' : titlecase(artifact.holder_hf.name),
+            'hfid' : artifact.holder_hf.id,
+            'worldid' : artifact.holder_hf.df_world_id
+            } if artifact.holder_hf else None
+    site = {
+            'name' : titlecase(artifact.storage_site.name),
+            'id' : artifact.storage_site.id,
+            'worldid' : artifact.storage_site.df_world_id
+            } if artifact.storage_site else None
+
     context = {
             'name' : titlecase(artifact.name or "Untitled"),
             'name_string' : titlecase(artifact.name_string or ""),
             'item_type' : artifact.item_subtype or artifact.item_type,
             'mat' : artifact.mat,
             'written_content' : written_content,
-            'item_description' : artifact.item_description
+            'item_description' : artifact.item_description,
+            'holder' : holder,
+            'site' : site
             }
     return jsonify(context)
 
@@ -278,6 +291,17 @@ def artifact_list(world_id):
 @bp.route('/<world_id>/occasion/<entity_id>/<occasion_id>')
 def occasion_detail(world_id, entity_id, occasion_id):
     return "placeholder for occasion %s of entity %s" % (occasion_id, entity_id)
+
+@bp.route('/api/<world_id>/site/<site_id>')
+def site_detail_json(world_id, site_id):
+    site = (Site.query
+                     .filter_by(df_world_id=world_id, id=artifact_id)
+                     .first())
+    context = {
+            "name" : site.name,
+            "type" : site.type
+            }
+    return jsonify(context)
 
 @bp.route('/<world_id>/site/<site_id>')
 def site_detail(world_id, site_id):
