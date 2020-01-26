@@ -7,6 +7,13 @@ import WrittenContentLink from "./WrittenContent_Link";
 
 const axios = require('axios');
 
+function WritingStyle({styles}){
+	if (styles != ''){
+		return <span>The writing is {styles}.</span>
+	}
+	else return null
+}
+
 function WrittenContentDetails(items){
 		const authorProps = { hf_name:items.author_name, 
 			                    hfid:items.author_hfid, 
@@ -14,8 +21,8 @@ function WrittenContentDetails(items){
 	return(
 	<div>
 	  {items.title} is a {items.form}. It was written by <HistfigLink {... authorProps} />.
-	  The writing is {items.styles}.
-  </div>
+		<WritingStyle styles={items.styles}/>
+	</div>
 	)
 }
 

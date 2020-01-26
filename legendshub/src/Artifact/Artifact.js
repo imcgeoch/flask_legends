@@ -5,11 +5,32 @@ import WrittenContentLink from "../WrittenContent/WrittenContent_Link";
 
 const axios = require('axios');
 
+function ArtifactDescription({type, desc}){
+	if (type === 'slab'){
+		if (desc === 'the secrets of life and death'){
+			return <span> It displays the secrets of life and death.</span>
+		}
+		return <span> It displays the words "{desc}"</span>
+	}
+	if (desc != null) {
+		return <span> It depicts {desc}.</span>
+	}
+	return null
+}
 
+function ArtifactName({name, name_string}){
+	if (name_string === ""){
+		return <span> {name} </span>
+	}
+	else{
+		return <span> {name}, "{name_string}"</span>
+	}
+}
 
-function ArtifactDetails({name, item_type, mat}) {
+function ArtifactDetails({name, name_string, item_type, mat, item_description}) {
 	return( <div id="artifact details"> 
-		{name} was a {mat} {item_type}. 
+		<ArtifactName name={name} name_string={name_string}/> was a {mat} {item_type}. 
+		<ArtifactDescription type={item_type} desc={item_description} /> 
 		</div>
 	)
 }

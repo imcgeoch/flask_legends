@@ -246,10 +246,12 @@ def artifact_detail_json(world_id, artifact_id):
             } if artifact.written_content else None
 
     context = {
-            'name' : titlecase(artifact.name),
-            'item_type' : artifact.item_type,
+            'name' : titlecase(artifact.name or "Untitled"),
+            'name_string' : titlecase(artifact.name_string or ""),
+            'item_type' : artifact.item_subtype or artifact.item_type,
             'mat' : artifact.mat,
-            'written_content' : written_content
+            'written_content' : written_content,
+            'item_description' : artifact.item_description
             }
     return jsonify(context)
 
