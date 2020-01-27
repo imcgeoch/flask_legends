@@ -93,6 +93,7 @@ class Site_Mapping(Mapping):
         super().convert()
 
         self.alias_key("structure", "local_id", "local_id", "id")
+        self.alias_key(self.obj_name, "current_owner_id", "cur_owner_id")
 
 class Histfig_Mapping(Mapping):
 

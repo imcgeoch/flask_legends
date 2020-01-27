@@ -26,6 +26,9 @@ class Entity(db.Model):
     sites = db.relationship('Site', backref='entity',
                     viewonly=True, foreign_keys="Site.df_world_id, Site.civ_id",
                     primaryjoin=jb('Entity', 'Site', ('id', 'civ_id')))
+    local_sites = db.relationship('Site', backref='local_entity',
+                viewonly=True, foreign_keys="Site.df_world_id, Site.current_owner_id",
+                primaryjoin=jb('Entity', 'Site', ('id', 'current_owner_id')))
     structures = db.relationship('Structure', backref='entity',
                                  viewonly=True, 
                                  foreign_keys="Structure.df_world_id,"

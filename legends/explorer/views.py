@@ -295,12 +295,28 @@ def occasion_detail(world_id, entity_id, occasion_id):
 @bp.route('/api/<world_id>/site/<site_id>')
 def site_detail_json(world_id, site_id):
     site = (Site.query
-                     .filter_by(df_world_id=world_id, id=artifact_id)
+                     .filter_by(df_world_id=world_id, id=site_id)
                      .first())
+    civ = {
+            "entity_name" : titlecase(site.entity.name),
+            "entity_id" : site.entity.id,
+            "worldid" : site.entity.df_world_id
+            } if site.entity else None
+
+    site_gvt = {
+            "entity_name" : titlecase(site.local_entity.name),
+            "entity_id" : site.local_entity.id,
+            "worldid" : site.local_entity.df_world_id
+            } if site.local_entity else None
+
     context = {
-            "name" : site.name,
-            "type" : site.type
+            "name" : titlecase(site.name),
+            "type" : site.type,
+            "civ" : civ,
+            "site_gvt" : site_gvt,
+            "img" : img
             }
+
     return jsonify(context)
 
 @bp.route('/<world_id>/site/<site_id>')
