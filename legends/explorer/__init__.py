@@ -1,6 +1,7 @@
 from flask import Blueprint
 
 #bp = Blueprint('explorer', __name__)
-bp = Blueprint('explorer', __name__, template_folder='templates')
+bp = Blueprint('explorer', __name__, template_folder='templates', 
+        static_folder='static', static_url_path='/explorer/static')
 
 from . import views

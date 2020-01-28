@@ -14,14 +14,16 @@ function SiteEntities({civ, site_gvt}){
 	)
 }
 
-function SiteImage({worldid, id}){
-	return <div> <img src="https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350" /> </div>
-
+function SiteImage({img}){
+	if (img != null) {
+		return <div> <img src={img} height="300" width="300" /> </div>
+	}
+	else return null
 }
 
 function SiteDetails(items){
 	const {name, type, civ, site_gvt} = items;
-	return <div> {name} was a {type}. <SiteEntities {... items} /></div>
+	return <div> {name} is a {type}. <SiteEntities {... items} /></div>
 }
 
 class Site extends React.Component {
@@ -59,7 +61,7 @@ class Site extends React.Component {
 		
 		return( <div> <h1>{items.name}</h1>
 			<SiteDetails {... items} />
-			<SiteImage {... this.props.match.params} />
+			<SiteImage {... items} />
 		</div>
 		)
 

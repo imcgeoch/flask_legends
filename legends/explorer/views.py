@@ -5,6 +5,8 @@ from sqlalchemy.orm import joinedload, load_only
 
 from titlecase import titlecase
 
+from os import path
+
 from ..models import *
 from . import bp
 
@@ -161,10 +163,9 @@ def entity_detail_json(world_id, entity_id):
     entity_positions = [{
         'name' : position.calculated_name(),
         'vacant' : position.holder.histfig == -1 if position.holder else True,
-        'hf_name' : titlecase(position.holder.hf.name) if position.holder.hf else None,
+        'hf_name' : titlecase(position.holder.hf.name) if position.holder and position.holder.hf else None,
         'hfid' : position.holder.histfig if position.holder else None
-        } for position in entity.positions]
-
+        } for position in entity.positions] 
     sites = [{
         'name' : titlecase(site.name),
         'id' : site.id,
@@ -308,6 +309,12 @@ def site_detail_json(world_id, site_id):
             "entity_id" : site.local_entity.id,
             "worldid" : site.local_entity.df_world_id
             } if site.local_entity else None
+
+    if path.exists('./legends/explorer/static/img/%s/site%s.png' % (world_id, site_id)):
+        img = url_for('explorer.static', 
+                      filename='img/%s/site%s.png' % (world_id, site_id))
+    else:
+        img = None
 
     context = {
             "name" : titlecase(site.name),
