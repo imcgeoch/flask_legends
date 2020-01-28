@@ -310,18 +310,29 @@ def site_detail_json(world_id, site_id):
             "worldid" : site.local_entity.df_world_id
             } if site.local_entity else None
 
-    if path.exists('./legends/explorer/static/img/%s/site%s.png' % (world_id, site_id)):
-        img = url_for('explorer.static', 
-                      filename='img/%s/site%s.png' % (world_id, site_id))
-    else:
-        img = None
+    img_filename = 'img/%s/site%s.png' % (world_id, site_id)
+    img = url_for('explorer.static', filename=img_filename) \
+            if path.exists('./legends/explorer/static/' + img_filename) else None
+
+    structures = [{
+        "name" : structure.name,
+        "name_2" : structure.name2,
+        "type" : structure.type,
+        "subtype" : structure.subtype,
+        "worship_hf" : {
+            "hf_name" : titlecase(structure.historical_figure.name or ""),
+            "hfid" : structure.historical_figure.id,
+            "worldid" : world_id
+            } if structure.historical_figure else None,
+        } for structure in site.structures]
 
     context = {
             "name" : titlecase(site.name),
             "type" : site.type,
             "civ" : civ,
             "site_gvt" : site_gvt,
-            "img" : img
+            "img" : img,
+            "structures" : structures
             }
 
     return jsonify(context)

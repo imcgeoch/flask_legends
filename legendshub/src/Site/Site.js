@@ -1,9 +1,28 @@
 import React from 'react';
 import EntityLink from "../Entity/Entity_Link";
+import HistfigLink from "../Histfig/Histfig_Link";
 
 const axios = require('axios');
 //import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
+
+function Structure({name, name_2, type, subtype, worship_hf}){
+	const names = `${name}, "${name_2}"`;
+	if (type === 'temple'){
+		return <li> {names}, a temple to <HistfigLink {... worship_hf} /></li>
+	}
+	if (subtype != undefined) {
+		return <li> {names}, a {type} ({subtype})</li>
+	}
+	return <li> {names}, a {type} </li>
+}
+
+function Structures({structures = []}){
+	return ( <div> <h2> Structures </h2>
+		<ul> {structures.map((structure) => ( <Structure {...structure} />)) }</ul>
+	  </div>
+		)
+}
 
 function SiteEntities({civ, site_gvt}){
 	return (<div> 
@@ -16,7 +35,7 @@ function SiteEntities({civ, site_gvt}){
 
 function SiteImage({img}){
 	if (img != null) {
-		return <div> <img src={img} height="300" width="300" /> </div>
+		return <div> <img src={img} height="500" width="500" /> </div>
 	}
 	else return null
 }
@@ -62,6 +81,7 @@ class Site extends React.Component {
 		return( <div> <h1>{items.name}</h1>
 			<SiteDetails {... items} />
 			<SiteImage {... items} />
+			<Structures {... items} />
 		</div>
 		)
 
