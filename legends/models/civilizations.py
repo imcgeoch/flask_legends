@@ -190,6 +190,10 @@ class Occasion(db.Model):
     name = db.Column(db.String(50))
     event = db.Column(db.Integer)
 
+    historical_event = db.relationship('Historical_Event', backref='occasion',
+            foreign_keys="Occasion.df_world_id, Occasion.event", viewonly=True,
+            primaryjoin=jb("Occasion", "Historical_Event", ("event", "id")))
+
     schedules = db.relationship('Schedule',
             backref='occasion', viewonly=True,
             foreign_keys="Schedule.df_world_id, "

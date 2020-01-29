@@ -293,6 +293,50 @@ def artifact_list(world_id):
 def occasion_detail(world_id, entity_id, occasion_id):
     return "placeholder for occasion %s of entity %s" % (occasion_id, entity_id)
 
+@bp.route('/api/<world_id>/occasion/<entity_id>/<occasion_id>')
+def occasion_detail_json(world_id, entity_id, occasion_id):
+    occasion = (Occasion.query
+                            .filter_by(df_world_id=world_id, 
+                                       entity_id=entity_id,
+                                       id=occasion_id)
+                            .first())
+    def feature_dict(feature):
+        context = {
+                'type' : feature.type
+                #//also references a la written content
+                }
+        return context
+
+    def schedule_dict(schedule):
+        context = {
+                'type' : schedule.type,
+                'item_subtype' : schedule.item_subtype,
+                'features' : [feature_dict(feature) 
+                              for feature in schdeule.features]
+                #// also references
+                }
+        return context
+
+    e = occasion.historical_event
+
+    context = {
+            "name" : occasion.name,
+            "event" : {
+                        'id':e.id,
+                        'year':e.year,
+                        'seconds72':e.seconds72,
+                        'type':e.type,
+                        'hfid':e.hfid,
+                        'hfid2':e.hfid2,
+                        'hf_name':titlecase(e.hf.name) if e.hf else None,
+                        'hf_name2':titlecase(e.hf2.name) if e.hf2 else None
+                        } if e else None,
+            'schedules' : [schedule_dict(schedule) 
+                           for schedule in occasion.schedules]
+            }
+
+    return jsonify(context)
+
 @bp.route('/api/<world_id>/site/<site_id>')
 def site_detail_json(world_id, site_id):
     site = (Site.query

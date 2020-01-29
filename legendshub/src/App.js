@@ -46,7 +46,7 @@ function AppRouter() {
 				<Route path="/:worldid/entity/:id" component={Entity} />
 				<Route path="/:worldid/artifact/:id" component={Artifact} />
 				<Route path="/:worldid/site/:id" component={Site} />
-				<Route path="/:worldid/occasion/:id" component={Occasion} />
+				<Route path="/:worldid/occasion/:entityid/:id" component={Occasion} />
 				<Route path="/:worldid/written_content/:id" component={WrittenContent} />
 			</div>
 		</Router>
