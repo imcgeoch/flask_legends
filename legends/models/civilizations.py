@@ -190,6 +190,13 @@ class Occasion(db.Model):
     name = db.Column(db.String(50))
     event = db.Column(db.Integer)
 
+    schedules = db.relationship('Schedule',
+            backref='occasion', viewonly=True,
+            foreign_keys="Schedule.df_world_id, "
+                         "Schedule.entity_id, Schedule.occasion_id",
+            primaryjoin=jb("Occasion", "Schedule", 
+                           ("id", "occasion_id"), ("entity_id", "entity_id")))
+
 class Schedule(db.Model):
     __tablename__ = 'schedules'
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
@@ -204,6 +211,13 @@ class Schedule(db.Model):
     reference2 = db.Column(db.Integer)
     item_type = db.Column(db.String(30))
     item_subtype = db.Column(db.String(30))
+
+    features = db.relationship('Feature', backref='schedule', viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.entity_id,"
+                         "Feature.occasion_id, Feature.schedule_id",
+            primaryjoin=jb("Schedule", "Feature", ("id", "schedule_id"),
+                 ("occasion_id", "occasion_id"), ("entity_id", "entity_id")))
+
 
 class Feature(db.Model):
     __tablename__ = 'features'
