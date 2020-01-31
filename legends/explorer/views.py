@@ -175,6 +175,8 @@ def entity_detail_json(world_id, entity_id):
     occasions = [{
         'name' : titlecase(occasion.name),
         'id' : occasion.id,
+        'entityid' : entity_id,
+        'worldid' : world_id
         } for occasion in entity.occasions] 
 
     context = {
@@ -301,25 +303,86 @@ def occasion_detail_json(world_id, entity_id, occasion_id):
                                        id=occasion_id)
                             .first())
     def feature_dict(feature):
+        musical_form = feature.referenced_musical_form
+        dance_form = feature.referenced_dance_form
+        poetic_form = feature.referenced_poetic_form
+        e = feature.referenced_event
         context = {
-                'type' : feature.type
+                'type' : feature.type,
+                'musical_form' : { 
+                    "name" : musical_form.name,
+                    "id" : musical_form.id,
+                    "worldid" : world_id
+                    } if musical_form else None,
+                'dance_form' : { 
+                    "name" : dance_form.name,
+                    "id" : dance_form.id,
+                    "worldid" : world_id
+                    } if dance_form else None,
+                'poetic_form' : { 
+                    "name" : poetic_form.name,
+                    "id" : poetic_form.id,
+                    "worldid" : world_id
+                    } if poetic_form else None,
+                "event" : {
+                        'id':e.id,
+                        'year':e.year,
+                        'seconds72':e.seconds72,
+                        'type':e.type,
+                        'hfid':e.hfid,
+                        'hfid2':e.hfid2,
+                        'hf_name':titlecase(e.hf.name) if e.hf else None,
+                        'hf_name2':titlecase(e.hf2.name) if e.hf2 else None
+                        } if e else None,
                 #//also references a la written content
                 }
         return context
 
     def schedule_dict(schedule):
+        musical_form = schedule.referenced_musical_form
+        dance_form = schedule.referenced_dance_form
+        poetic_form = schedule.referenced_poetic_form
+        e = schedule.referenced_event
+
         context = {
                 'type' : schedule.type,
                 'item_subtype' : schedule.item_subtype,
-                'features' : [feature_dict(feature) 
-                              for feature in schdeule.features]
-                #// also references
+                'features' : [feature_dict(feature)
+                              for feature in schedule.features],
+                'musical_form' : { 
+                    "name" : musical_form.name,
+                    "id" : musical_form.id,
+                    "worldid" : world_id
+                    } if musical_form else None,
+                'dance_form' : { 
+                    "name" : dance_form.name,
+                    "id" : dance_form.id,
+                    "worldid" : world_id
+                    } if dance_form else None,
+                'poetic_form' : { 
+                    "name" : poetic_form.name,
+                    "id" : poetic_form.id,
+                    "worldid" : world_id
+                    } if poetic_form else None,
+                "event" : {
+                        'id':e.id,
+                        'year':e.year,
+                        'seconds72':e.seconds72,
+                        'type':e.type,
+                        'hfid':e.hfid,
+                        'hfid2':e.hfid2,
+                        'hf_name':titlecase(e.hf.name) if e.hf else None,
+                        'hf_name2':titlecase(e.hf2.name) if e.hf2 else None,
+                        'worldid':world_id
+                        } if e else None,
                 }
+
         return context
 
     e = occasion.historical_event
 
     context = {
+            "entity_name" : titlecase(occasion.entity.name),
             "name" : occasion.name,
             "event" : {
                         'id':e.id,

@@ -222,6 +222,38 @@ class Schedule(db.Model):
             primaryjoin=jb("Schedule", "Feature", ("id", "schedule_id"),
                  ("occasion_id", "occasion_id"), ("entity_id", "entity_id")))
 
+    referenced_event = db.relationship('Historical_Event',
+            backref="referencing_schedules", viewonly=True,
+            foreign_keys="Schedule.df_world_id, Schedule.reference",
+            primaryjoin="and_(Schedule.type=='storytelling',"
+                        + jb("Historical_Event", "Schedule",
+                             ("id", "reference")) + ")"
+            )
+
+    referenced_musical_form = db.relationship('Musical_Form',
+            backref="referencing_schedules", viewonly=True,
+            foreign_keys="Schedule.df_world_id, Schedule.reference",
+            primaryjoin="and_(or_(Schedule.type=='musical performance',"
+                        "Schedule.type=='musical competition'),"
+                        + jb("Musical_Form", "Schedule",
+                             ("id", "reference")) + ")"
+            )
+    referenced_dance_form = db.relationship('Dance_Form',
+            backref="referencing_schedules", viewonly=True,
+            foreign_keys="Schedule.df_world_id, Schedule.reference",
+            primaryjoin="and_(or_(Schedule.type=='dance performance',"
+                        "Schedule.type=='dance competition'),"
+                        + jb("Dance_Form", "Schedule",
+                             ("id", "reference")) + ")"
+            )
+    referenced_poetic_form = db.relationship('Poetic_Form',
+            backref="referencing_schedules", viewonly=True,
+            foreign_keys="Schedule.df_world_id, Schedule.reference",
+            primaryjoin="and_(or_(Schedule.type=='poetry recital',"
+                        "Schedule.type=='poetry competition'),"
+                        + jb("Poetic_Form", "Schedule",
+                             ("id", "reference")) + ")"
+            )
 
 class Feature(db.Model):
     __tablename__ = 'features'
@@ -234,6 +266,38 @@ class Feature(db.Model):
     
     type = db.Column(db.String(30))
     reference = db.Column(db.Integer)
+    referenced_event = db.relationship('Historical_Event',
+            backref="referencing_features", viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.reference",
+            primaryjoin="and_(Feature.type=='storytelling',"
+                        + jb("Historical_Event", "Feature",
+                             ("id", "reference")) + ")"
+            )
+
+    referenced_musical_form = db.relationship('Musical_Form',
+            backref="referencing_features", viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.reference",
+            primaryjoin="and_(or_(Feature.type=='musical performance',"
+                        "Feature.type=='musical competition'),"
+                        + jb("Musical_Form", "Feature",
+                             ("id", "reference")) + ")"
+            )
+    referenced_dance_form = db.relationship('Dance_Form',
+            backref="referencing_features", viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.reference",
+            primaryjoin="and_(or_(Feature.type=='dance performance',"
+                        "Feature.type=='dance competition'),"
+                        + jb("Dance_Form", "Feature",
+                             ("id", "reference")) + ")"
+            )
+    referenced_poetic_form = db.relationship('Poetic_Form',
+            backref="referencing_features", viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.reference",
+            primaryjoin="and_(or_(Feature.type=='poetry recital',"
+                        "Feature.type=='poetry competition'),"
+                        + jb("Poetic_Form", "Feature",
+                             ("id", "reference")) + ")"
+            )
 
 class Entity_Position(db.Model):
     __tablename__ = 'entity_positions'

@@ -9,6 +9,17 @@ import Event_List from "../Events/Event_List"
 const axios = require('axios');
 
 
+function Festivals({occasions=[]}){
+	return(
+		<div>
+		<h2>Festivals</h2>
+		<ul>
+			{occasions.map((occasion)=>(<li><OccasionLink {... occasion}/></li>))}
+		</ul>
+	</div>
+	);
+}
+
 function Entity_Details({name, race, type}) {
 	return( <div id="entity details"> 
 		{name} was a {race} {type}. 
@@ -46,15 +57,6 @@ function EntitySiteList({sites=[], worldid='', ...props}){
 	return <RelatedList fn={fn} list={sites} divId="entity sites" title="Sites" />
 }
 
-function EntityOccasionListItem(props){
-	const {id} = props;
-	return <li key={id}><OccasionLink {... props} /> </li>
-}
-
-function EntityOccasionList({occasions=[], worldid='', entityid='', ... props}){
-	const fn = (prps) => (<EntityOccasionListItem {... prps} worldid={worldid} entityid={entityid}/> );
-	return <RelatedList fn={fn} list={occasions} divId="entity occasions" title="Occasions" />; 
-}
 
 function EntityEvents({events, id, worldid}){
 	return(
@@ -108,7 +110,7 @@ class Entity extends React.Component {
 			<EntityLinkList entity_links={items.entity_links} worldid={worldid} />
 			<EntityPositionList entity_positions={items.entity_positions} worldid={worldid}/>
 			<EntitySiteList sites={items.sites} worldid={worldid} />
-			<EntityOccasionList occasions={items.occasions} entityid={id} worldid={worldid} />
+			<Festivals occasions={items.occasions} worldid={worldid}/>
 			<EntityEvents events={this.state.events} id={id} worldid={worldid} />
 			</div>
 		)
