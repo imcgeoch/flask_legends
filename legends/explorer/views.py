@@ -444,6 +444,21 @@ def site_detail_json(world_id, site_id):
 
     return jsonify(context)
 
+@bp.route('/api/<world_id>/musicalform/<form_id>')
+def musical_form_detail_json(world_id, form_id):
+    form = (Musical_Form.query
+                     .filter_by(df_world_id=world_id, id=form_id)
+                     .first())
+    context = {
+            "name" : form.name,
+            "description" : form.description
+            }
+    
+
+    return jsonify(context)
+
+
+
 @bp.route('/<world_id>/site/<site_id>')
 def site_detail(world_id, site_id):
     return "placeholder for site %s" % (site_id)

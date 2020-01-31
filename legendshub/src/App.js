@@ -6,6 +6,7 @@ import Artifact from './Artifact/Artifact';
 import Site from './Site/Site';
 import Occasion from './Occasion/Occasion';
 import WrittenContent from './WrittenContent/WrittenContent';
+import MusicalForm from './MusicalForm/MusicalForm';
 import LegendsIndex from './LegendsIndex';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
@@ -48,6 +49,7 @@ function AppRouter() {
 				<Route path="/:worldid/site/:id" component={Site} />
 				<Route path="/:worldid/occasion/:entityid/:id" component={Occasion} />
 				<Route path="/:worldid/written_content/:id" component={WrittenContent} />
+				<Route path="/:worldid/musical_form/:id" component={MusicalForm} />
 			</div>
 		</Router>
 	);
