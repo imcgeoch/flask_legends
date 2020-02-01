@@ -4,6 +4,10 @@ import HistfigLink from "../Histfig/Histfig_Link";
 import SiteLink from "../Site/SiteLink";
 import Event from "../Events/Event.js"
 import WrittenContentLink from "./WrittenContent_Link";
+import MusicalFormLink from "../MusicalForm/MusicalFormLink";
+import DanceFormLink from "../DanceForm/DanceFormLink";
+import PoeticFormLink from "../PoeticForm/PoeticFormLink";
+
 
 const axios = require('axios');
 
@@ -48,11 +52,11 @@ function WrittenContentReferences({worldid = '', subj_hf=[], subj_evt=[], subj_s
 				{subj_wc.map((wcprops) => 
 					<li> It concerns the work <WrittenContentLink {... wcprops} /> </li>)}
 				{subj_poetic.map((poeticprops) => 
-					 <li> It concerns poetic form {poeticprops.id} </li>)}
+					<li> It concerns poetic form <PoeticFormLink {... poeticprops} worldid={worldid} /> </li>)}
 				{subj_dance.map((danceprops) => 
-					 <li> It concerns dance form {danceprops.id} </li>)}
+					<li> It concerns dance form <DanceFormLink {... danceprops} worldid={worldid}/> </li>)}
 				{subj_musical.map((musicalprops) => 
-					 <li> It concerns musical form {musicalprops.id} </li>)}
+					<li> It concerns musical form <MusicalFormLink {... musicalprops} worldid={worldid}/> </li>)}
 			</ul>
 		</div>
 	)
