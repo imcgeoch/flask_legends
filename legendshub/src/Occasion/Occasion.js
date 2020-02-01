@@ -1,6 +1,9 @@
 import React from 'react';
 import Event from "../Events/Event.js"
 import EntityLink from "../Entity/Entity_Link.js"
+import MusicalFormLink from "../MusicalForm/MusicalFormLink";
+import DanceFormLink from "../DanceForm/DanceFormLink";
+import PoeticFormLink from "../PoeticForm/PoeticFormLink";
 
 const axios = require('axios');
 
@@ -32,24 +35,26 @@ function FeaturesSchedule({type, features=[]}){
 }
 
 function OccasionItem({type, dance_form, musical_form, 
-	                     poetic_form, event, features }){
+	                     poetic_form, event, features, item_subtype}){
 	switch (type) {
 		case 'ceremony':
 		case 'procession':
 			return <FeaturesSchedule features={features} type={type} />
 		case 'dance performance':
 		case 'dance competition':
-			return <li> A {type} of {dance_form.name} </li>
+			return <li> A {type} of <DanceFormLink {... dance_form} /> </li>
 		case 'poetry recital':
 		case 'poetry competition':
-			return <li> A {type} in the style of {poetic_form.name} </li>
+			return <li> A {type} in the style of <PoeticFormLink {... poetic_form} /> </li>
 		case 'musical performance':
 		case 'musical competition':
-			return <li> A {type} of {musical_form.name} </li>
+			return <li> A {type} of <MusicalFormLink {... musical_form} /> </li>
 		case 'storytelling':
 			return <li> Storytelling of the time when <Event {... event}  /></li>
 		case 'foot race':
 			return <li> A foot race </li>
+		case 'throwing competition':
+			return <li> A {item_subtype} throwing competition </li>
 		default:
 			return <li> {type.charAt(0).toUpperCase() + type.slice(1)} </li>
 	}
