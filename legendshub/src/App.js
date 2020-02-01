@@ -7,6 +7,8 @@ import Site from './Site/Site';
 import Occasion from './Occasion/Occasion';
 import WrittenContent from './WrittenContent/WrittenContent';
 import MusicalForm from './MusicalForm/MusicalForm';
+import PoeticForm from './PoeticForm/PoeticForm';
+import DanceForm from './DanceForm/DanceForm';
 import LegendsIndex from './LegendsIndex';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
@@ -50,6 +52,8 @@ function AppRouter() {
 				<Route path="/:worldid/occasion/:entityid/:id" component={Occasion} />
 				<Route path="/:worldid/written_content/:id" component={WrittenContent} />
 				<Route path="/:worldid/musical_form/:id" component={MusicalForm} />
+				<Route path="/:worldid/dance_form/:id" component={DanceForm} />
+				<Route path="/:worldid/poetic_form/:id" component={PoeticForm} />
 			</div>
 		</Router>
 	);
