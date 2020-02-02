@@ -75,7 +75,6 @@ function Duel({start_year, events, battle}){
 				{events.map((event)=>(<li><Event {...event} /></li>))}
 			</ul>
 		</div>
-
 	)
 }
 
@@ -114,19 +113,18 @@ function War(items){
 }
 
 function EventColDetails(items){
-	if (items.type == 'war'){
-		return <War {... items} />
+	switch(items.type){
+		case 'war':
+			return <War {... items} />
+		case 'battle':
+		  return <Battle {... items} />
+		case 'duel':
+			return <Duel {... items} />
+		case 'site conquered':
+			return <Conquest {... items} />
+		default:
+				<div>Event Collection: {items.type}</div>
 	}
-	if (items.type == 'battle'){
-		return <Battle {... items} />
-	}
-	if (items.type == 'duel'){
-		return <Duel {... items} />
-	}
-	if (items.type == 'site conquered'){
-		return <Conquest {... items} />
-	}
-	return <div>Event Collection: {items.type}</div> 
 }
 
 class EventCol extends React.Component {
