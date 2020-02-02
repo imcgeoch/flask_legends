@@ -165,6 +165,9 @@ class Eventcol_Mapping(Mapping):
                   'entity_id', 'civ_id', 'attacking_enid')
         self.alias_key(self.obj_name, 'entity_id2',
                 'entity_id2', 'defending_enid')
+        
+        # alias_key aggressor_ent_id, defender_ent_id to entity, entity2
+        # also attacking_enid, defending enid
 
 class Historical_Event_Mapping(Mapping):
     
@@ -259,6 +262,7 @@ class Entity_Mapping(Mapping):
                                     occasion_id=occasion_id,
                                     schedule_id=schedule_id)
         super().convert()
+
 
 class Entity_Pop_Mapping(Mapping):
 

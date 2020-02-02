@@ -9,6 +9,7 @@ import WrittenContent from './WrittenContent/WrittenContent';
 import MusicalForm from './MusicalForm/MusicalForm';
 import PoeticForm from './PoeticForm/PoeticForm';
 import DanceForm from './DanceForm/DanceForm';
+import EventCol from './EventCol/EventCol';
 import LegendsIndex from './LegendsIndex';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
@@ -54,6 +55,7 @@ function AppRouter() {
 				<Route path="/:worldid/musical_form/:id" component={MusicalForm} />
 				<Route path="/:worldid/dance_form/:id" component={DanceForm} />
 				<Route path="/:worldid/poetic_form/:id" component={PoeticForm} />
+				<Route path="/:worldid/eventcollection/:id" component={EventCol} />
 			</div>
 		</Router>
 	);

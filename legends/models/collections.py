@@ -56,6 +56,7 @@ class Event_Collection(db.Model):
     type = db.Column(db.String(20))
     ordinal = db.Column(db.Integer)
     occasion_id = db.Column(db.Integer)
+    #outcome
 
     site_id = db.Column(db.Integer)
     

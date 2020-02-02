@@ -194,6 +194,13 @@ class Occasion(db.Model):
             foreign_keys="Occasion.df_world_id, Occasion.event", viewonly=True,
             primaryjoin=jb("Occasion", "Historical_Event", ("event", "id")))
 
+    event_collections = db.relationship('Event_Collection', backref='occasion', 
+            foreign_keys="Event_Collection.df_world_id,"
+                         "Event_Collection.entity_id,"
+                         "Event_Collection.occasion_id",
+            primaryjoin=jb("Occasion", "Event_Collection", ("id", "occasion_id"),
+                           ("entity_id","entity_id")), viewonly=True)
+
     schedules = db.relationship('Schedule',
             backref='occasion', viewonly=True,
             foreign_keys="Schedule.df_world_id, "
@@ -381,6 +388,18 @@ class Site(db.Model):
                                               "Structure.site_id",
                                  primaryjoin=jb('Site', 'Structure', 
                                                 ('id', 'site_id')))
+    attacking_squads = db.relationship('Attacking_Squad', backref='site', 
+                         viewonly=True,
+                                 foreign_keys="Attacking_Squad.df_world_id,"
+                                              "Attacking_Squad.attacking_squad_site",
+                                 primaryjoin=jb('Site', 'Attacking_Squad', 
+                                                ('id', 'attacking_squad_site')))
+    defending_squads = db.relationship('Defending_Squad', backref='site', 
+                         viewonly=True,
+                                 foreign_keys="Defending_Squad.df_world_id,"
+                                              "Defending_Squad.defending_squad_site",
+                                 primaryjoin=jb('Site', 'Defending_Squad', 
+                                                ('id', 'defending_squad_site')))
     event_collections = db.relationship('Event_Collection', backref='site',
                                         viewonly=True, 
                                         foreign_keys="Event_Collection.df_world_id,"

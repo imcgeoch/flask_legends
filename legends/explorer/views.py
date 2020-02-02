@@ -490,3 +490,136 @@ def site_detail(world_id, site_id):
 @bp.route('/<world_id>/region/<region_id>')
 def region_detail(world_id, region_id):
     return "placeholder for region %s" % (region_id)
+
+@bp.route('/api/<world_id>/eventcollection/<evtcol_id>')
+def evtcol_detail(world_id, evtcol_id):
+    evtcol = Event_Collection.query.get((world_id, evtcol_id))
+
+    def duel_context(evtcol):
+        context = {
+                "type" : evtcol.type,
+                "battle" : evtcol_context(evtcol.linking_collections[0]),
+                "start_year" : evtcol.start_year,
+                "events" : [event_context(event) 
+                            for event in evtcol.linked_events]
+                }
+        return context
+
+    def evtcol_context(evtcol):
+        context = {
+                "name" : titlecase(evtcol.name or ""),
+                "id" : evtcol.id,
+                "worldid" : evtcol.df_world_id
+                }
+        
+        return context
+
+    def hf_context(hf):
+        context = {
+                "hf_name" : titlecase(hf.name),
+                "hfid" : hf.id,
+                "worldid" : hf.df_world_id
+                }
+        return context
+
+    def site_context(site):
+        context = {
+                "name" : titlecase(site.name),
+                "id" : site.id,
+                "worldid" : site.df_world_id
+                }
+        return context
+
+    def squad_context(squad, side):
+        context = {
+                "race" : squad.attacking_squad_race if side == "attacking"
+                         else squad.defending_squad_race,
+                "number" : squad.attacking_squad_number if side == "attacking"
+                         else squad.defending_squad_number,
+                "deaths" : squad.attacking_squad_deaths if side == "attacking"
+                         else squad.defending_squad_deaths,
+                "site" : site_context(squad.site) if squad.site else None
+                }
+        return context
+
+    def battle_context(evtcol):
+        context = {
+                "id" :  evtcol.id,
+                "worldid" : evtcol.df_world_id,
+                "type" : evtcol.type,
+                "name" : titlecase(evtcol.name or ""),
+                "start_year" : evtcol.start_year,
+                "end_year" : evtcol.start_year,
+                "attacking_squads" : [squad_context(squad, 'attacking')
+                                      for squad in evtcol.attacking_squads],
+                "defending_squads" : [squad_context(squad, 'defending')
+                                      for squad in evtcol.defending_squads],
+                "attacking_hfs" : [hf_context(hf) for hf in evtcol.attackers],
+                "defending_hfs" : [hf_context(hf) for hf in evtcol.defenders],
+                "noncom_hfs" : [hf_context(hf) for hf in evtcol.noncoms],
+                "events" : [event_context(event)
+                            for event in evtcol.linked_events],
+                "duels" : [evtcol_context(linked_col)
+                             for linked_col in evtcol.linked_collections
+                             if linked_col.type == 'duel'],
+                "war" : evtcol_context(evtcol.linking_collections[0])
+                }
+
+        return context
+
+    def event_context(event):
+        context = {
+                "id" : event.id,
+                "year" : event.year,
+                "type" : event.type
+                }
+        return context
+
+    def entity_context(entity):
+        context = {
+                "entity_name" : titlecase(entity.name),
+                "entity_id" : entity.id,
+                "worldid" : entity.df_world_id
+                } if entity else {}
+        return context
+        
+    def war_context(evtcol):
+        context = {
+                "type" : evtcol.type,
+                "name" : titlecase(evtcol.name or ""),
+                "start_year" : evtcol.start_year,
+                "end_year" : evtcol.end_year,
+                "battles" : [evtcol_context(linked_col)
+                             for linked_col in evtcol.linked_collections
+                             if linked_col.type == 'battle'],
+                "events" : [event_context(event)
+                            for event in evtcol.linked_events],
+                "aggressor" : entity_context(evtcol.entity1),
+                "defender" : entity_context(evtcol.entity2),
+                }
+
+        return context
+
+    def conquest_context(evtcol):
+        context = {
+                "type" : evtcol.type,
+                "start_year" : evtcol.start_year,
+                "events" : [event_context(event)
+                            for event in evtcol.linked_events],
+                "site" : site_context(evtcol.site),
+                "aggressor" : entity_context(evtcol.entity1),
+                "defender" : entity_context(evtcol.entity2),
+                "war" : evtcol_context(evtcol.linking_collections[0])
+                }
+        return context
+
+    if evtcol.type == 'war':
+        return jsonify(war_context(evtcol))
+    if evtcol.type == 'battle':
+        return jsonify(battle_context(evtcol))
+    if evtcol.type == 'duel':
+        return jsonify(duel_context(evtcol))
+    if evtcol.type == 'site conquered':
+        return jsonify(conquest_context(evtcol))
+
+    return jsonify({})
