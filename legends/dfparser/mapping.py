@@ -33,6 +33,9 @@ class Mapping(object):
         for old, new in rewrite_list:
             for detail_dict in detail_dict_list:
                 detail_dict[new] = detail_dict.pop(old, [None])
+        # what if we should extend instead?
+        # Yes, this is the bug. 
+        # If exists, extend, else write.
         self.db_dicts[name] = [{**extract_values(detail_dict),
             'df_world_id' : self.world_id, **parent_keys}
             for detail_dict in detail_dict_list]
@@ -204,6 +207,9 @@ class Historical_Event_Mapping(Mapping):
         self.alias_key(self.obj_name, 'site_id2', 'site_id2', 'site_id_2')
         self.alias_key(self.obj_name, 'state', 'state', 'mood')
 
+        # alias group_hfid to hfid?
+        # winner_hfid to hfid
+
 
 class Written_Content_Mapping(Mapping):
 
@@ -262,6 +268,9 @@ class Entity_Mapping(Mapping):
                                     occasion_id=occasion_id,
                                     schedule_id=schedule_id)
         super().convert()
+
+
+        #investigate bug w/ occasions being missed e.g. entity 279
 
 
 class Entity_Pop_Mapping(Mapping):

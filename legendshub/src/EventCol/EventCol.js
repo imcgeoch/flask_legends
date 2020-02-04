@@ -3,6 +3,7 @@ import EntityLink from "../Entity/Entity_Link";
 import SiteLink from "../Site/SiteLink";
 import HistfigLink from "../Histfig/Histfig_Link";
 import EventColLink from "./EventColLink";
+import OccasionLink from "../Occasion/OccasionLink";
 import Event from "../Events/Event";
 
 const axios = require('axios');
@@ -112,6 +113,61 @@ function War(items){
 	)
 }
 
+function Occasion({start_year, ordinal, occasion, schedules, ...items}){
+	return(
+		<div>
+			In {start_year}, the {ordinal}st celebration 
+			of <OccasionLink {...occasion} /> was held.
+
+			The festival included:
+			<ul>
+				{schedules.map((schedule) => 
+					(<li><EventColLink {...schedule} name={"a " + schedule.type}/></li>))}
+
+			</ul>
+		</div>
+	);
+}
+
+function Schedule({type, year, occasion, event}){
+	return(
+		<div>
+			A {type} was held in {year} as 
+			part of <EventColLink {... occasion} name='a festival' />.
+
+
+			<h3> Events </h3>
+			<ul>
+				<Event {...event} />
+			</ul>
+		</div>
+	)
+}
+
+function Purge({adjective, events=[], year, site}){
+	return( 
+		<div>
+			In {year}, an {adjective} purge happened in <SiteLink {... site}/>. As a result,
+			<h3> Events </h3>
+			<ul>
+				{events.map((event)=>(<li><Event {...event} /></li>))}
+			</ul>
+		</div>
+			);
+}
+
+function Journey({events, year, ordinal}){
+	return(
+		<div>
+			In {year}, a historical figure took their {ordinal}st journey.
+			<h3> Events </h3>
+			<ul>
+				{events.map((event)=>(<li><Event {...event} /></li>))}
+			</ul>
+		</div>
+	);
+}
+
 function EventColDetails(items){
 	switch(items.type){
 		case 'war':
@@ -122,8 +178,19 @@ function EventColDetails(items){
 			return <Duel {... items} />
 		case 'site conquered':
 			return <Conquest {... items} />
+		case 'occasion': 
+			return <Occasion {... items} />
+		case 'ceremony':
+		case 'procession':
+		case 'performance':
+		case 'competition':
+			return <Schedule {... items} />
+		case 'purge':
+			return <Purge {... items} />
+		case 'journey':
+			return <Journey {... items} />
 		default:
-				<div>Event Collection: {items.type}</div>
+				return <div>Event Collection: {items.type}</div>
 	}
 }
 

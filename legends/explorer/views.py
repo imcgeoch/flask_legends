@@ -509,7 +509,8 @@ def evtcol_detail(world_id, evtcol_id):
         context = {
                 "name" : titlecase(evtcol.name or ""),
                 "id" : evtcol.id,
-                "worldid" : evtcol.df_world_id
+                "worldid" : evtcol.df_world_id,
+                "type" : evtcol.type
                 }
         
         return context
@@ -613,6 +614,59 @@ def evtcol_detail(world_id, evtcol_id):
                 }
         return context
 
+    def occasion_context(occasion):
+        context = {
+                "id" : occasion.id,
+                "entityid" : occasion.entity_id,
+                "worldid" : occasion.df_world_id,
+                "name" : occasion.name
+                }
+        return context
+
+    def occasion_evtcol_context(evtcol):
+        context = {
+                "type" : evtcol.type,
+                "occasion" : occasion_context(evtcol.occasion),
+                "start_year" : evtcol.start_year,
+                "ordinal" : evtcol.ordinal,
+                "schedules" : [evtcol_context(schedule)
+                               for schedule in evtcol.linked_collections],
+                "entity" : entity_context(evtcol.entity1)
+                
+                }
+        return context
+
+    def schedule_context(evtcol):
+        context = {
+                "type" : evtcol.type,
+                "occasion" : evtcol_context(
+                               evtcol.linking_collections[0]),
+                "event" : event_context(evtcol.linked_events[0]),
+                "year" : evtcol.start_year
+                }
+        return context
+
+    def purge_context(evtcol):
+        context = {
+                "type" : evtcol.type,
+                "adjective" : evtcol.adjective.lower(),
+                "year" : evtcol.start_year,
+                "site" : site_context(evtcol.site),
+                "events" : [event_context(event) for 
+                    event in evtcol.linked_events]
+                }
+        return context
+
+    def journey_context(evtcol):
+        context = {
+                "type" : evtcol.type,
+                "year" : evtcol.start_year,
+                "ordinal" : evtcol.ordinal,
+                "events" : [event_context(event) for
+                    event in evtcol.linked_events]
+                }
+        return context
+
     if evtcol.type == 'war':
         return jsonify(war_context(evtcol))
     if evtcol.type == 'battle':
@@ -621,5 +675,17 @@ def evtcol_detail(world_id, evtcol_id):
         return jsonify(duel_context(evtcol))
     if evtcol.type == 'site conquered':
         return jsonify(conquest_context(evtcol))
+    if evtcol.type == 'occasion':
+        return jsonify(occasion_evtcol_context(evtcol))
+    if (evtcol.type == 'ceremony'
+            or evtcol.type == 'procession'
+            or evtcol.type == 'performance'
+            or evtcol.type == 'competition'):
+        return jsonify(schedule_context(evtcol))
+    if evtcol.type == 'purge':
+        return purge_context(evtcol)
+    if evtcol.type == 'journey':
+        return journey_context(evtcol)
 
-    return jsonify({})
+    return jsonify({"type": evtcol.type})
+
