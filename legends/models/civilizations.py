@@ -26,6 +26,9 @@ class Entity(db.Model):
     sites = db.relationship('Site', backref='entity',
                     viewonly=True, foreign_keys="Site.df_world_id, Site.civ_id",
                     primaryjoin=jb('Entity', 'Site', ('id', 'civ_id')))
+    local_sites = db.relationship('Site', backref='local_entity',
+                viewonly=True, foreign_keys="Site.df_world_id, Site.current_owner_id",
+                primaryjoin=jb('Entity', 'Site', ('id', 'current_owner_id')))
     structures = db.relationship('Structure', backref='entity',
                                  viewonly=True, 
                                  foreign_keys="Structure.df_world_id,"
@@ -187,6 +190,24 @@ class Occasion(db.Model):
     name = db.Column(db.String(50))
     event = db.Column(db.Integer)
 
+    historical_event = db.relationship('Historical_Event', backref='occasion',
+            foreign_keys="Occasion.df_world_id, Occasion.event", viewonly=True,
+            primaryjoin=jb("Occasion", "Historical_Event", ("event", "id")))
+
+    event_collections = db.relationship('Event_Collection', backref='occasion', 
+            foreign_keys="Event_Collection.df_world_id,"
+                         "Event_Collection.entity_id,"
+                         "Event_Collection.occasion_id",
+            primaryjoin=jb("Occasion", "Event_Collection", ("id", "occasion_id"),
+                           ("entity_id","entity_id")), viewonly=True)
+
+    schedules = db.relationship('Schedule',
+            backref='occasion', viewonly=True,
+            foreign_keys="Schedule.df_world_id, "
+                         "Schedule.entity_id, Schedule.occasion_id",
+            primaryjoin=jb("Occasion", "Schedule", 
+                           ("id", "occasion_id"), ("entity_id", "entity_id")))
+
 class Schedule(db.Model):
     __tablename__ = 'schedules'
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
@@ -202,6 +223,45 @@ class Schedule(db.Model):
     item_type = db.Column(db.String(30))
     item_subtype = db.Column(db.String(30))
 
+    features = db.relationship('Feature', backref='schedule', viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.entity_id,"
+                         "Feature.occasion_id, Feature.schedule_id",
+            primaryjoin=jb("Schedule", "Feature", ("id", "schedule_id"),
+                 ("occasion_id", "occasion_id"), ("entity_id", "entity_id")))
+
+    referenced_event = db.relationship('Historical_Event',
+            backref="referencing_schedules", viewonly=True,
+            foreign_keys="Schedule.df_world_id, Schedule.reference",
+            primaryjoin="and_(Schedule.type=='storytelling',"
+                        + jb("Historical_Event", "Schedule",
+                             ("id", "reference")) + ")"
+            )
+
+    referenced_musical_form = db.relationship('Musical_Form',
+            backref="referencing_schedules", viewonly=True,
+            foreign_keys="Schedule.df_world_id, Schedule.reference",
+            primaryjoin="and_(or_(Schedule.type=='musical performance',"
+                        "Schedule.type=='musical competition'),"
+                        + jb("Musical_Form", "Schedule",
+                             ("id", "reference")) + ")"
+            )
+    referenced_dance_form = db.relationship('Dance_Form',
+            backref="referencing_schedules", viewonly=True,
+            foreign_keys="Schedule.df_world_id, Schedule.reference",
+            primaryjoin="and_(or_(Schedule.type=='dance performance',"
+                        "Schedule.type=='dance competition'),"
+                        + jb("Dance_Form", "Schedule",
+                             ("id", "reference")) + ")"
+            )
+    referenced_poetic_form = db.relationship('Poetic_Form',
+            backref="referencing_schedules", viewonly=True,
+            foreign_keys="Schedule.df_world_id, Schedule.reference",
+            primaryjoin="and_(or_(Schedule.type=='poetry recital',"
+                        "Schedule.type=='poetry competition'),"
+                        + jb("Poetic_Form", "Schedule",
+                             ("id", "reference")) + ")"
+            )
+
 class Feature(db.Model):
     __tablename__ = 'features'
     df_world_id = db.Column(db.Integer, 
@@ -213,6 +273,38 @@ class Feature(db.Model):
     
     type = db.Column(db.String(30))
     reference = db.Column(db.Integer)
+    referenced_event = db.relationship('Historical_Event',
+            backref="referencing_features", viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.reference",
+            primaryjoin="and_(Feature.type=='storytelling',"
+                        + jb("Historical_Event", "Feature",
+                             ("id", "reference")) + ")"
+            )
+
+    referenced_musical_form = db.relationship('Musical_Form',
+            backref="referencing_features", viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.reference",
+            primaryjoin="and_(or_(Feature.type=='musical performance',"
+                        "Feature.type=='musical competition'),"
+                        + jb("Musical_Form", "Feature",
+                             ("id", "reference")) + ")"
+            )
+    referenced_dance_form = db.relationship('Dance_Form',
+            backref="referencing_features", viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.reference",
+            primaryjoin="and_(or_(Feature.type=='dance performance',"
+                        "Feature.type=='dance competition'),"
+                        + jb("Dance_Form", "Feature",
+                             ("id", "reference")) + ")"
+            )
+    referenced_poetic_form = db.relationship('Poetic_Form',
+            backref="referencing_features", viewonly=True,
+            foreign_keys="Feature.df_world_id, Feature.reference",
+            primaryjoin="and_(or_(Feature.type=='poetry recital',"
+                        "Feature.type=='poetry competition'),"
+                        + jb("Poetic_Form", "Feature",
+                             ("id", "reference")) + ")"
+            )
 
 class Entity_Position(db.Model):
     __tablename__ = 'entity_positions'
@@ -233,6 +325,14 @@ class Entity_Position(db.Model):
                          "Entity_Position_Assignment.position_id",
             primaryjoin=jb("Entity_Position", "Entity_Position_Assignment",
                 ("entity_id", "entity_id"), ("id", "position_id")))
+
+    def calculated_name(self):
+        if (self.holder and self.name_female 
+                        and not self.holder.histfig == -1 
+                        and self.holder.hf.caste == 'FEMALE'):
+            return self.name_female
+        return self.name
+
 
 class Entity_Position_Assignment(db.Model):
     __tablename__ = 'entity_position_assignments'
@@ -288,6 +388,18 @@ class Site(db.Model):
                                               "Structure.site_id",
                                  primaryjoin=jb('Site', 'Structure', 
                                                 ('id', 'site_id')))
+    attacking_squads = db.relationship('Attacking_Squad', backref='site', 
+                         viewonly=True,
+                                 foreign_keys="Attacking_Squad.df_world_id,"
+                                              "Attacking_Squad.attacking_squad_site",
+                                 primaryjoin=jb('Site', 'Attacking_Squad', 
+                                                ('id', 'attacking_squad_site')))
+    defending_squads = db.relationship('Defending_Squad', backref='site', 
+                         viewonly=True,
+                                 foreign_keys="Defending_Squad.df_world_id,"
+                                              "Defending_Squad.defending_squad_site",
+                                 primaryjoin=jb('Site', 'Defending_Squad', 
+                                                ('id', 'defending_squad_site')))
     event_collections = db.relationship('Event_Collection', backref='site',
                                         viewonly=True, 
                                         foreign_keys="Event_Collection.df_world_id,"

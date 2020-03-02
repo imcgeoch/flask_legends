@@ -29,7 +29,6 @@ class Artifact(db.Model):
                     foreign_keys=[id, df_world_id], uselist=True, 
                     viewonly=True)
 
-
     def __repr__(self):
         return "<Artifact %s>" % (self.name)
 
@@ -54,6 +53,11 @@ class Written_Content(db.Model):
     author_hfid = db.Column(db.Integer)
     author_roll = db.Column(db.Integer)
 
+    copies = db.relationship('Artifact', backref='written_content',
+            foreign_keys='Artifact.written_content_id, Artifact.df_world_id',
+            primaryjoin=jb('Artifact', 'Written_Content', ('written_content_id', 'id')),
+            viewonly=True) 
+
     styles = db.relationship('Style', 
                              foreign_keys="Style.df_world_id,"
                                           "Style.content_id",
@@ -61,6 +65,96 @@ class Written_Content(db.Model):
                                             "Style",
                                             ("id", "content_id")))
     
+    referenced_hfs = db.relationship('Historical_Figure',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='HISTORICAL FIGURE')"  ,
+            secondaryjoin=jb("Historical_Figure", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_events = db.relationship('Historical_Event',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='HISTORICAL EVENT')"  ,
+            secondaryjoin=jb("Historical_Event", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_sites = db.relationship('Site',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='SITE')"  ,
+            secondaryjoin=jb("Site", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_artifacts = db.relationship('Artifact',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='ARTIFACT')"  ,
+            secondaryjoin=jb("Artifact", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_entities = db.relationship('Entity',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='ENTITY')"  ,
+            secondaryjoin=jb("Entity", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_regions = db.relationship('Region',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='SUBREGION')"  ,
+            secondaryjoin=jb("Region", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_wcs = db.relationship('Written_Content',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='WRITTEN CONTENT')"  ,
+            secondaryjoin=jb("Written_Content", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_poetic_forms = db.relationship('Poetic_Form',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='POETIC FORM')"  ,
+            secondaryjoin=jb("Poetic_Form", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_dance_forms = db.relationship('Dance_Form',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='DANCE FORM')"  ,
+            secondaryjoin=jb("Dance_Form", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+    referenced_musical_forms = db.relationship('Musical_Form',
+            secondary="references",
+            primaryjoin="and_( (" + jb("Written_Content", "Reference", ("id", "wc_id"))
+                        + "), Reference.type=='MUSICAL FORM')"  ,
+            secondaryjoin=jb("Musical_Form", "Reference", ("id", "ref_id")),
+            foreign_keys="Reference.wc_id, Reference.ref_id",
+            backref="referencing_works",
+            viewonly=True)
+
+    def style_string(self):
+        styles = self.styles[:]
+        if styles == []:
+            return ""
+        last_style = styles.pop().as_string()
+        style_list = ", ".join([style.as_string() for style in styles]) + " and " if styles else ""
+        return style_list + last_style
+
+
 
 class Reference(db.Model):
     __tablename__ = 'references'
@@ -79,6 +173,18 @@ class Style(db.Model):
     content_id = db.Column(db.Integer)
     style = db.Column(db.String(20)) #should be enum
     magnitude = db.Column(db.Integer)
+
+    def as_string(self):
+        if self.magnitude == 1:
+            return "a little " + self.style
+        elif self.magnitude == 2:
+            return "somewhat " + self.style
+        elif self.magnitude == 3:
+            return "quite " + self.style
+        elif self.magnitude == 4:
+            return "very " + self.style
+        else:
+            return self.style
 
 class Musical_Form(db.Model):
     __tablename__ = 'musical_forms'

@@ -118,7 +118,7 @@ class Historical_Figure(db.Model):
                             foreign_keys="Goal.hfid,Goal.df_world_id",
                             primaryjoin=jb("Historical_Figure", 
                                            "Goal", ("id", "hfid")))
-    temples = db.relationship('Structure', backref='historical_figures',
+    temples = db.relationship('Structure', backref='historical_figure',
                                  viewonly=True, #foreign_keys=[id, df_world_id],
                                  foreign_keys="Structure.df_world_id,"
                                               "Structure.df_world_id",

@@ -56,6 +56,7 @@ class Event_Collection(db.Model):
     type = db.Column(db.String(20))
     ordinal = db.Column(db.Integer)
     occasion_id = db.Column(db.Integer)
+    #outcome
 
     site_id = db.Column(db.Integer)
     
@@ -71,12 +72,12 @@ class Event_Collection(db.Model):
     attacking_enid = db.synonym(entity_id)
     defending_enid = db.synonym(entity_id2)
 
-    children = db.relationship('Event_Collection', remote_side=[id], 
-                               backref='parent', viewonly=True,
+    parent = db.relationship('Event_Collection', remote_side=[id, df_world_id], 
+                               backref='children', viewonly=True,
                                foreign_keys=[df_world_id, parent_eventcol],
                                primaryjoin=jb("Event_Collection",
                                               "Event_Collection",
-                                              ("id", "parent_eventcol")))
+                                              ("parent_eventcol","id")))
 
     linked_collections = db.relationship('Event_Collection',
                                          secondary='eventcol_eventcol_link', 
