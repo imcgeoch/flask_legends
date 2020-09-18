@@ -168,6 +168,24 @@ function Journey({events, year, ordinal}){
 	);
 }
 
+function Theft({events, year, duels}){
+	return (
+		<div>
+			In {year}, a theft occured. 
+			<h3> Events </h3>
+			<ul>
+				{events.map((event)=>(<li><Event {...event} /></li>))}
+			</ul>
+			<h3> Duels </h3>
+			<ul>
+				{duels.map((duel, i) => 
+					(<li><EventColLink {...duel} name={i+1} /> </li>))}
+			</ul>
+		</div>
+	);
+}
+
+
 function EventColDetails(items){
 	switch(items.type){
 		case 'war':
@@ -189,6 +207,8 @@ function EventColDetails(items){
 			return <Purge {... items} />
 		case 'journey':
 			return <Journey {... items} />
+    case 'theft':
+			return <Theft {... items} />
 		default:
 				return <div>Event Collection: {items.type}</div>
 	}

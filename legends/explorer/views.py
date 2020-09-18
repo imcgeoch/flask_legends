@@ -667,6 +667,31 @@ def evtcol_detail(world_id, evtcol_id):
                 }
         return context
 
+    def beast_attack_context(evtcol):
+        context  = {
+                "type" : evtcol.type,
+                "year" : evtcol.start_year,
+                "events" : [event_context(event) for
+                    event in evtcol.linked_events],
+                "evtcol" : (evtcol_context( evtcol.linking_collections[0]) 
+                    if len_evtcol.linking_collections > 0 
+                    else None),
+                "site" : site_context(evtcol.site)
+                }
+        return context
+
+    def theft_context(evtcol):
+        context = {
+                "type" : evtcol.type,
+                "year" : evtcol.start_year,
+                "events" : [event_context(event) for
+                    event in evtcol.linked_events],
+                "duels" : [evtcol_context(linked_col)
+                             for linked_col in evtcol.linked_collections
+                             if linked_col.type == 'duel'],
+                }
+        return context
+
     if evtcol.type == 'war':
         return jsonify(war_context(evtcol))
     if evtcol.type == 'battle':
@@ -686,6 +711,8 @@ def evtcol_detail(world_id, evtcol_id):
         return purge_context(evtcol)
     if evtcol.type == 'journey':
         return journey_context(evtcol)
+    if evtcol.type == 'theft':
+        return theft_context(evtcol)
 
     return jsonify({"type": evtcol.type})
 
