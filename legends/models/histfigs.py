@@ -88,6 +88,10 @@ class Historical_Figure(db.Model):
             backref='this_histfig', primaryjoin=jb('Historical_Figure', 
                                                     'Relationship', ('id', 'hfid1')),
             foreign_keys='Relationship.hfid1,Relationship.df_world_id')
+    hf_relationships_historical = db.relationship('Relationship_Historical', 
+            backref='this_histfig', primaryjoin=jb('Historical_Figure', 
+                                                'Relationship_Historical', ('id', 'hfid1')),
+            foreign_keys='Relationship_Historical.hfid1,Relationship_Historical.df_world_id')
     
     site_links = db.relationship('Site_Link', backref='historical_figure', 
                                  viewonly=True, #foreign_keys = [id, df_world_id],
@@ -306,3 +310,20 @@ class Relationship(db.Model):
             primaryjoin=
     "and_(Relationship.hfid2==Historical_Figure.id," + 
     "Relationship.df_world_id==Historical_Figure.df_world_id)")
+
+class Relationship_Historical(db.Model):
+    __tablename__ = 'relationship_historical'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
+    hfid1 = db.Column(db.Integer)
+    hfid2 = db.Column(db.Integer)
+    love = db.Column(db.Integer)
+    respect = db.Column(db.Integer)
+    trust = db.Column(db.Integer)
+    loyalty = db.Column(db.Integer)
+    fear = db.Column(db.Integer)
+
+    other = db.relationship("Historical_Figure", foreign_keys=[df_world_id, hfid2],
+            primaryjoin=
+    "and_(Relationship_Historical.hfid2==Historical_Figure.id," + 
+    "Relationship_Historical.df_world_id==Historical_Figure.df_world_id)")
