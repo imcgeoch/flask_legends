@@ -92,7 +92,11 @@ class Historical_Figure(db.Model):
             backref='this_histfig', primaryjoin=jb('Historical_Figure', 
                                                 'Relationship_Historical', ('id', 'hfid1')),
             foreign_keys='Relationship_Historical.hfid1,Relationship_Historical.df_world_id')
-    
+    vague_relationships = db.relationship('Vague_Relationship', 
+            backref='this_histfig', primaryjoin=jb('Historical_Figure', 
+                                                'Vague_Relationship', ('id', 'hfid1')),
+            foreign_keys='Vague_Relationship.hfid1,Vague_Relationship.df_world_id')
+
     site_links = db.relationship('Site_Link', backref='historical_figure', 
                                  viewonly=True, #foreign_keys = [id, df_world_id],
                                  foreign_keys="Site_Link.df_world_id,"
@@ -327,3 +331,19 @@ class Relationship_Historical(db.Model):
             primaryjoin=
     "and_(Relationship_Historical.hfid2==Historical_Figure.id," + 
     "Relationship_Historical.df_world_id==Historical_Figure.df_world_id)")
+
+class Vague_Relationship(db.Model):
+    __tablename__ = 'vague_relationship'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
+    hfid1 = db.Column(db.Integer)
+    hfid2 = db.Column(db.Integer)
+    war_buddy = db.Column(db.Boolean)
+    athlete_buddy = db.Column(db.Boolean)
+    athletic_rival = db.Column(db.Boolean)
+    childhood_friend = db.Column(db.Boolean)
+
+    other = db.relationship("Historical_Figure", foreign_keys=[df_world_id, hfid2],
+            primaryjoin=
+    "and_(Vague_Relationship.hfid2==Historical_Figure.id," + 
+    "Vague_Relationship.df_world_id==Historical_Figure.df_world_id)")
