@@ -24,6 +24,7 @@ class Historical_Figure(db.Model):
     death_year = db.Column(db.Integer)
     current_identity_id = db.Column(db.Integer)
     ent_pop_id = db.Column(db.Integer)
+
     
     first_name = lambda self: self.name.split(" ")[0]
     pronouns = lambda self: ('he', 'his') if self.caste == 'MALE' else ('she', 'her') 
@@ -295,6 +296,11 @@ class Relationship(db.Model):
     last_meet_year = db.Column(db.Integer)
     meet_count = db.Column(db.Integer)
     rep_buddy = db.Column(db.Integer) 
+    love = db.Column(db.Integer)
+    respect = db.Column(db.Integer)
+    trust = db.Column(db.Integer)
+    loyalty = db.Column(db.Integer)
+    fear = db.Column(db.Integer)
 
     other = db.relationship("Historical_Figure", foreign_keys=[df_world_id, hfid2],
             primaryjoin=
