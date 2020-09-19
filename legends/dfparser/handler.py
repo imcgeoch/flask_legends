@@ -44,6 +44,8 @@ class DF_Handler(ContentHandler):
                        "site_link","entity_reputation", 
                        "entity_position_link", 
                        "relationship_profile_hf_visual",
+                       "relationship_profile_hf_historical",
+                       "vague_relationship",
                        # begin plus
                        "entity_position", "entity_position_assignment",
                        "occasion", "schedule", "feature", "reference"

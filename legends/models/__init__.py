@@ -37,7 +37,8 @@ from .events import Historical_Event, Add_HF_Entity_Link, Add_HF_HF_Link, \
         Written_Content_Composed
 from .histfigs import Historical_Figure, Goal, Sphere, Journey_Pet,\
         Skill, Interaction_Knowledge, HF_Link, Site_Link, Entity_Link,\
-        Entity_Position_Link, Entity_Reputation, Relationship
+        Entity_Position_Link, Entity_Reputation, Relationship,\
+        Relationship_Historical, Vague_Relationship
 from .culture import Artifact, Written_Content, Style, Musical_Form,\
         Dance_Form, Historical_Era, Poetic_Form, Reference
 from .civilizations import Entity, Occasion, Schedule, Feature, \

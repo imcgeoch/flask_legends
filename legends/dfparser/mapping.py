@@ -116,9 +116,17 @@ class Histfig_Mapping(Mapping):
         hf_links = self.xml_dict.get('hf_link', [])
         self.convert_detail('hf_link', hf_links, ('hfid', 'hfid2'), 
                             hfid1=hfid)
-        hf_rel_profs = self.xml_dict.get('relationship_profile_hf_visual', 
-                                         [])
-        self.convert_detail('relationship_profile_hf_visual', hf_rel_profs,
+
+        # Now that there are four that follow this pattern, we should be able to loop
+        # over them. "less_simple_details" ?
+        hf_rel_profs_vis = self.xml_dict.get('relationship_profile_hf_visual', [])
+        self.convert_detail('relationship_profile_hf_visual', hf_rel_profs_vis,
+                            ('hf_id', 'hfid2'), hfid1=hfid)
+        hf_rel_profs_hist = self.xml_dict.get('relationship_profile_hf_historical', [])
+        self.convert_detail('relationship_profile_hf_historical', hf_rel_profs_hist,
+                            ('hf_id', 'hfid2'), hfid1=hfid)
+        vague_rels = self.xml_dict.get('vague_relationship', [])
+        self.convert_detail('vague_relationship', vague_rels,
                             ('hf_id', 'hfid2'), hfid1=hfid)
 
         # these ones are single values, of which there may be more than
