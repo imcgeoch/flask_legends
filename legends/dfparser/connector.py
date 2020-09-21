@@ -89,6 +89,8 @@ class Connector():
         self.db.session.commit()
 
     def add_mapping(self, xml_mapping):
+        if self.mapping_flawed(xml_mapping):
+            return
         self.db_mapping_size += self.convert_mapping(xml_mapping)
         if self.db_mapping_size >= self.capacity:
             print('\033[A', 'Added %s, current id %s' % (xml_mapping, 
@@ -162,3 +164,6 @@ class Connector():
             self.update_mappings()
             self.insert_mappings()
 
+    # This can be built out to cover more potential issues.
+    def mapping_flawed(self, xml_mapping):
+        return xml_mapping == {}
