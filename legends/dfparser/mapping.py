@@ -80,7 +80,8 @@ class Site_Mapping(Mapping):
         super().__init__(xml_dict, obj_name, world_id)
 
     def convert(self):
-
+        if self.xml_dict == {}:
+            return
         site_id = self.xml_dict['id'][0]
         structures = self.xml_dict.get('structure') or []
         self.convert_detail('structure', structures, site_id=site_id)

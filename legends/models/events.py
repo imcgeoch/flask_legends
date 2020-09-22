@@ -75,11 +75,11 @@ class Historical_Event(db.Model):
     ghost = db.Column(db.String(20))
     subtype = db.Column(db.String(30))
     returned = db.Column(db.Boolean)
-    woundee_race = db.Column(db.Integer)
-    woundee_caste = db.Column(db.Integer)
+    woundee_race = db.Column(db.String(50))
+    woundee_caste = db.Column(db.String(20))
     body_part = db.Column(db.Integer)
-    injury_type = db.Column(db.Integer)
-    part_lost = db.Column(db.Integer)
+    injury_type = db.Column(db.String(20))
+    part_lost = db.Column(db.String(30))
     identity_id1 = db.Column(db.Integer)
     identity_id2 = db.Column(db.Integer)
     hf_rep_1_of_2 = db.Column(db.String(20))
@@ -97,7 +97,7 @@ class Historical_Event(db.Model):
     improvement_subtype = db.Column(db.String(50))
     imp_mat = db.Column(db.String(50))
     creation_event = db.Column(db.Integer)
-    method = db.Column(db.Integer)
+    method = db.Column(db.String(50))
     occasion_id = db.Column(db.Integer)
     schedule_id = db.Column(db.Integer)
     abandoned = db.Column(db.Boolean)
@@ -117,9 +117,9 @@ class Historical_Event(db.Model):
     # strings
     link_type = db.Column(db.String(30))
     reason = db.Column(db.String(50))
-    position = db.Column(db.String(20))
+    position = db.Column(db.String(30))
     interaction = db.Column(db.String(50))
-    action = db.Column(db.Integer)
+    action = db.Column(db.String(50))
     circumstance = db.Column(db.String(50))
     topic = db.Column(db.String(30))
     first = db.Column(db.Boolean)
@@ -166,7 +166,6 @@ class Agreement_Formed(Historical_Event):
     #artifact_id = db.Column(db.Integer)
 
     #concluder_hfid, subject_id, reason in java but not seen in xml
-
 
 class Artifact_Claim_Formed(Historical_Event):
     __mapper_args__ = { 'polymorphic_identity':'artifact claim formed'}

@@ -182,7 +182,7 @@ class Goal(db.Model):
              'start a family', 'rule the world', 'fall in love',
              'see the great natural sites', 'become a legendary warrior',
              'bring peace to the world', 'make a great discovery',
-             'craft a masterwork']
+             'craft a masterwork', 'attain rank in society', 'bathe world in chaos']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
@@ -251,7 +251,7 @@ class HF_Link(db.Model):
     link_strength = db.Column(db.Integer)
     link_type = db.Column(db.Enum('child','spouse', 'deity', 'apprentice',
         'mother', 'father', 'former apprentice', 'master', 'prisoner', 'imprisoner',
-        'former master', name='hf_link_type'))
+        'former master', 'former spouse', 'deceased spouse', 'lover', name='hf_link_type'))
 
     other = db.relationship("Historical_Figure", foreign_keys=[df_world_id, hfid2],
             primaryjoin="and_(HF_Link.hfid2==Historical_Figure.id," + 
