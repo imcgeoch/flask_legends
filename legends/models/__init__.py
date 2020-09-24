@@ -5,7 +5,7 @@ db = SQLAlchemy()
 from .world import DF_World
 from .geography import Landmass, Mountain_Peak, Region, \
                        Underground_Region, World_Construction,\
-                       World_Map
+                       World_Map, River, Creature
 from .events import Historical_Event, Add_HF_Entity_Link, Add_HF_HF_Link, \
         Add_HF_Site_Link, Agreement_Formed, Artifact_Claim_Formed, \
         Artifact_Copied, Artifact_Copied, Artifact_Destroyed, \
@@ -34,11 +34,12 @@ from .events import Historical_Event, Add_HF_Entity_Link, Add_HF_HF_Link, \
         Remove_HF_Entity_Link, Remove_HF_Site_Link, Replace_Structure, \
         Site_Died, Site_Dispute, Site_Retired, Site_Taken_Over, \
         Site_Tribute_Forced, Sneak_Into_Site, Spotted_Leaving_Site, \
-        Written_Content_Composed
+        Written_Content_Composed, Poetic_Form_Created, Relationship_Event 
 from .histfigs import Historical_Figure, Goal, Sphere, Journey_Pet,\
         Skill, Interaction_Knowledge, HF_Link, Site_Link, Entity_Link,\
         Entity_Position_Link, Entity_Reputation, Relationship,\
-        Relationship_Historical, Vague_Relationship
+        Relationship_Historical, Vague_Relationship, Identity, Intrigue_Actor,\
+        Intrigue_Plot
 from .culture import Artifact, Written_Content, Style, Musical_Form,\
         Dance_Form, Historical_Era, Poetic_Form, Reference
 from .civilizations import Entity, Occasion, Schedule, Feature, \

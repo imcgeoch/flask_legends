@@ -71,7 +71,7 @@ class Historical_Event(db.Model):
     secret_text = db.Column(db.String(50))
     pets = db.Column(db.String(50))
     unit_type = db.Column(db.String(20))
-    relationship = db.Column(db.String(20))
+    relationship = db.Column(db.String(30))
     ghost = db.Column(db.String(20))
     subtype = db.Column(db.String(30))
     returned = db.Column(db.Boolean)
@@ -836,6 +836,10 @@ class Written_Content_Composed(Historical_Event):
 
 class Poetic_Form_Created(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'poetic form created'}
+
+
+class Relationship_Event(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'relationship event'}
 
 
 competitors = db.Table('competitors', db.metadata,

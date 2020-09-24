@@ -45,7 +45,14 @@ orm_objects = {
         "entity_position" : m.Entity_Position,
         "entity_position_assignment" : m.Entity_Position_Assignment,
         "entity_entity_link" : m.Entity_Entity_Link,
-        "reference" : m.Reference
+        "reference" : m.Reference,
+        # new in 47
+        "river" : m.River,
+        "creature" : m.Creature,
+        "identity" : m.Identity,
+        "intrigue_actor" : m.Intrigue_Actor,
+        "intrigue_plot" : m.Intrigue_Plot,
+        "historical_event_relationship" : m.Historical_Event #Notice different name in xml
         }
 
 aux_tables = {
@@ -63,8 +70,10 @@ aux_tables = {
 plus_only_objects = ["landmass", "world_construction", "mountain_peak", 
         "entity_entity_link", "entity_position", 
         "entity_position_assignment", "occasion", "schedule", "feature",
-        "reference", "inhabitant", "member"]
+        "reference", "inhabitant", "member", "river", "creature", "identity",
+        "historical_event_relationship"] 
 
+# don't use plus at all
 base_only_objets = ['historical_figure', 'style']
 
 class Connector():

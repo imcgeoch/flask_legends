@@ -369,6 +369,7 @@ class Site(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    name2 = db.Column(db.String(50))
     coords = db.Column(db.String(10))
     rectangle = db.Column(db.String(20))
     type = db.Column(db.Enum(*types, name='site_types'))

@@ -107,7 +107,8 @@ class Histfig_Mapping(Mapping):
         
         # these ones are simple, multi-field, details
         simple_details = ['hf_skill', 'entity_link','site_link', 
-                          'entity_position_link', 'entity_reputation']
+                          'entity_position_link', 'entity_reputation',
+                          'intrigue_plot']
         for detail_name in simple_details:
             detail = self.xml_dict.get(detail_name) or []
             self.convert_detail(detail_name, detail, hfid=hfid)
@@ -129,6 +130,9 @@ class Histfig_Mapping(Mapping):
         vague_rels = self.xml_dict.get('vague_relationship', [])
         self.convert_detail('vague_relationship', vague_rels,
                             ('hf_id', 'hfid2'), hfid1=hfid)
+        intrigue_actors = self.xml_dict.get('intrigue_actor', [])
+        self.convert_detail('intrigue_actor', intrigue_actors,
+                             parent_hfid=hfid)
 
         # these ones are single values, of which there may be more than
         # one for a given histfig
@@ -292,6 +296,15 @@ class Entity_Pop_Mapping(Mapping):
             self.xml_dict['num'] = [number]
         super().convert()
 
+class Relationship_Event_Mapping(Mapping):
+
+    def convert(self):
+        self.xml_dict['type'] = ['relationship_event']
+        super().convert()
+        self.alias_key(self.obj_name, 'id', 'event')
+        self.alias_key(self.obj_name, 'hfid', 'source_hf')
+        self.alias_key(self.obj_name, 'hfid2', 'target_hf')
+
 class Mapping_Factory(object):
     mapping_by_name = { "written_content" : Written_Content_Mapping,
                         "artifact" : Artifact_Mapping,
@@ -300,7 +313,9 @@ class Mapping_Factory(object):
                         "historical_event_collection" : Eventcol_Mapping,
                         "historical_event" : Historical_Event_Mapping,
                         "entity" : Entity_Mapping,
-                        "entity_population" : Entity_Pop_Mapping}
+                        "entity_population" : Entity_Pop_Mapping,
+                        "historical_event_relationship" : Relationship_Event_Mapping,
+                        "historical_event_relationship_supplement" : Relationship_Event_Mapping}
 
     def __init__(self, world_id):
         self.world_id = world_id

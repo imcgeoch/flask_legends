@@ -57,6 +57,23 @@ class World_Construction(db.Model):
     type = db.Column(db.String(50)) #should be enum
     coords = db.Column(db.String)
 
+class River(db.Model):
+    __tablename__ = 'rivers'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer, 
+                            db.ForeignKey('df_world.id', ondelete='CASCADE'))
+    name = db.Column(db.String(50))
+    path = db.Column(db.String)
+    end_pos = db.Column(db.String(12))
+
+class Creature(db.Model):
+    __tablename__ = 'creatures'
+    creature_id = db.Column(db.String(30), primary_key=True)
+    df_world_id = db.Column(db.Integer, 
+                            db.ForeignKey('df_world.id', ondelete='CASCADE'))
+    name_singular = db.Column(db.String(30))
+    name_plural = db.Column(db.String(30))
+
 class World_Map(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     __tablename__ = 'world_maps'

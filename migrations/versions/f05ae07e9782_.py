@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 860636e78f70
+Revision ID: f05ae07e9782
 Revises: 
-Create Date: 2020-09-21 19:57:04.023579
+Create Date: 2020-09-24 00:27:38.718006
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '860636e78f70'
+revision = 'f05ae07e9782'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -60,6 +60,14 @@ def upgrade():
     sa.Column('competitor_hfid', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('creatures',
+    sa.Column('creature_id', sa.String(length=30), nullable=False),
+    sa.Column('df_world_id', sa.Integer(), nullable=True),
+    sa.Column('name_singular', sa.String(length=30), nullable=True),
+    sa.Column('name_plural', sa.String(length=30), nullable=True),
+    sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('creature_id')
     )
     op.create_table('dance_forms',
     sa.Column('df_world_id', sa.Integer(), nullable=False),
@@ -322,7 +330,7 @@ def upgrade():
     sa.Column('secret_text', sa.String(length=50), nullable=True),
     sa.Column('pets', sa.String(length=50), nullable=True),
     sa.Column('unit_type', sa.String(length=20), nullable=True),
-    sa.Column('relationship', sa.String(length=20), nullable=True),
+    sa.Column('relationship', sa.String(length=30), nullable=True),
     sa.Column('ghost', sa.String(length=20), nullable=True),
     sa.Column('subtype', sa.String(length=30), nullable=True),
     sa.Column('returned', sa.Boolean(), nullable=True),
@@ -394,6 +402,21 @@ def upgrade():
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('df_world_id', 'id')
     )
+    op.create_table('identities',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('df_world_id', sa.Integer(), nullable=True),
+    sa.Column('name', sa.String(length=100), nullable=True),
+    sa.Column('race', sa.String(length=40), nullable=True),
+    sa.Column('caste', sa.String(length=10), nullable=True),
+    sa.Column('birth_seconds72', sa.Integer(), nullable=True),
+    sa.Column('birth_year', sa.Integer(), nullable=True),
+    sa.Column('profession', sa.String(length=50), nullable=True),
+    sa.Column('entity_id', sa.Integer(), nullable=True),
+    sa.Column('histfig_id', sa.Integer(), nullable=True),
+    sa.Column('nemisis_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('inhabitants',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('df_world_id', sa.Integer(), nullable=True),
@@ -410,6 +433,26 @@ def upgrade():
     sa.Column('interaction_knowledge', sa.String(length=12), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('intrigue_actors',
+    sa.Column('df_world_id', sa.Integer(), nullable=False),
+    sa.Column('parent_hfid', sa.Integer(), nullable=False),
+    sa.Column('local_id', sa.Integer(), nullable=False),
+    sa.Column('hfid', sa.Integer(), nullable=True),
+    sa.Column('role', sa.String(length=30), nullable=True),
+    sa.Column('strategy', sa.String(length=30), nullable=True),
+    sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('df_world_id', 'parent_hfid', 'local_id')
+    )
+    op.create_table('intrigue_plots',
+    sa.Column('df_world_id', sa.Integer(), nullable=False),
+    sa.Column('hfid', sa.Integer(), nullable=False),
+    sa.Column('local_id', sa.Integer(), nullable=False),
+    sa.Column('type', sa.String(length=50), nullable=True),
+    sa.Column('on_hold', sa.Boolean(), nullable=True),
+    sa.Column('entity_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('df_world_id', 'hfid', 'local_id')
     )
     op.create_table('journey_pets',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -518,6 +561,15 @@ def upgrade():
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('rivers',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('df_world_id', sa.Integer(), nullable=True),
+    sa.Column('name', sa.String(length=50), nullable=True),
+    sa.Column('path', sa.String(), nullable=True),
+    sa.Column('end_pos', sa.String(length=12), nullable=True),
+    sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('schedules',
     sa.Column('df_world_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
@@ -555,6 +607,7 @@ def upgrade():
     sa.Column('df_world_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=50), nullable=True),
+    sa.Column('name2', sa.String(length=50), nullable=True),
     sa.Column('coords', sa.String(length=10), nullable=True),
     sa.Column('rectangle', sa.String(length=20), nullable=True),
     sa.Column('type', sa.Enum('cave', 'fortress', 'dark fortress', 'forest retreat', 'town', 'vault', 'hillocks', 'dark pits', 'hamlet', 'tomb', 'mountain halls', 'camp', 'lair', 'shrine', 'tower', 'castle', 'fort', 'monastery', name='site_types'), nullable=True),
@@ -618,6 +671,7 @@ def upgrade():
     sa.Column('athlete_buddy', sa.Boolean(), nullable=True),
     sa.Column('athletic_rival', sa.Boolean(), nullable=True),
     sa.Column('childhood_friend', sa.Boolean(), nullable=True),
+    sa.Column('jealous_obsession', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
@@ -667,6 +721,7 @@ def downgrade():
     op.drop_table('site_maps')
     op.drop_table('site_links')
     op.drop_table('schedules')
+    op.drop_table('rivers')
     op.drop_table('relationship_historical')
     op.drop_table('relationship')
     op.drop_table('regions')
@@ -678,8 +733,11 @@ def downgrade():
     op.drop_table('members')
     op.drop_table('landmasses')
     op.drop_table('journey_pets')
+    op.drop_table('intrigue_plots')
+    op.drop_table('intrigue_actors')
     op.drop_table('interaction_knowledges')
     op.drop_table('inhabitants')
+    op.drop_table('identities')
     op.drop_table('historical_figures')
     op.drop_table('historical_events')
     op.drop_table('historical_eras')
@@ -702,6 +760,7 @@ def downgrade():
     op.drop_table('entities')
     op.drop_table('defending_squads')
     op.drop_table('dance_forms')
+    op.drop_table('creatures')
     op.drop_table('competitors')
     op.drop_table('attacking_squads')
     op.drop_table('artifacts')

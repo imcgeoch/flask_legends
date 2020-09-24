@@ -170,6 +170,15 @@ class Historical_Figure(db.Model):
                                  "Historical_Event.hfid,"
                                  "Historical_Event.hfid2",
                     order_by="Historical_Event.year,Historical_Event.seconds72")
+    
+    intrigue_actors = db.relationship('Intrigue_Actor',
+            backref='parent_hf', viewonly=True,
+            foreign_keys="Intrigue_Actor.df_world_id, Intrigue_Actor.parent_hfid",
+            primaryjoin=jb("Historical_Figure", "Intrigue_Actor", ("id", "parent_hfid")))
+    intrigue_plots = db.relationship('Intrigue_Plot',
+            backref='parent_hf', viewonly=True,
+            foreign_keys="Intrigue_Plot.df_world_id, Intrigue_Plot.hfid",
+            primaryjoin=jb("Historical_Figure", "Intrigue_Plot", ("id", "hfid")))
 
 
     def __repr__(self):
@@ -342,8 +351,59 @@ class Vague_Relationship(db.Model):
     athlete_buddy = db.Column(db.Boolean)
     athletic_rival = db.Column(db.Boolean)
     childhood_friend = db.Column(db.Boolean)
+    jealous_obsession = db.Column(db.Boolean)
 
     other = db.relationship("Historical_Figure", foreign_keys=[df_world_id, hfid2],
             primaryjoin=
     "and_(Vague_Relationship.hfid2==Historical_Figure.id," + 
     "Vague_Relationship.df_world_id==Historical_Figure.df_world_id)")
+
+class Identity(db.Model):
+    __tablename__ = 'identities'
+    id = db.Column(db.Integer, primary_key=True)
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
+    name = db.Column(db.String(100))
+    race = db.Column(db.String(40))
+    caste = db.Column(db.String(10))
+    birth_seconds72 = db.Column(db.Integer) 
+    birth_year = db.Column(db.Integer)
+    profession = db.Column(db.String(50))
+    entity_id = db.Column(db.Integer)
+    histfig_id = db.Column(db.Integer) # seems to be redundant with histfig.used_identity_id
+    nemisis_id = db.Column(db.Integer)
+
+    true_identity = db.relationship("Historical_Figure", backref="false_identity",
+            foreign_keys="Historical_Figure.df_world_id,"
+                         "Historical_Figure.id",
+            primaryjoin=jb("Identity","Historical_Figure",("histfig_id", "id")),
+            viewonly=True)
+
+class Intrigue_Actor(db.Model):
+    __tablename__ = 'intrigue_actors'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
+            primary_key=True)
+    parent_hfid = db.Column(db.Integer, primary_key=True)
+    local_id = db.Column(db.Integer, primary_key=True)
+
+    hfid = db.Column(db.Integer)
+    role = db.Column(db.String(30))
+    strategy = db.Column(db.String(30))
+
+    target = db.relationship("Historical_Figure", backref="intrigue_actors_on",
+            foreign_keys="Historical_Figure.df_world_id,"
+                         "Historical_Figure.id",
+            primaryjoin=jb("Intrigue_Actor","Historical_Figure",("hfid", "id")),
+            viewonly=True)
+
+class Intrigue_Plot(db.Model):
+    __tablename__ = 'intrigue_plots'
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'),
+            primary_key=True)
+    hfid = db.Column(db.Integer, primary_key=True)
+    local_id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50))
+    on_hold = db.Column(db.Boolean)
+    entity_id = db.Column(db.Integer)
+
+    
+
