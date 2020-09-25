@@ -361,7 +361,7 @@ class Vague_Relationship(db.Model):
 class Identity(db.Model):
     __tablename__ = 'identities'
     id = db.Column(db.Integer, primary_key=True)
-    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'))
+    df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), primary_key=True)
     name = db.Column(db.String(100))
     race = db.Column(db.String(40))
     caste = db.Column(db.String(10))

@@ -67,7 +67,7 @@ def upgrade():
     sa.Column('name_singular', sa.String(length=30), nullable=True),
     sa.Column('name_plural', sa.String(length=30), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('creature_id')
+    sa.PrimaryKeyConstraint('df_world_id', 'creature_id')
     )
     op.create_table('dance_forms',
     sa.Column('df_world_id', sa.Integer(), nullable=False),
@@ -415,7 +415,7 @@ def upgrade():
     sa.Column('histfig_id', sa.Integer(), nullable=True),
     sa.Column('nemisis_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('df_world_id', 'id')
     )
     op.create_table('inhabitants',
     sa.Column('id', sa.Integer(), nullable=False),

@@ -70,7 +70,7 @@ class Creature(db.Model):
     __tablename__ = 'creatures'
     creature_id = db.Column(db.String(30), primary_key=True)
     df_world_id = db.Column(db.Integer, 
-                            db.ForeignKey('df_world.id', ondelete='CASCADE'))
+                            db.ForeignKey('df_world.id', ondelete='CASCADE'), primary_key=True)
     name_singular = db.Column(db.String(30))
     name_plural = db.Column(db.String(30))
 
