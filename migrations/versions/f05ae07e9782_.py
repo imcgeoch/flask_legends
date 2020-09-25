@@ -564,7 +564,7 @@ def upgrade():
     op.create_table('rivers',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('df_world_id', sa.Integer(), nullable=True),
-    sa.Column('name', sa.String(length=50), nullable=True),
+    sa.Column('name', sa.String(length=100), nullable=True),
     sa.Column('path', sa.String(), nullable=True),
     sa.Column('end_pos', sa.String(length=12), nullable=True),
     sa.ForeignKeyConstraint(['df_world_id'], ['df_world.id'], ondelete='CASCADE'),

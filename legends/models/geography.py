@@ -62,7 +62,7 @@ class River(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     df_world_id = db.Column(db.Integer, 
                             db.ForeignKey('df_world.id', ondelete='CASCADE'))
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(100))
     path = db.Column(db.String)
     end_pos = db.Column(db.String(12))
 
