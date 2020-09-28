@@ -80,7 +80,8 @@ class Site_Mapping(Mapping):
         super().__init__(xml_dict, obj_name, world_id)
 
     def convert(self):
-
+        if self.xml_dict == {}:
+            return
         site_id = self.xml_dict['id'][0]
         structures = self.xml_dict.get('structure') or []
         self.convert_detail('structure', structures, site_id=site_id)
@@ -106,7 +107,8 @@ class Histfig_Mapping(Mapping):
         
         # these ones are simple, multi-field, details
         simple_details = ['hf_skill', 'entity_link','site_link', 
-                          'entity_position_link', 'entity_reputation']
+                          'entity_position_link', 'entity_reputation',
+                          'intrigue_plot']
         for detail_name in simple_details:
             detail = self.xml_dict.get(detail_name) or []
             self.convert_detail(detail_name, detail, hfid=hfid)
@@ -116,10 +118,21 @@ class Histfig_Mapping(Mapping):
         hf_links = self.xml_dict.get('hf_link', [])
         self.convert_detail('hf_link', hf_links, ('hfid', 'hfid2'), 
                             hfid1=hfid)
-        hf_rel_profs = self.xml_dict.get('relationship_profile_hf_visual', 
-                                         [])
-        self.convert_detail('relationship_profile_hf_visual', hf_rel_profs,
+
+        # Now that there are four that follow this pattern, we should be able to loop
+        # over them. "less_simple_details" ?
+        hf_rel_profs_vis = self.xml_dict.get('relationship_profile_hf_visual', [])
+        self.convert_detail('relationship_profile_hf_visual', hf_rel_profs_vis,
                             ('hf_id', 'hfid2'), hfid1=hfid)
+        hf_rel_profs_hist = self.xml_dict.get('relationship_profile_hf_historical', [])
+        self.convert_detail('relationship_profile_hf_historical', hf_rel_profs_hist,
+                            ('hf_id', 'hfid2'), hfid1=hfid)
+        vague_rels = self.xml_dict.get('vague_relationship', [])
+        self.convert_detail('vague_relationship', vague_rels,
+                            ('hf_id', 'hfid2'), hfid1=hfid)
+        intrigue_actors = self.xml_dict.get('intrigue_actor', [])
+        self.convert_detail('intrigue_actor', intrigue_actors,
+                             parent_hfid=hfid)
 
         # these ones are single values, of which there may be more than
         # one for a given histfig
@@ -283,6 +296,15 @@ class Entity_Pop_Mapping(Mapping):
             self.xml_dict['num'] = [number]
         super().convert()
 
+class Relationship_Event_Mapping(Mapping):
+
+    def convert(self):
+        self.xml_dict['type'] = ['relationship_event']
+        super().convert()
+        self.alias_key(self.obj_name, 'id', 'event')
+        self.alias_key(self.obj_name, 'hfid', 'source_hf')
+        self.alias_key(self.obj_name, 'hfid2', 'target_hf')
+
 class Mapping_Factory(object):
     mapping_by_name = { "written_content" : Written_Content_Mapping,
                         "artifact" : Artifact_Mapping,
@@ -291,7 +313,9 @@ class Mapping_Factory(object):
                         "historical_event_collection" : Eventcol_Mapping,
                         "historical_event" : Historical_Event_Mapping,
                         "entity" : Entity_Mapping,
-                        "entity_population" : Entity_Pop_Mapping}
+                        "entity_population" : Entity_Pop_Mapping,
+                        "historical_event_relationship" : Relationship_Event_Mapping,
+                        "historical_event_relationship_supplement" : Relationship_Event_Mapping}
 
     def __init__(self, world_id):
         self.world_id = world_id

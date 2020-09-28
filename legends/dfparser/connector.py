@@ -15,7 +15,9 @@ orm_objects = {
         "entity_position_link" : m.Entity_Position_Link,
         "entity_reputation" : m.Entity_Reputation,
         "hf_link" : m.HF_Link,
-        "relationship_profile_hf_visual": m.Relationship,
+        "relationship_profile_hf_visual" : m.Relationship,
+        "relationship_profile_hf_historical" : m.Relationship_Historical,
+        "vague_relationship" : m.Vague_Relationship,
         "sphere" : m.Sphere,
         "goal" : m.Goal,
         "journey_pet" : m.Journey_Pet,
@@ -43,7 +45,14 @@ orm_objects = {
         "entity_position" : m.Entity_Position,
         "entity_position_assignment" : m.Entity_Position_Assignment,
         "entity_entity_link" : m.Entity_Entity_Link,
-        "reference" : m.Reference
+        "reference" : m.Reference,
+        # new in 47
+        "river" : m.River,
+        "creature" : m.Creature,
+        "identity" : m.Identity,
+        "intrigue_actor" : m.Intrigue_Actor,
+        "intrigue_plot" : m.Intrigue_Plot,
+        "historical_event_relationship" : m.Historical_Event #Notice different name in xml
         }
 
 aux_tables = {
@@ -61,8 +70,10 @@ aux_tables = {
 plus_only_objects = ["landmass", "world_construction", "mountain_peak", 
         "entity_entity_link", "entity_position", 
         "entity_position_assignment", "occasion", "schedule", "feature",
-        "reference", "inhabitant", "member"]
+        "reference", "inhabitant", "member", "river", "creature", "identity",
+        "historical_event_relationship"] 
 
+# don't use plus at all
 base_only_objets = ['historical_figure', 'style']
 
 class Connector():
@@ -87,6 +98,8 @@ class Connector():
         self.db.session.commit()
 
     def add_mapping(self, xml_mapping):
+        if self.mapping_flawed(xml_mapping):
+            return
         self.db_mapping_size += self.convert_mapping(xml_mapping)
         if self.db_mapping_size >= self.capacity:
             print('\033[A', 'Added %s, current id %s' % (xml_mapping, 
@@ -160,3 +173,6 @@ class Connector():
             self.update_mappings()
             self.insert_mappings()
 
+    # This can be built out to cover more potential issues.
+    def mapping_flawed(self, xml_mapping):
+        return xml_mapping == {}

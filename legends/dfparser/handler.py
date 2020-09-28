@@ -39,11 +39,15 @@ class DF_Handler(ContentHandler):
             "musical_form", "dance_form",
             # begin plus 
             "landmass", "mountain_peak", "world_construction",
-            "entity_population"}
+            "entity_population", "river", "creature", "identity",
+            "historical_event_relationship"}
     childFieldNames = {"structure", "entity_link", "hf_skill", "hf_link",
                        "site_link","entity_reputation", 
                        "entity_position_link", 
                        "relationship_profile_hf_visual",
+                       "relationship_profile_hf_historical",
+                       "vague_relationship",
+                       "intrigue_actor", "intrigue_plot",
                        # begin plus
                        "entity_position", "entity_position_assignment",
                        "occasion", "schedule", "feature", "reference"

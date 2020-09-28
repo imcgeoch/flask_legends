@@ -312,7 +312,7 @@ class Entity_Position(db.Model):
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     entity_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20))
+    name = db.Column(db.String(30))
     name_male = db.Column(db.String(20))
     name_female = db.Column(db.String(20))
     spouse_male = db.Column(db.String(20))
@@ -362,12 +362,14 @@ class Site(db.Model):
 
     types = ['cave', 'fortress', 'dark fortress', 'forest retreat',
              'town', 'vault', 'hillocks', 'dark pits', 'hamlet',
-            'tomb', 'mountain halls', 'camp', 'lair', 'shrine', 'tower']
+            'tomb', 'mountain halls', 'camp', 'lair', 'shrine', 'tower',
+            'castle', 'fort', 'monastery']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    name2 = db.Column(db.String(50))
     coords = db.Column(db.String(10))
     rectangle = db.Column(db.String(20))
     type = db.Column(db.Enum(*types, name='site_types'))
@@ -452,7 +454,8 @@ class Structure(db.Model):
     __tablename__ = 'structures'
 
     types = ['underworld spire', 'inn tavern', 'market', 'temple',
-             'dungeon', 'keep', 'tomb', 'mead hall', 'library']
+             'dungeon', 'keep', 'tomb', 'mead hall', 'library', 'guildhall',
+             'counting house', 'tower']
     subtypes = ['catacombs', 'standard', 'sewers']
     
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
