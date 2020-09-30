@@ -328,7 +328,7 @@ class Entity_Position(db.Model):
 
     def calculated_name(self):
         if (self.holder and self.name_female 
-                        and not self.holder.histfig == -1 
+                        and self.holder.hf
                         and self.holder.hf.caste == 'FEMALE'):
             return self.name_female
         return self.name

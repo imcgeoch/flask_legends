@@ -162,7 +162,7 @@ def entity_detail_json(world_id, entity_id):
 
     entity_positions = [{
         'name' : position.calculated_name(),
-        'vacant' : position.holder.histfig == -1 if position.holder else True,
+        'vacant' : not position.holder.hf if position.holder else True,
         'hf_name' : titlecase(position.holder.hf.name) if position.holder and position.holder.hf else None,
         'hfid' : position.holder.histfig if position.holder else None
         } for position in entity.positions] 
