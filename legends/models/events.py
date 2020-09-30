@@ -839,7 +839,7 @@ class Poetic_Form_Created(Historical_Event):
 
 
 class Relationship_Event(Historical_Event):
-    __mapper_args__ = {'polymorphic_identity':'relationship event'}
+    __mapper_args__ = {'polymorphic_identity':'relationship_event'}
 
 
 competitors = db.Table('competitors', db.metadata,
