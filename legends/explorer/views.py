@@ -170,7 +170,7 @@ def entity_detail_json(world_id, entity_id):
         'name' : titlecase(site.name),
         'id' : site.id,
         'type' : site.type
-        } for site in entity.sites] 
+        } for site in entity.sites + entity.local_sites] 
 
     occasions = [{
         'name' : titlecase(occasion.name),
