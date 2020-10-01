@@ -841,6 +841,10 @@ class Poetic_Form_Created(Historical_Event):
 class Relationship_Event(Historical_Event):
     __mapper_args__ = {'polymorphic_identity':'relationship_event'}
 
+class Remove_HF_HF_Link(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'remove hf hf link'}
+class HF_Convicted(Historical_Event):
+    __mapper_args__ = {'polymorphic_identity':'hf convicted'}
 
 competitors = db.Table('competitors', db.metadata,
         db.Column('id', db.Integer, primary_key=True),
