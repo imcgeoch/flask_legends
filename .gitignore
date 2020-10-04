@@ -5,3 +5,4 @@ tst2.xml
 legends.db.loadedbak
 tst.*
 frontend/package-lock.json
+**.pyc
