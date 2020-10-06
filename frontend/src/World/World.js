@@ -1,8 +1,8 @@
 import React from 'react';
-import {Map, ImageOverlay} from 'react-leaflet';
-import {CRS} from 'leaflet';
+import DFMap from './DFMap';
 
 const axios = require('axios');
+
 
 class World extends React.Component {
 	
@@ -35,15 +35,13 @@ class World extends React.Component {
 	}
 
 	render() {
-		const {name } = this.state.items;
+		const {name, altname} = this.state.items;
 		const {id, worldid} = this.props.match.params;
 		return( 
 			<div id="world">
 				<h1> {name} </h1>
-				<Map center={[0,0]} zoom={2} crs={CRS.Simple}> 
-					<ImageOverlay url="/explorer/static/img/1/world_world_map.png"
-				                bounds={[[0,0],[396,360]]}/>
-        </Map>
+				<h2> {altname} </h2>
+				<DFMap height={396} width={360} world_id={1}  />
 			</div>
 		);
 	}
