@@ -26,6 +26,12 @@ def world_index():
 def api_hello():
     return jsonify({'greeting':'hello, api'})
 
+@bp.route('/api/<world_id>')
+def api_world(world_id):
+    world = DF_World.query.get(world_id)
+
+    return jsonify({'name':world.name})
+
 @bp.route('/<world_id>/histfigs')
 def hf_index(world_id):
     after = request.args.get('after') or 0

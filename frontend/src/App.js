@@ -11,6 +11,7 @@ import PoeticForm from './PoeticForm/PoeticForm';
 import DanceForm from './DanceForm/DanceForm';
 import EventCol from './EventCol/EventCol';
 import LegendsIndex from './LegendsIndex';
+import World from './World/World';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 //const axios = require('axios');
@@ -46,6 +47,7 @@ function AppRouter() {
 		<Router>
 			<div>
 				<Route path="/" exact component={LegendsIndex} />
+				<Route exact path="/:worldid" component={World} /> 
 				<Route path="/:worldid/histfig/:id" component={Histfig} />
 				<Route path="/:worldid/entity/:id" component={Entity} />
 				<Route path="/:worldid/artifact/:id" component={Artifact} />
