@@ -29,9 +29,16 @@ def api_hello():
 @bp.route('/api/<world_id>')
 def api_world(world_id):
     world = DF_World.query.get(world_id)
+    sites = [{ 
+        "id" : s.id,
+        "name" : s.name,
+        "type" : s.type,
+        "coords" : s.coords
+            } for s in world.sites]
 
     return jsonify({'name':titlecase(world.name),
-                    'altname': world.altname})
+                    'altname': world.altname,
+                    'sites' : sites})
 
 @bp.route('/<world_id>/histfigs')
 def hf_index(world_id):

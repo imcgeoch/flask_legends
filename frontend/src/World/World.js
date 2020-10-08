@@ -35,13 +35,13 @@ class World extends React.Component {
 	}
 
 	render() {
-		const {name, altname} = this.state.items;
+		const {name, altname, sites} = this.state.items;
 		const {id, worldid} = this.props.match.params;
 		return( 
 			<div id="world">
 				<h1> {name} </h1>
 				<h2> {altname} </h2>
-				<DFMap height={396} width={360} world_id={1}  />
+				<DFMap height={396} width={330} world_id={1} sites={sites}/>
 			</div>
 		);
 	}
