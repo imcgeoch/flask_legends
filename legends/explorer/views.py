@@ -35,10 +35,17 @@ def api_world(world_id):
         "type" : s.type,
         "coords" : s.coords
             } for s in world.sites]
+    size_info = {
+            'height_coords' : world.height_coords,
+            'width_coords' : world.width_coords,
+            'height_pixels' : world.height_pixels,
+            'width_pixels' : world.width_pixels
+            }
 
     return jsonify({'name':titlecase(world.name),
                     'altname': world.altname,
-                    'sites' : sites})
+                    'sites' : sites,
+                    'size_info' : size_info})
 
 @bp.route('/<world_id>/histfigs')
 def hf_index(world_id):
