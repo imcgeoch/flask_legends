@@ -25,7 +25,7 @@ function Index() {
 			We'll have to get some styling up and running as well. 
 			One day, anybody will be able to upload their files to share. 
 			For now, you can start exploring one of the worlds we've created
-			by clicking <Link to={`/1/histfig/5`}>here</Link>.
+			by clicking <Link to={`/1`}>here</Link>.
 		</p>
 		<p>
 			You can follow our progress on <a href="https://github.com/imcgeoch/flask_legends">Github</a>!
