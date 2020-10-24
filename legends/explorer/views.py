@@ -56,6 +56,21 @@ def hf_index(world_id):
 
     return render_template('histfig_list.html', items=hfs, context={})
 
+@bp.route('/api/<world_id>/histfigs')
+def api_hf_list(world_id):
+    after = request.args.get('after') or 0
+    hfs = Historical_Figure.query\
+                           .filter_by(df_world_id=world_id)\
+                           .limit(25).offset(after)
+
+    return {
+             "hfs" : [
+                 { "hf_name" : hf.name,
+                   "hfid" : hf.id,
+                   "race" : hf.race } for hf in hfs
+                 ]
+             }
+
 @bp.route('/<world_id>/histfig/<hfid>')
 def hf_detail(world_id, hfid):
     evt_after = request.args.get('evt_after') or 0

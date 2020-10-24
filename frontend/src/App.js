@@ -12,6 +12,7 @@ import DanceForm from './DanceForm/DanceForm';
 import EventCol from './EventCol/EventCol';
 import LegendsIndex from './LegendsIndex';
 import World from './World/World';
+import HistfigListPage from './Lists/HistfigListPage';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 //const axios = require('axios');
@@ -58,6 +59,7 @@ function AppRouter() {
 				<Route path="/:worldid/dance_form/:id" component={DanceForm} />
 				<Route path="/:worldid/poetic_form/:id" component={PoeticForm} />
 				<Route path="/:worldid/eventcollection/:id" component={EventCol} />
+				<Route path="/:worldid/histfigs" component={HistfigListPage} />
 			</div>
 		</Router>
 	);

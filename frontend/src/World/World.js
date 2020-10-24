@@ -1,8 +1,7 @@
 import React from 'react';
 import DFMap from './DFMap';
-
-const axios = require('axios');
-
+import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 class World extends React.Component {
 	
@@ -42,6 +41,7 @@ class World extends React.Component {
 				<h1> {name} </h1>
 				<h2> {altname} </h2>
 				<DFMap world_id={worldid} sites={sites} size_info={size_info}/>
+				<Link to={`/${worldid}/histfigs`}>Historical Figures</Link>			
 			</div>
 		);
 	}
