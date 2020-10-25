@@ -56,6 +56,26 @@ def hf_index(world_id):
 
     return render_template('histfig_list.html', items=hfs, context={})
 
+@bp.route('/api/<world_id>/artifacts')
+def api_artifact_list(world_id):
+    after = request.args.get('after') or 0
+    artifacts = Artifact.query\
+                        .filter_by(df_world_id=world_id)\
+                        .limit(25).offset(after)
+
+    return {
+            'artifacts' : [
+                {
+                    'id' : a.id,
+                    'name' : titlecase(a.name or "Untitled") ,
+                    'name_string' : titlecase(a.name_string or ""),
+                    'item_type' : a.item_subtype or a.item_type,
+                    'mat' : a.mat,
+                } for a in artifacts] 
+            }
+
+
+
 @bp.route('/api/<world_id>/histfigs')
 def api_hf_list(world_id):
     after = request.args.get('after') or 0
