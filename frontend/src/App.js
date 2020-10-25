@@ -13,6 +13,7 @@ import EventCol from './EventCol/EventCol';
 import LegendsIndex from './LegendsIndex';
 import World from './World/World';
 import HistfigListPage from './Lists/HistfigListPage';
+import ArtifactListPage from './Lists/ArtifactListPage';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 //const axios = require('axios');
@@ -60,6 +61,7 @@ function AppRouter() {
 				<Route path="/:worldid/poetic_form/:id" component={PoeticForm} />
 				<Route path="/:worldid/eventcollection/:id" component={EventCol} />
 				<Route path="/:worldid/histfigs" component={HistfigListPage} />
+				<Route path="/:worldid/artifacts" component={ArtifactListPage} />
 			</div>
 		</Router>
 	);

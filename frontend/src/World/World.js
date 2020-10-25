@@ -41,7 +41,14 @@ class World extends React.Component {
 				<h1> {name} </h1>
 				<h2> {altname} </h2>
 				<DFMap world_id={worldid} sites={sites} size_info={size_info}/>
-				<Link to={`/${worldid}/histfigs`}>Historical Figures</Link>			
+				<ul>
+					<li>
+						<Link to={`/${worldid}/histfigs`}>Historical Figures</Link>
+					</li>
+					<li>
+				<Link to={`/${worldid}/artifacts`}>Artifacts</Link>	
+			</li>
+			</ul>
 			</div>
 		);
 	}
