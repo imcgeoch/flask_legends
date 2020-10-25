@@ -38,15 +38,19 @@ class HistfigListPage extends React.Component {
 		const {hfs=[]} = this.state.items;
 		const {worldid} = this.props.match.params
 		const queryParams = queryString.parse(this.props.location.search)
-		const after = queryParams.after ? `${Number(queryParams.after)}` : 0;
-		
+		const after = queryParams.after ? `${queryParams.after}` : 0;
+
+		//console.log(after);
 		return( <div>
 			<ul>
 				{hfs.map((props) => (<li> The {props.race} <HistfigLink {...props} worldid={worldid}/></li>))} 
 			</ul>
-			<Link to={`/${worldid}/histfigs/?after=${after > 25 ? after-25 : 0}`}> PREV </Link>	
-			<Link to={`/${worldid}/histfigs/?after=${Number(after) + 25}`}> NEXT </Link>	
-
+			{ after != 0 ?
+					<Link to={`/${worldid}/histfigs/?after=${after > 25 ? after-25 : 0}`}> PREV </Link>
+		      : <div/>}
+			{ hfs.length == 25 ?
+					<Link to={`/${worldid}/histfigs/?after=${25 + Number(after)}`}> NEXT </Link>	
+			    : <div/> }
 			</div>
 		)
 
