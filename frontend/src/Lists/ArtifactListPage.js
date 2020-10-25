@@ -2,12 +2,12 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import queryString from 'query-string';
 
-import HistfigLink from "../Histfig/Histfig_Link"
+import ArtifactLink from "../Artifact/Artifact_Link"
 
 const axios = require('axios');
 
 
-class HistfigListPage extends React.Component {
+class ArtifactListPage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {items : {}};
@@ -17,9 +17,8 @@ class HistfigListPage extends React.Component {
 		const {worldid} = this.props.match.params
 		const queryParams = queryString.parse(this.props.location.search)
 		const after = queryParams.after ? `?after=${queryParams.after}` : '';
-		axios.get(`/api/${worldid}/histfigs${after}`)
+		axios.get(`/api/${worldid}/artifacts${after}`)
 		  .then(response => {
-				//			console.log(response); 
 				this.setState( {items : response.data} );
 			});
 	}
@@ -35,27 +34,27 @@ class HistfigListPage extends React.Component {
 	}
 
 	render() {
-		const {hfs=[]} = this.state.items;
+		const {artifacts=[]} = this.state.items;
 		const {worldid} = this.props.match.params
 		const queryParams = queryString.parse(this.props.location.search)
-		const after = queryParams.after ? `${queryParams.after}` : 0;
-
-		//console.log(after);
+		const after = queryParams.after ? `${Number(queryParams.after)}` : 0;
+		
 		return( <div>
 			<ul>
-				{hfs.map((props) => (<li> The {props.race} <HistfigLink {...props} worldid={worldid}/></li>))} 
+				{artifacts.map((props) => (
+					<li> The {props.mat} {props.item_type} <ArtifactLink {...props} worldid={worldid}/> 
+               {props.name != props.name_string ? ", " + props.name : ""}
+					</li>))} 
 			</ul>
 			{ after != 0 ?
-					<Link to={`/${worldid}/histfigs/?after=${after > 25 ? after-25 : 0}`}> PREV </Link>
+					<Link to={`/${worldid}/artifacts/?after=${after > 25 ? after-25 : 0}`}> PREV </Link>
 		      : <div/>}
-			{ hfs.length == 25 ?
-					<Link to={`/${worldid}/histfigs/?after=${25 + Number(after)}`}> NEXT </Link>	
+			{ artifacts.length == 25 ?
+					<Link to={`/${worldid}/artifacts/?after=${25 + Number(after)}`}> NEXT </Link>	
 			    : <div/> }
 			</div>
 		)
-
 	}
-
 }
 
-export default HistfigListPage;
+export default ArtifactListPage;
