@@ -77,11 +77,8 @@ class Entity extends React.Component {
 
 	getFromAPI() {
 		const {worldid, id} = this.props.match.params
-		//let worldid = this.props.match.params.worldid;
-		//let id = this.props.id;
 		axios.get(`/api/${worldid}/entity/${id}`)
 		  .then(response => {
-				//			console.log(response); 
 				this.setState( {items : response.data} );
 			});
 		axios.get(`/api/${worldid}/events?entity=${id}`)
@@ -116,10 +113,6 @@ class Entity extends React.Component {
 		)
 
 	}
-
-
-
 }
-
 
 export default Entity;

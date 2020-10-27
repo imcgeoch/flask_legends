@@ -20,7 +20,6 @@ class MusicalForm extends React.Component {
 		const {worldid, id} = this.props.match.params
 		axios.get(`/api/${worldid}/musicalform/${id}`)
 		  .then(response => {
-				//			console.log(response); 
 				this.setState( {items : response.data} );
 			});
 	}

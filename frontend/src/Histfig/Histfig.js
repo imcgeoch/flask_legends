@@ -1,10 +1,6 @@
 import React from 'react';
-//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import EntityLink from "../Entity/Entity_Link";
-
-//import Event from "../Events/Event"
 import Event_List from "../Events/Event_List"
-
 import HistfigLink from "./Histfig_Link"
 
 import axios from "axios";
@@ -148,4 +144,5 @@ class Histfig extends React.Component {
 		);
 	}
 }
+
 export default Histfig;
