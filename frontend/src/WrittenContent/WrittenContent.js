@@ -8,8 +8,7 @@ import MusicalFormLink from "../MusicalForm/MusicalFormLink";
 import DanceFormLink from "../DanceForm/DanceFormLink";
 import PoeticFormLink from "../PoeticForm/PoeticFormLink";
 
-
-const axios = require('axios');
+import axios from "axios";
 
 function WritingStyle({styles}){
 	if (styles != ''){

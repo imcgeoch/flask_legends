@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 import ArtifactLink from "../Artifact/Artifact_Link"
 
-const axios = require('axios');
+import axios from "axios";
 
 
 class ArtifactListPage extends React.Component {

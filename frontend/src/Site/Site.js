@@ -2,9 +2,7 @@ import React from 'react';
 import EntityLink from "../Entity/Entity_Link";
 import HistfigLink from "../Histfig/Histfig_Link";
 
-const axios = require('axios');
-//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-
+import axios from 'axios';
 
 function Structure({name, name_2, type, subtype, worship_hf}){
 	const names = `${name}, "${name_2}"`;
@@ -55,12 +53,10 @@ class Site extends React.Component {
 		const {worldid, id} = this.props.match.params
 		axios.get(`/api/${worldid}/site/${id}`)
 		  .then(response => {
-				//			console.log(response); 
 				this.setState( {items : response.data} );
 			});
 		axios.get(`/api/${worldid}/events?site=${id}`)
 		  .then(response => {
-				//console.log(response); 
 				this.setState( {events : response.data} );
 			});
 	}

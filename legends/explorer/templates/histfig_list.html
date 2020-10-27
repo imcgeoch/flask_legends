@@ -1,9 +1,0 @@
-{% extends "list_base.html" %}
-
-{% block page_title%}
-  Histfigs
-{% endblock %}
-
-{% block content %}
-<div> {{ item.id }}: The {% if item.deity %} deity with the form of a {% endif %} {{ item.race }} {{ item.name | title}} </div>
-{% endblock %}

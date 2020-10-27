@@ -1,13 +1,9 @@
 import React from 'react';
-//import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import EntityLink from "../Entity/Entity_Link";
-
-//import Event from "../Events/Event"
 import Event_List from "../Events/Event_List"
-
 import HistfigLink from "./Histfig_Link"
 
-const axios = require('axios');
+import axios from "axios";
 
 function StringList({items=[], ...props}){
 	const listItems = items.map((item) => 
@@ -148,4 +144,5 @@ class Histfig extends React.Component {
 		);
 	}
 }
+
 export default Histfig;

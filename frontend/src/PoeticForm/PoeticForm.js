@@ -1,6 +1,6 @@
 import React from 'react';
 
-const axios = require('axios');
+import axios from 'axios';
 
 function PoeticFormDetails({description=''}){
 	return (<div>
@@ -20,7 +20,6 @@ class PoeticForm extends React.Component {
 		const {worldid, id} = this.props.match.params
 		axios.get(`/api/${worldid}/poeticform/${id}`)
 		  .then(response => {
-				//			console.log(response); 
 				this.setState( {items : response.data} );
 			});
 	}
@@ -42,9 +41,7 @@ class PoeticForm extends React.Component {
 			<PoeticFormDetails {... items} />
 			</div>
 		)
-
 	}
-
 }
 
 export default PoeticForm;

@@ -1,7 +1,0 @@
-<h2> Associated Sites </h2>
-<ul>
-{% for site in context['entity'].sites %}
-<li><a href={{ url_for('explorer.site_detail', world_id=site.df_world_id, 
-			 site_id=site.id) }}>{{site.name | title}}</a>, a {{ site.type }}.</li>
-{% endfor %}
-</ul>

@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 import HistfigLink from "../Histfig/Histfig_Link"
 
-const axios = require('axios');
+import axios from 'axios';
 
 
 class HistfigListPage extends React.Component {

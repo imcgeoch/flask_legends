@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-const axios = require('axios');
+import axios from 'axios';
 
 function DanceFormDetails({description=''}){
 	return (<div>
