@@ -14,8 +14,6 @@ class Entity(db.Model):
     claims = db.Column(db.String)
     worship_id = db.Column(db.Integer)
 
-    #site_links = db.relationship('Site_Link', backref='entity', 
-    #                             viewonly=True)
     site_links = db.relationship('Site_Link', backref='entity', 
                                  viewonly=True, 
                                  foreign_keys="Site_Link.df_world_id,"

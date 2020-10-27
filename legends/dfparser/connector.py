@@ -119,18 +119,6 @@ class Connector():
             else:
                 self.db_mappings[name] = db_mapping
         return size
-
-    #def convert_mappings(self):
-    #    while self.xml_mappings:
-    #        xml_mapping = self.xml_mappings.pop()
-    #        xml_mapping.convert()
-    #        if self.mode == 'update':
-    #            xml_mapping.mask_fields()
-    #        for name, db_mapping in xml_mapping.get_db_mappings().items():
-    #            if name in self.db_mappings:
-    #                self.db_mappings[name].extend(db_mapping)
-    #            else:
-    #                self.db_mappings[name] = db_mapping
     
     def insert_mappings(self):
         s = self.db.session

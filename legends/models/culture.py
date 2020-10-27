@@ -10,7 +10,6 @@ class Artifact(db.Model):
     name = db.Column(db.String(100))
     name_string = db.Column(db.String(100))
     page_number = db.Column(db.Integer)
-    # page_written_content_id = db.Column(db.Integer) redundant scroll vs book
     written_content_id = db.Column(db.Integer)
     holder_hfid = db.Column(db.Integer)
     site_id = db.Column(db.Integer)
