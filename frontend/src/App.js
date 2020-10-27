@@ -1,5 +1,4 @@
 import React from 'react';
-//import './App.css';
 import Histfig from './Histfig/Histfig';
 import Entity from './Entity/Entity';
 import Artifact from './Artifact/Artifact';
@@ -15,34 +14,6 @@ import World from './World/World';
 import HistfigListPage from './Lists/HistfigListPage';
 import ArtifactListPage from './Lists/ArtifactListPage';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
-
-//const axios = require('axios');
-
-/*
-class MyComponent extends React.Component {
-
-  constructor(props) {
-		super(props)
-		this.state = {
-			error: null,
-			isLoaded: false,
-			items: "hey" 
-		};
-	}
-
-	componentDidMount() {
-		axios.get("/api/hello")
-		  .then(response => {console.log(response); 
-				this.setState({ items : response.data.greeting });
-		});
-	}
-
-	render () {
-		const {items} = this.state;
-    return <div> {items} </div>
-	}
-}
-*/
 
 function AppRouter() {
 	return (
@@ -66,7 +37,6 @@ function AppRouter() {
 		</Router>
 	);
 }
-
 
 function App() {
   return (
