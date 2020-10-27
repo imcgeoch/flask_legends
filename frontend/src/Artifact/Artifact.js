@@ -4,7 +4,7 @@ import HistfigLink from "../Histfig/Histfig_Link";
 import SiteLink from "../Site/SiteLink";
 import WrittenContentLink from "../WrittenContent/WrittenContent_Link";
 
-const axios = require('axios');
+import axios from "axios"
 
 function ArtifactDescription({item_type, item_description}){
 	const {type, desc} = {item_type, item_description};

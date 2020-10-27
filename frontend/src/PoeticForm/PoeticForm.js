@@ -1,6 +1,6 @@
 import React from 'react';
 
-const axios = require('axios');
+import axios from 'axios';
 
 function PoeticFormDetails({description=''}){
 	return (<div>

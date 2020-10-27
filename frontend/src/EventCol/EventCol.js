@@ -6,7 +6,7 @@ import EventColLink from "./EventColLink";
 import OccasionLink from "../Occasion/OccasionLink";
 import Event from "../Events/Event";
 
-const axios = require('axios');
+import axios from "axios";
 
 function Generals({side, generals}){
 	if (generals.length > 0) {

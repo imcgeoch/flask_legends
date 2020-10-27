@@ -2,7 +2,7 @@ import React from 'react';
 import EntityLink from "../Entity/Entity_Link";
 import HistfigLink from "../Histfig/Histfig_Link";
 
-const axios = require('axios');
+import axios from 'axios';
 //import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 

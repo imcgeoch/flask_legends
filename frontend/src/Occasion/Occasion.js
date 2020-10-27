@@ -5,7 +5,7 @@ import MusicalFormLink from "../MusicalForm/MusicalFormLink";
 import DanceFormLink from "../DanceForm/DanceFormLink";
 import PoeticFormLink from "../PoeticForm/PoeticFormLink";
 
-const axios = require('axios');
+import axios from 'axios';
 
 function OccasionIntroEvent({event, name, worldid, entityid, entity_name}){
 	return ( <div> 

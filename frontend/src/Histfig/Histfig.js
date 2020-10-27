@@ -7,7 +7,7 @@ import Event_List from "../Events/Event_List"
 
 import HistfigLink from "./Histfig_Link"
 
-const axios = require('axios');
+import axios from "axios";
 
 function StringList({items=[], ...props}){
 	const listItems = items.map((item) => 

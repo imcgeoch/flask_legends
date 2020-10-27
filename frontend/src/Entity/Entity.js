@@ -6,7 +6,7 @@ import SiteLink from "../Site/SiteLink";
 import RelatedList from "../RelatedList";
 import OccasionLink from "../Occasion/OccasionLink";
 import Event_List from "../Events/Event_List"
-const axios = require('axios');
+import axios from "axios";
 
 
 function Festivals({occasions=[]}){
