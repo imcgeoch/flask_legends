@@ -1,9 +1,19 @@
+"""The main runner module for the legends parser.
+
+process_directory -- A convenience function that instantiates a DF_Parser object
+                     and calls the process() method
+
+DF_Parser -- The main class that handles the overall process of processing a
+             legends directory.
+"""
+
+
 import os
 import re
 import codecs
 from glob import glob
-from wand.image import Image
 from xml.sax import parse as sax_parse
+from wand.image import Image
 
 from .handler import DF_Handler
 from .mapping import Mapping_Factory
@@ -11,11 +21,19 @@ from .connector import Connector
 from ..models import DF_World, db, Site_Map, World_Map
 
 def process_directory(path, image_path):
+    """A convenience function that instantiates a DF_Parser object and runs it.
+
+    path -- the root of the legends directory
+    image_path -- the location processed images should be written.
+    """
     parser = DF_Parser(path, image_path)
     parser.process()
 
 class DF_Parser(object):
-    
+    """
+    The main runner class for the legends parser. Keeps configuration and calls
+    the modules that do the real work.
+    """
     def __init__(self, dump_path, image_path):
         self.dump_path = dump_path
         self.image_path = image_path
@@ -26,6 +44,9 @@ class DF_Parser(object):
         self.plus_mode = self.plus_xml is not []
 
     def process(self):
+        """The main processing function. Calls other functions in the
+        correct order.
+        """
         print("Creating world...")
         self.create_world()
         print("Parsing base...")
@@ -42,6 +63,7 @@ class DF_Parser(object):
         self.convert_world_maps()
 
     def create_world(self):
+        """Writes a new world to the database, and stores the created id."""
         world = DF_World()
         db.session.add(world)
         db.session.commit()
@@ -49,20 +71,29 @@ class DF_Parser(object):
         self.world_id = world.id
 
     def parse_base(self):
-        filename = self.base_xml[0] 
+        """Calls parse() on the base file in insert mode."""
+        filename = self.base_xml[0]
         self.parse(filename, 'insert')
 
     def parse_plus(self):
-        filename = self.plus_xml[0] 
+        """Calls parse() on the plus file in update mode"""
+        filename = self.plus_xml[0]
         self.parse(filename, 'update')
 
     def parse(self, filename, mode):
+        """Parses an XML file by calling a SAX parser with a new DF_Handler.
+        filename -- The name of the input file.
+        mode -- either "insert" or "update", passed to a Connector.
+        """
         connector = Connector(db, mode, self.world_id)
         factory = Mapping_Factory(self.world_id)
         with codecs.open(filename, 'r', encoding='CP437') as infile:
             sax_parse(infile, DF_Handler(connector, factory))
 
     def convert_site_maps(self):
+        """Converts the site maps in the directory to png and writes them to
+        the image directory.
+        """
         site_num_pat = re.compile("(?<=site_map-)[0-9]*(?=\.bmp)")
 
         site_map_objs = []
@@ -78,8 +109,11 @@ class DF_Parser(object):
                 site_map_objs.append(site_map)
         db.session.bulk_save_objects(site_map_objs)
         db.session.commit()
-        
+
     def convert_world_maps(self):
+        """Converts the world maps in the directory to png and writes them to
+        the image directory.
+        """
         map_type_pat = re.compile("[_a-z]+(?=\.bmp)")
 
         world_map_objs = []
@@ -94,4 +128,3 @@ class DF_Parser(object):
                 world_map_objs.append(world_map)
         db.session.bulk_save_objects(world_map_objs)
         db.session.commit()
-
