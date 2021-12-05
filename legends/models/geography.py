@@ -24,6 +24,7 @@ class Region(db.Model):
 
     types = ['Wetland', 'Grassland', 'Hills', 'Desert', 'Forest',
              'Mountains', 'Lake', 'Ocean', 'Tundra', 'Glacier']
+    evilness_types = ['evil', 'good', 'neutral']
 
     df_world_id = db.Column(db.Integer, db.ForeignKey('df_world.id', ondelete='CASCADE'), 
                             primary_key=True)
@@ -31,6 +32,7 @@ class Region(db.Model):
     name = db.Column(db.String(50))
     type = db.Column(db.Enum(*types, name='region_types'))
     coords = db.Column(db.String)
+    evilness = db.Column(db.Enum(*evilness_types, name='evilness_types'))
     
     events = db.relationship('Historical_Event', backref='region', 
                     primaryjoin='and_(Historical_Event.subregion_id == ' +
