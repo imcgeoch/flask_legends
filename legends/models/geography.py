@@ -17,6 +17,7 @@ class Mountain_Peak(db.Model):
 
     coords = db.Column(db.String(10))
     height = db.Column(db.Integer)
+    is_volcano = db.Column(db.Boolean)
 
 class Region(db.Model):
     __tablename__ = 'regions'
